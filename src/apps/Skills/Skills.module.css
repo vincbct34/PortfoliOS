@@ -1,0 +1,156 @@
+.skills {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  color: #fff;
+}
+
+/* Header tabs */
+.tabs {
+  display: flex;
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.tab {
+  padding: 12px 24px;
+  font-size: 13px;
+  color: #969696;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+  color: #fff;
+  border-bottom-color: var(--accent-primary);
+}
+
+/* Main content */
+.content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* Stats bar */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  padding: 16px;
+  background: #252526;
+  border-radius: 4px;
+  border: 1px solid #3c3c3c;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #969696;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+/* Process list */
+.processList {
+  background: #252526;
+  border-radius: 4px;
+  border: 1px solid #3c3c3c;
+  overflow: hidden;
+}
+
+.processHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 100px;
+  padding: 12px 16px;
+  background: #2d2d2d;
+  font-size: 12px;
+  font-weight: 600;
+  color: #969696;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.processRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 100px;
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #3c3c3c;
+  transition: background-color 0.15s ease;
+}
+
+.processRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.processRow:last-child {
+  border-bottom: none;
+}
+
+.processName {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.processIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.processCategory {
+  color: #969696;
+}
+
+.processLevel {
+  color: #969696;
+}
+
+/* Progress bar */
+.progressBar {
+  height: 4px;
+  background: #3c3c3c;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progressFill.high {
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+}
+
+.progressFill.medium {
+  background: linear-gradient(90deg, #ff9800, #ffc107);
+}
+
+.progressFill.low {
+  background: linear-gradient(90deg, #2196f3, #03a9f4);
+}

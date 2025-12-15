@@ -1,0 +1,50 @@
+.preview {
+  position: fixed;
+  z-index: 9998;
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.15) 0%, rgba(96, 205, 255, 0.1) 100%);
+  border: 2px solid var(--accent-primary);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+/* Animated border glow */
+.preview::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary),
+    rgba(96, 205, 255, 0.8),
+    var(--accent-primary)
+  );
+  opacity: 0.3;
+  z-index: -1;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Inner content hint */
+.preview::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}

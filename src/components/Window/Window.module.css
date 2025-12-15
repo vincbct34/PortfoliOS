@@ -1,0 +1,189 @@
+.window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: box-shadow 0.2s ease;
+}
+
+.window.focused {
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.window.maximized {
+  border-radius: 0;
+}
+
+/* Titlebar */
+.titlebar {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 0 0 8px;
+  background: transparent;
+  user-select: none;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.titlebarIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  color: #333;
+}
+
+.titlebarTitle {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 400;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titlebarButtons {
+  display: flex;
+  gap: 0;
+  margin-left: 8px;
+}
+
+.titlebarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.titlebarButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.titlebarButton.close:hover {
+  background: #e81123;
+  color: white;
+}
+
+.titlebarButton svg {
+  width: 12px;
+  height: 12px;
+}
+
+.titlebarButton.maximize svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Resize handles */
+.resizeHandle {
+  position: absolute;
+  z-index: 10;
+}
+
+.resizeHandle.n {
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.resizeHandle.s {
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.resizeHandle.e {
+  right: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.resizeHandle.w {
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.resizeHandle.ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.resizeHandle.nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.resizeHandle.se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+}
+
+.resizeHandle.sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+/* Dark theme */
+:global(.dark) .window {
+  background: rgba(32, 32, 32, 0.85);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .titlebarIcon,
+:global(.dark) .titlebarTitle,
+:global(.dark) .titlebarButton {
+  color: #fff;
+}
+
+:global(.dark) .titlebarButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .content {
+  background: rgba(32, 32, 32, 0.5);
+}

@@ -1,0 +1,103 @@
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+/* Main cursor dot */
+.custom-cursor__dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.1s ease,
+    opacity 0.2s ease;
+}
+
+/* Cursor ring that follows with delay */
+.custom-cursor__ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Hover state - grows and fills slightly */
+.custom-cursor--hover .custom-cursor__ring {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-cursor--hover .custom-cursor__dot {
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* Click state - shrinks briefly */
+.custom-cursor--click .custom-cursor__ring {
+  width: 30px;
+  height: 30px;
+  border-width: 3px;
+}
+
+.custom-cursor--click .custom-cursor__dot {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+/* Text input state - becomes a line */
+.custom-cursor--text .custom-cursor__ring {
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+}
+
+.custom-cursor--text .custom-cursor__dot {
+  opacity: 0;
+}
+
+/* Dragging state */
+.custom-cursor--drag .custom-cursor__ring {
+  width: 50px;
+  height: 50px;
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hidden when outside viewport */
+.custom-cursor--hidden {
+  opacity: 0;
+}
+
+/* Hide default cursor globally when custom cursor is active */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* Restore cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: auto !important;
+  }
+}

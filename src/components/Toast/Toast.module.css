@@ -1,0 +1,102 @@
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  min-width: 320px;
+  max-width: 420px;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.4;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 1);
+}
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.5;
+  transform-origin: left;
+}
+
+/* Type Variants */
+.success {
+  border-left: 3px solid #22c55e;
+  color: #22c55e;
+}
+
+.success .icon {
+  color: #22c55e;
+}
+
+.error {
+  border-left: 3px solid #ef4444;
+  color: #ef4444;
+}
+
+.error .icon {
+  color: #ef4444;
+}
+
+.warning {
+  border-left: 3px solid #f59e0b;
+  color: #f59e0b;
+}
+
+.warning .icon {
+  color: #f59e0b;
+}
+
+.info {
+  border-left: 3px solid #3b82f6;
+  color: #3b82f6;
+}
+
+.info .icon {
+  color: #3b82f6;
+}

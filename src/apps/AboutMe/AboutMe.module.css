@@ -1,0 +1,151 @@
+.aboutMe {
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 48px;
+  color: white;
+  font-weight: 600;
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+
+.title {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 16px;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 12px;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.socialLink:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-primary);
+}
+
+.bio {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.infoItem svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-primary);
+}
+
+.infoLabel {
+  font-size: 12px;
+  color: #666;
+}
+
+.infoValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* Dark theme */
+:global(.dark) .name {
+  color: #fff;
+}
+
+:global(.dark) .title {
+  color: #aaa;
+}
+
+:global(.dark) .sectionTitle {
+  color: #fff;
+}
+
+:global(.dark) .bio {
+  color: #ccc;
+}
+
+:global(.dark) .infoItem {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:global(.dark) .infoValue {
+  color: #fff;
+}
+
+:global(.dark) .infoLabel {
+  color: #888;
+}
+
+:global(.dark) .socialLink {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}

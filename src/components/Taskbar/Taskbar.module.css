@@ -1,0 +1,309 @@
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: rgba(32, 32, 32, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+}
+
+/* Start button */
+.startButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.startButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.startButton svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+/* App buttons container */
+.appButtons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  margin-left: 8px;
+  overflow-x: auto;
+}
+
+/* Individual app button */
+.appButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.appButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.appButton.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.appButton.minimized {
+  opacity: 0.7;
+}
+
+.appButton svg {
+  width: 18px;
+  height: 18px;
+  color: white;
+}
+
+.appButtonLabel {
+  font-size: 12px;
+  color: white;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Active indicator */
+.activeIndicator {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 3px;
+  background: var(--accent-primary);
+  border-radius: 2px;
+}
+
+.appButton.active .activeIndicator {
+  width: 16px;
+}
+
+/* System tray */
+.systemTray {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clock:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.clockTime {
+  font-size: 12px;
+  color: white;
+  font-weight: 400;
+}
+
+.clockDate {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Widget button */
+.widgetButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  color: white;
+}
+
+.widgetButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.widgetButton.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Tray button (notifications, etc) */
+.trayButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  color: white;
+}
+
+.trayButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.trayButton.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #ef4444;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Window Preview Popup */
+.windowPreview {
+  position: fixed;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 280px;
+  background: rgba(32, 32, 32, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.previewTitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.previewClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #888888;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.previewClose:hover {
+  background: #c42b1c;
+  color: white;
+}
+
+.previewContent {
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.previewContent:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  color: #666666;
+}
+
+/* Preview content scaler - scales down the real app content */
+.previewScaler {
+  width: 264px;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #1e1e1e;
+}
+
+.previewWindow {
+  transform: scale(0.25);
+  transform-origin: top left;
+  pointer-events: none;
+  overflow: hidden;
+}

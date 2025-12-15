@@ -1,0 +1,47 @@
+.contextMenu {
+  position: fixed;
+  min-width: 200px;
+  background: var(--surface-primary);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  padding: 4px;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.1s ease;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.menuItem svg {
+  opacity: 0.8;
+}
+
+.menuItem:hover svg {
+  opacity: 1;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 8px;
+}

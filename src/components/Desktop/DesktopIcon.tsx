@@ -1,0 +1,121 @@
+import { memo, useRef } from 'react';
+import { motion, type PanInfo } from 'framer-motion';
+import * as LucideIcons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import type { IconPosition } from '../../hooks/useDesktopIcons';
+import styles from './Desktop.module.css';
+
+const getIcon = (iconName: string): LucideIcon => {
+  // Convert kebab-case to PascalCase (e.g., "file-text" -> "FileText", "gamepad-2" -> "Gamepad2")
+  const formattedName = iconName
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
+  return icons[formattedName] || LucideIcons.File;
+};
+
+interface DesktopIconProps {
+  appId: string;
+  icon: string;
+  label: string;
+  isSelected: boolean;
+  position: IconPosition;
+  dragConstraints?: React.RefObject<Element | null>;
+  onClick: (appId: string) => void;
+  onDoubleClick: (appId: string) => void;
+  onContextMenu: (e: React.MouseEvent, appId: string) => void;
+  onPositionChange: (appId: string, position: IconPosition) => void;
+}
+
+const DesktopIcon = memo(function DesktopIcon({
+  appId,
+  icon,
+  label,
+  isSelected,
+  position,
+  dragConstraints,
+  onClick,
+  onDoubleClick,
+  onContextMenu,
+  onPositionChange,
+}: DesktopIconProps) {
+  const Icon = getIcon(icon);
+  const isDragging = useRef(false);
+  const dragStartPos = useRef<IconPosition>({ x: 0, y: 0 });
+
+  const handleDragStart = () => {
+    isDragging.current = true;
+    dragStartPos.current = { ...position };
+  };
+
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    // Small delay to prevent click from firing after drag
+    setTimeout(() => {
+      isDragging.current = false;
+    }, 100);
+
+    const newPosition: IconPosition = {
+      x: dragStartPos.current.x + info.offset.x,
+      y: dragStartPos.current.y + info.offset.y,
+    };
+
+    onPositionChange(appId, newPosition);
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isDragging.current) {
+      onClick(appId);
+    }
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isDragging.current) {
+      onDoubleClick(appId);
+    }
+  };
+
+  return (
+    <motion.div
+      className={`${styles.desktopIcon} ${isSelected ? styles.selected : ''}`}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}
+      animate={{
+        x: position.x,
+        y: position.y,
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 500,
+        damping: 30,
+        mass: 1,
+      }}
+      drag
+      dragConstraints={dragConstraints}
+      dragMomentum={false}
+      dragElastic={0}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onContextMenu(e, appId);
+      }}
+      whileDrag={{ scale: 1.05, zIndex: 1000 }}
+    >
+      <div className={styles.iconWrapper}>
+        <Icon />
+      </div>
+      <span className={styles.iconLabel}>{label}</span>
+    </motion.div>
+  );
+});
+
+export default DesktopIcon;

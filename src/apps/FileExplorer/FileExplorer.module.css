@@ -1,0 +1,443 @@
+.explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e1e;
+  color: #cccccc;
+  font-size: 13px;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.navButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #cccccc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.navButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navButton:disabled {
+  color: #555555;
+  cursor: not-allowed;
+}
+
+/* Address bar */
+.addressBar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  background: #3c3c3c;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.breadcrumbSeparator {
+  color: #888888;
+  margin: 0 2px;
+}
+
+.breadcrumbButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: #cccccc;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.breadcrumbButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Search */
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #3c3c3c;
+  border-radius: 4px;
+  color: #888888;
+}
+
+.searchBox input {
+  width: 150px;
+  background: transparent;
+  border: none;
+  color: #cccccc;
+  font-size: 13px;
+  outline: none;
+}
+
+.searchBox input::placeholder {
+  color: #888888;
+}
+
+/* Main content area */
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #252526;
+  border-right: 1px solid #3c3c3c;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.sidebarSection {
+  padding: 8px 0;
+}
+
+.sidebarHeader {
+  padding: 8px 16px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888888;
+}
+
+.treeItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.treeItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.treeItem.active {
+  background: rgba(0, 120, 212, 0.3);
+}
+
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  padding: 0;
+}
+
+.expandPlaceholder {
+  width: 16px;
+  height: 16px;
+}
+
+.treeFolderIcon {
+  color: #dcb67a;
+  flex-shrink: 0;
+}
+
+.treeName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.itemCount {
+  color: #888888;
+  font-size: 12px;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 2px;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #888888;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.viewButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cccccc;
+}
+
+.viewButton.active {
+  background: rgba(0, 120, 212, 0.3);
+  color: #60a5fa;
+}
+
+/* Grid view */
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  padding: 16px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.gridItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.gridItem.selected {
+  background: rgba(0, 120, 212, 0.3);
+}
+
+.gridIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.gridIcon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.gridName {
+  text-align: center;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.3;
+  max-width: 100%;
+}
+
+/* List view */
+.list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.listHeader {
+  display: grid;
+  grid-template-columns: 1fr 150px 100px;
+  gap: 16px;
+  padding: 8px 16px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3c3c3c;
+  font-size: 12px;
+  color: #888888;
+  position: sticky;
+  top: 0;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 1fr 150px 100px;
+  gap: 16px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.listItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.listItem.selected {
+  background: rgba(0, 120, 212, 0.3);
+}
+
+.listName {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.listName span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listDate,
+.listSize {
+  color: #888888;
+  font-size: 12px;
+}
+
+/* Icons */
+.folderIcon {
+  color: #dcb67a;
+}
+
+.imageIcon {
+  color: #a855f7;
+}
+
+.codeIcon {
+  color: #22c55e;
+}
+
+.textIcon {
+  color: #60a5fa;
+}
+
+.fileIcon {
+  color: #888888;
+}
+
+/* Empty state */
+.emptyState {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: #666666;
+}
+
+/* Status bar */
+.statusBar {
+  padding: 6px 16px;
+  background: #007acc;
+  color: white;
+  font-size: 12px;
+}
+
+/* Context Menu */
+.contextMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.contextMenu {
+  position: fixed;
+  min-width: 180px;
+  background: #2d2d2d;
+  border: 1px solid #3c3c3c;
+  border-radius: 6px;
+  padding: 4px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
+
+.contextMenu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  color: #cccccc;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.contextMenu button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.contextMenu button svg {
+  color: #888888;
+}
+
+.contextMenuDivider {
+  height: 1px;
+  background: #3c3c3c;
+  margin: 4px 8px;
+}
+
+.deleteAction {
+  color: #ef4444 !important;
+}
+
+.deleteAction svg {
+  color: #ef4444 !important;
+}
+
+.deleteAction:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+}
