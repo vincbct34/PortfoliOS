@@ -3,17 +3,24 @@
 
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_NOTIFICATION = import.meta.env.VITE_EMAILJS_TEMPLATE_NOTIFICATION;
-const TEMPLATE_CONFIRMATION = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRMATION;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
 // Validate configuration at runtime (only logs warning, doesn't break the app)
-const isEmailConfigured = Boolean(SERVICE_ID && TEMPLATE_NOTIFICATION && PUBLIC_KEY);
-if (!isEmailConfigured && import.meta.env.DEV) {
-  console.warn(
-    'EmailJS is not configured. Contact form will not work. Please check your .env file.'
+const checkConfig = () => {
+  const isEmailConfigured = Boolean(
+    import.meta.env.VITE_EMAILJS_SERVICE_ID &&
+    import.meta.env.VITE_EMAILJS_TEMPLATE_NOTIFICATION &&
+    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
   );
+  if (!isEmailConfigured && import.meta.env.DEV) {
+    console.warn(
+      'EmailJS is not configured. Contact form will not work. Please check your .env file.'
+    );
+  }
+  return isEmailConfigured;
+};
+
+// Check config immediately in dev
+if (import.meta.env.DEV) {
+  checkConfig();
 }
 
 interface ContactFormData {
@@ -26,20 +33,24 @@ interface ContactFormData {
  * Send notification email to portfolio owner
  */
 async function sendNotification(data: ContactFormData): Promise<boolean> {
-  if (!PUBLIC_KEY) {
-    console.error('EmailJS public key is not configured');
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_NOTIFICATION;
+
+  if (!publicKey || !serviceId || !templateId) {
+    console.error('EmailJS configuration is missing');
     return false;
   }
   try {
     await emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_NOTIFICATION,
+      serviceId,
+      templateId,
       {
         name: data.name,
         email: data.email,
         message: data.message,
       },
-      PUBLIC_KEY
+      publicKey
     );
     return true;
   } catch (error) {
@@ -52,17 +63,21 @@ async function sendNotification(data: ContactFormData): Promise<boolean> {
  * Send confirmation email to the user
  */
 async function sendConfirmation(data: ContactFormData): Promise<boolean> {
-  if (!PUBLIC_KEY) return false;
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRMATION;
+
+  if (!publicKey || !serviceId || !templateId) return false;
   try {
     await emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_CONFIRMATION,
+      serviceId,
+      templateId,
       {
         name: data.name,
         email: data.email,
         message: data.message,
       },
-      PUBLIC_KEY
+      publicKey
     );
     return true;
   } catch (error) {

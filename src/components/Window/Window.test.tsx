@@ -19,17 +19,19 @@ vi.mock('framer-motion', () => ({
     div: ({
       children,
       style,
+      layout: _layout,
       ...props
     }: {
       children?: React.ReactNode;
       style?: React.CSSProperties;
+      layout?: unknown;
       [key: string]: unknown;
     }) => (
       <div style={style} {...props}>
         {children}
       </div>
     ),
-    button: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
+    button: ({ children, ...props }: { children?: React.ReactNode;[key: string]: unknown }) => (
       <button {...props}>{children}</button>
     ),
   },

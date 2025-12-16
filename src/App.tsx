@@ -125,7 +125,7 @@ function OperatingSystem() {
     try {
       window.close();
     } catch (e) {
-      console.log('Cannot close window via script', e);
+      console.error('Cannot close window via script', e);
     }
   }, [setSystemStatus]);
 

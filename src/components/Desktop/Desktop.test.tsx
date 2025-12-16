@@ -17,9 +17,23 @@ vi.mock('../../services/audioService', () => ({
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-      <div {...props}>{children}</div>
-    ),
+    div: ({
+      children,
+      drag: _drag,
+      dragConstraints: _dragConstraints,
+      dragMomentum: _dragMomentum,
+      dragElastic: _dragElastic,
+      whileDrag: _whileDrag,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      drag?: unknown;
+      dragConstraints?: unknown;
+      dragMomentum?: unknown;
+      dragElastic?: unknown;
+      whileDrag?: unknown;
+      [key: string]: unknown;
+    }) => <div {...props}>{children}</div>,
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
