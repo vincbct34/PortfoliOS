@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import './CustomCursor.css';
 
-type CursorState = 'default' | 'hover' | 'click' | 'text' | 'drag';
+type CursorState =
+  | 'default'
+  | 'hover'
+  | 'click'
+  | 'text'
+  | 'resize-ns'
+  | 'resize-ew'
+  | 'resize-nwse'
+  | 'resize-nesw';
 
 interface Position {
   x: number;
@@ -89,6 +97,22 @@ export default function CustomCursor() {
         return;
       }
 
+      // Check for resize handles
+      const resizeHandle = element.closest('[data-resize]') as HTMLElement | null;
+      if (resizeHandle) {
+        const direction = resizeHandle.getAttribute('data-resize');
+        if (direction === 'n' || direction === 's') {
+          setCursorState('resize-ns');
+        } else if (direction === 'e' || direction === 'w') {
+          setCursorState('resize-ew');
+        } else if (direction === 'nw' || direction === 'se') {
+          setCursorState('resize-nwse');
+        } else if (direction === 'ne' || direction === 'sw') {
+          setCursorState('resize-nesw');
+        }
+        return;
+      }
+
       // Check for text inputs
       const tagName = element.tagName.toLowerCase();
       if (tagName === 'input' || tagName === 'textarea' || element.isContentEditable) {
@@ -110,15 +134,7 @@ export default function CustomCursor() {
         element.classList.contains('clickable') ||
         element.closest('button, a, [role="button"], .clickable');
 
-      // Check for draggable elements
-      const isDraggable =
-        element.draggable ||
-        element.classList.contains('draggable') ||
-        element.closest('.draggable');
-
-      if (isDraggable) {
-        setCursorState('drag');
-      } else if (isClickable) {
+      if (isClickable) {
         setCursorState('hover');
       } else {
         setCursorState('default');

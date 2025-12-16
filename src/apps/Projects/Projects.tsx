@@ -1,64 +1,60 @@
 import { useState } from 'react';
-import { Folder, ChevronRight, LayoutGrid, List, Github, ExternalLink } from 'lucide-react';
+import {
+  Folder,
+  ChevronRight,
+  LayoutGrid,
+  List,
+  Github,
+  ExternalLink,
+  ImageOff,
+} from 'lucide-react';
 import styles from './Projects.module.css';
+import { projects } from '../../data/portfolio';
 
 type ViewMode = 'grid' | 'list';
 
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  icon: string;
-  github: string | null;
-  demo: string | null;
+interface ProjectImageProps {
+  src: string;
+  alt: string;
+}
+
+function ProjectImage({ src, alt }: ProjectImageProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  const handleError = () => {
+    setIsLoading(false);
+    setHasError(true);
+  };
+
+  return (
+    <>
+      {isLoading && <div className={styles.imageSkeleton} />}
+      {hasError ? (
+        <div className={styles.imageFallback}>
+          <ImageOff size={32} />
+          <span>Image non disponible</span>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={isLoading ? styles.imageHidden : styles.imageLoaded}
+        />
+      )}
+    </>
+  );
 }
 
 export default function Projects() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
-
-  // Placeholder projects - to be filled by user
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: 'Projet Portfolio Windows',
-      description:
-        'Un portfolio original avec une interface Windows 11. Gestion de fenêtres, drag & drop, et design moderne.',
-      tags: ['React', 'TypeScript', 'CSS Modules', 'Framer Motion'],
-      icon: '🪟',
-      github: 'https://github.com/username/portfolio',
-      demo: 'https://portfolio.example.com',
-    },
-    {
-      id: 2,
-      title: 'CV Generator',
-      description:
-        'Application de génération de CV avec support PDF, thèmes personnalisables et extraction de couleurs.',
-      tags: ['Node.js', 'EJS', 'Puppeteer'],
-      icon: '📄',
-      github: 'https://github.com/username/cv-generator',
-      demo: null,
-    },
-    {
-      id: 3,
-      title: 'Application Mobile',
-      description: 'Application mobile cross-platform développée avec React Native.',
-      tags: ['React Native', 'TypeScript', 'Expo'],
-      icon: '📱',
-      github: 'https://github.com/username/mobile-app',
-      demo: null,
-    },
-    {
-      id: 4,
-      title: 'API REST',
-      description:
-        'API backend robuste avec authentification, rate limiting et documentation Swagger.',
-      tags: ['Node.js', 'Express', 'MongoDB', 'JWT'],
-      icon: '🔗',
-      github: 'https://github.com/username/api',
-      demo: null,
-    },
-  ];
 
   return (
     <div className={styles.projects}>
@@ -93,7 +89,9 @@ export default function Projects() {
             key={project.id}
             className={`${styles.projectCard} ${viewMode === 'list' ? styles.list : ''}`}
           >
-            <div className={styles.projectPreview}>{project.icon}</div>
+            <div className={styles.projectPreview}>
+              <ProjectImage src={project.image} alt={project.title} />
+            </div>
             <div className={styles.projectInfo}>
               <h3 className={styles.projectTitle}>{project.title}</h3>
               <p className={styles.projectDescription}>{project.description}</p>

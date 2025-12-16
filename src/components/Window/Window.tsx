@@ -276,6 +276,7 @@ export default function Window({ windowId, children }: WindowProps) {
             <div
               key={handle}
               className={`${styles.resizeHandle} ${styles[handle]}`}
+              data-resize={handle}
               onMouseDown={(e) =>
                 handleResizeStart(e, handle, windowData.size, windowData.position)
               }

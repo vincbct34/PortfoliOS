@@ -124,9 +124,14 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
   const WeatherIcon = getIconComponent();
 
   const quickLinks = [
-    { id: 'github', icon: Github, label: 'GitHub', url: 'https://github.com' },
-    { id: 'linkedin', icon: Linkedin, label: 'LinkedIn', url: 'https://linkedin.com' },
-    { id: 'email', icon: Mail, label: 'Email', url: 'mailto:contact@example.com' },
+    { id: 'github', icon: Github, label: 'GitHub', url: 'https://github.com/vincbct34' },
+    {
+      id: 'linkedin',
+      icon: Linkedin,
+      label: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/vincent-bichat',
+    },
+    { id: 'email', icon: Mail, label: 'Email', url: 'mailto:portfoli-os@outlook.fr' },
   ];
 
   return (

@@ -1,16 +1,74 @@
-# React + Vite
+# PortfoliOS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un portfolio interactif avec une interface inspirée de Windows 11, développé avec React et TypeScript.
 
-Currently, two official plugins are available:
+![PortfoliOS Screenshot](https://img.shields.io/badge/React-19-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Fonctionnalités
 
-## React Compiler
+- 🪟 **Interface Windows 11** - Fenêtres redimensionnables, déplaçables, maximisables
+- 📁 **Explorateur de fichiers** - Navigation dans l'arborescence virtuelle
+- 🎮 **Jeu Snake** - Un classique intégré
+- 📝 **Bloc-notes** - Éditeur de texte avec onglets
+- ⚙️ **Paramètres rapides** - Mode nuit, mode focus, volume
+- 🎨 **Animations fluides** - Powered by Framer Motion
+- 🖱️ **Curseur personnalisé** - Effets visuels modernes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Stack Technique
 
-## Expanding the ESLint configuration
+- **React 19** - UI Framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Framer Motion** - Animations
+- **Lucide React** - Icons
+- **CSS Modules** - Styling
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Développement Local
+
+```bash
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
+npm run dev
+
+# Vérifier le code (types + lint + format)
+npm run check
+
+# Build pour la production
+npm run build
+```
+
+## 📦 Scripts Disponibles
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run preview` | Preview du build |
+| `npm run lint` | Vérification ESLint |
+| `npm run typecheck` | Vérification TypeScript |
+| `npm run format` | Formatage Prettier |
+| `npm run check` | Types + Lint + Format |
+
+## 🚢 Déploiement
+
+Le projet est configuré pour un déploiement automatique sur **Railway**.
+
+1. Connectez votre repo GitHub à Railway
+2. Railway détecte automatiquement Vite et configure le build
+3. Le site est déployé à chaque push sur `main`
+
+## 📝 Personnalisation
+
+Pour personnaliser le contenu du portfolio, éditez le fichier :
+
+```
+src/data/portfolio.ts
+```
+
+Ce fichier contient toutes les informations personnelles : profil, compétences, projets et contacts.
+
+## 📄 License
+
+MIT © Vincent Bichat

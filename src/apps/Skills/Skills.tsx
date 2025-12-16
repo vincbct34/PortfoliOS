@@ -1,45 +1,11 @@
 import { useState } from 'react';
 import styles from './Skills.module.css';
+import { skills, skillStats } from '../../data/portfolio';
 
 type TabType = 'processes' | 'performance';
 
-interface Skill {
-  name: string;
-  category: string;
-  level: number;
-  icon: string;
-}
-
-interface Stats {
-  totalSkills: number;
-  avgProficiency: number;
-  topCategory: string;
-  yearsExp: number;
-}
-
 export default function Skills() {
   const [activeTab, setActiveTab] = useState<TabType>('processes');
-
-  // Placeholder skills - to be filled by user
-  const skills: Skill[] = [
-    { name: 'React', category: 'Frontend', level: 90, icon: '⚛️' },
-    { name: 'TypeScript', category: 'Language', level: 85, icon: '📘' },
-    { name: 'Node.js', category: 'Backend', level: 85, icon: '🟢' },
-    { name: 'Python', category: 'Language', level: 75, icon: '🐍' },
-    { name: 'Docker', category: 'DevOps', level: 70, icon: '🐳' },
-    { name: 'PostgreSQL', category: 'Database', level: 80, icon: '🐘' },
-    { name: 'Git', category: 'Tools', level: 90, icon: '📦' },
-    { name: 'CSS/SCSS', category: 'Frontend', level: 85, icon: '🎨' },
-    { name: 'Next.js', category: 'Frontend', level: 80, icon: '▲' },
-    { name: 'MongoDB', category: 'Database', level: 75, icon: '🍃' },
-  ];
-
-  const stats: Stats = {
-    totalSkills: skills.length,
-    avgProficiency: Math.round(skills.reduce((acc, s) => acc + s.level, 0) / skills.length),
-    topCategory: 'Frontend',
-    yearsExp: 3,
-  };
 
   const getProgressClass = (level: number): string => {
     if (level >= 80) return styles.high;
@@ -68,19 +34,19 @@ export default function Skills() {
         <div className={styles.statsBar}>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Compétences</div>
-            <div className={styles.statValue}>{stats.totalSkills}</div>
+            <div className={styles.statValue}>{skillStats.totalSkills}</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Maîtrise moyenne</div>
-            <div className={styles.statValue}>{stats.avgProficiency}%</div>
+            <div className={styles.statValue}>{skillStats.avgProficiency}%</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Spécialité</div>
-            <div className={styles.statValue}>{stats.topCategory}</div>
+            <div className={styles.statValue}>{skillStats.topCategory}</div>
           </div>
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Expérience</div>
-            <div className={styles.statValue}>{stats.yearsExp} ans</div>
+            <div className={styles.statValue}>{skillStats.yearsExp} ans</div>
           </div>
         </div>
 

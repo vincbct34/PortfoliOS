@@ -81,9 +81,9 @@ const COMMANDS: Record<string, Command> = {
     execute: () => [
       { type: 'info', text: '📧 Contact:' },
       { type: 'output', text: '' },
-      { type: 'output', text: '  Email:    votre@email.com' },
-      { type: 'output', text: '  GitHub:   github.com/username' },
-      { type: 'output', text: '  LinkedIn: linkedin.com/in/username' },
+      { type: 'output', text: '  Email:    portfoli-os@outlook.fr' },
+      { type: 'output', text: '  GitHub:   github.com/vincbct34' },
+      { type: 'output', text: '  LinkedIn: linkedin.com/in/vincent-bichat' },
     ],
   },
   neofetch: {

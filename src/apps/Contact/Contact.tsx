@@ -1,6 +1,9 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { Mail, Github, Linkedin, Send, type LucideIcon } from 'lucide-react';
+import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import styles from './Contact.module.css';
+import { contactMethods } from '../../data/portfolio';
+import { handleContactSubmission } from '../../services/emailService';
+import { useNotification } from '../../context/NotificationContext';
 
 interface FormData {
   name: string;
@@ -8,54 +11,47 @@ interface FormData {
   message: string;
 }
 
-interface ContactMethod {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  href: string;
-}
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function Contact() {
+  const { showToast, addNotification } = useNotification();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: '',
   });
-
-  // Placeholder contact info - to be filled by user
-  const contactMethods: ContactMethod[] = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: 'votre@email.com',
-      href: 'mailto:votre@email.com',
-    },
-    {
-      icon: Github,
-      label: 'GitHub',
-      value: 'github.com/username',
-      href: 'https://github.com/username',
-    },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/username',
-      href: 'https://linkedin.com/in/username',
-    },
-  ];
+  const [status, setStatus] = useState<FormStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Reset status when user starts typing again
+    if (status === 'error' || status === 'success') {
+      setStatus('idle');
+    }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Integrate with EmailJS, Formspree, or your backend
-    // Form data available in: formData.name, formData.email, formData.message
-    alert('Message envoyé ! (À implémenter avec un service de mail)');
+    setStatus('loading');
+    setErrorMessage('');
+
+    const result = await handleContactSubmission(formData);
+
+    if (result.success) {
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      showToast('✅ Message envoyé avec succès !', 'success');
+      addNotification('Contact', 'Votre message a été envoyé', 'success');
+    } else {
+      setStatus('error');
+      setErrorMessage(result.error || "Une erreur s'est produite");
+      showToast("❌ Échec de l'envoi du message", 'error');
+      addNotification('Contact', result.error || "Échec de l'envoi", 'error');
+    }
   };
 
   return (
@@ -88,6 +84,20 @@ export default function Contact() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2 className={styles.formTitle}>Envoyer un message</h2>
 
+        {status === 'success' && (
+          <div className={styles.successMessage}>
+            <CheckCircle size={20} />
+            <span>Message envoyé avec succès ! Je vous répondrai bientôt.</span>
+          </div>
+        )}
+
+        {status === 'error' && (
+          <div className={styles.errorMessage}>
+            <AlertCircle size={20} />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         <div className={styles.formGroup}>
           <label className={styles.formLabel} htmlFor="name">
             Nom
@@ -101,6 +111,7 @@ export default function Contact() {
             onChange={handleChange}
             placeholder="Votre nom"
             required
+            disabled={status === 'loading'}
           />
         </div>
 
@@ -117,6 +128,7 @@ export default function Contact() {
             onChange={handleChange}
             placeholder="votre@email.com"
             required
+            disabled={status === 'loading'}
           />
         </div>
 
@@ -132,12 +144,22 @@ export default function Contact() {
             onChange={handleChange}
             placeholder="Votre message..."
             required
+            disabled={status === 'loading'}
           />
         </div>
 
-        <button type="submit" className={styles.submitButton}>
-          <Send size={16} style={{ marginRight: 8, verticalAlign: 'middle' }} />
-          Envoyer
+        <button type="submit" className={styles.submitButton} disabled={status === 'loading'}>
+          {status === 'loading' ? (
+            <>
+              <Loader2 size={16} className={styles.spinner} />
+              Envoi en cours...
+            </>
+          ) : (
+            <>
+              <Send size={16} />
+              Envoyer
+            </>
+          )}
         </button>
       </form>
     </div>

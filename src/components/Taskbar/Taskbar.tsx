@@ -148,7 +148,7 @@ export default function Taskbar() {
     setIsWidgetPanelOpen(false);
 
     setIsQuickSettingsOpen(false);
-  }, []);
+  }, [playSound]);
 
   const closeCalendar = useCallback(() => {
     setIsCalendarOpen(false);

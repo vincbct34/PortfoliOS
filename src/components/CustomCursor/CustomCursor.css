@@ -6,64 +6,66 @@
   z-index: 99999;
 }
 
-/* Main cursor dot */
+/* Main cursor dot - white with black border */
 .custom-cursor__dot {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #fff;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid #1a1a1a;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition:
-    transform 0.1s ease,
+    transform 0.15s ease,
+    width 0.15s ease,
+    height 0.15s ease,
+    border-radius 0.15s ease,
     opacity 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Cursor ring that follows with delay */
 .custom-cursor__ring {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(26, 26, 26, 0.4);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition:
-    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s ease,
-    background-color 0.3s ease,
-    opacity 0.3s ease;
+    width 0.2s ease,
+    height 0.2s ease,
+    border-radius 0.2s ease,
+    opacity 0.2s ease;
 }
 
-/* Hover state - grows and fills slightly */
+/* Hover state - grows */
 .custom-cursor--hover .custom-cursor__ring {
-  width: 60px;
-  height: 60px;
-  border-color: rgba(255, 255, 255, 1);
-  background-color: rgba(255, 255, 255, 0.1);
+  width: 44px;
+  height: 44px;
+  border-color: rgba(26, 26, 26, 0.6);
 }
 
 .custom-cursor--hover .custom-cursor__dot {
-  transform: translate(-50%, -50%) scale(0.5);
+  transform: translate(-50%, -50%) scale(0.8);
 }
 
-/* Click state - shrinks briefly */
+/* Click state - shrinks */
 .custom-cursor--click .custom-cursor__ring {
-  width: 30px;
-  height: 30px;
-  border-width: 3px;
+  width: 24px;
+  height: 24px;
 }
 
 .custom-cursor--click .custom-cursor__dot {
-  transform: translate(-50%, -50%) scale(1.5);
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* Text input state - becomes a line */
+/* Text input state */
 .custom-cursor--text .custom-cursor__ring {
   width: 4px;
-  height: 24px;
+  height: 20px;
   border-radius: 2px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background: #1a1a1a;
   border: none;
 }
 
@@ -71,12 +73,60 @@
   opacity: 0;
 }
 
-/* Dragging state */
-.custom-cursor--drag .custom-cursor__ring {
-  width: 50px;
-  height: 50px;
-  border-style: dashed;
-  border-color: rgba(255, 255, 255, 0.9);
+/* Resize North-South (vertical) */
+.custom-cursor--resize-ns .custom-cursor__dot {
+  width: 6px;
+  height: 20px;
+  border-radius: 3px;
+}
+
+.custom-cursor--resize-ns .custom-cursor__ring {
+  width: 20px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+/* Resize East-West (horizontal) */
+.custom-cursor--resize-ew .custom-cursor__dot {
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.custom-cursor--resize-ew .custom-cursor__ring {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+/* Resize NW-SE diagonal */
+.custom-cursor--resize-nwse .custom-cursor__dot {
+  width: 16px;
+  height: 6px;
+  border-radius: 3px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.custom-cursor--resize-nwse .custom-cursor__ring {
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border-radius: 8px;
+}
+
+/* Resize NE-SW diagonal */
+.custom-cursor--resize-nesw .custom-cursor__dot {
+  width: 16px;
+  height: 6px;
+  border-radius: 3px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.custom-cursor--resize-nesw .custom-cursor__ring {
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 8px;
 }
 
 /* Hidden when outside viewport */
