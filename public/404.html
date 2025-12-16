@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur 404 | PortfoliOS</title>
+    <meta name="description" content="Page non trouvée - PortfoliOS">
+    <link rel="icon" type="image/svg+xml" href="/portfolios.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #0078d4;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .bsod-container {
+            max-width: 800px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoticon {
+            font-size: 8rem;
+            margin-bottom: 1.5rem;
+            animation: sadBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes sadBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .error-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .error-code {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-text {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 300px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: white;
+            animation: loading 3s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 100%;
+            }
+
+            100% {
+                width: 0%;
+            }
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        .qr-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .qr-code svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .qr-text {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        .qr-text a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .stop-code {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 2px solid white;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .home-button:hover {
+            background-color: white;
+            color: #0078d4;
+        }
+
+        .home-button:active {
+            transform: scale(0.98);
+        }
+
+        .home-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Scanlines effect for retro feel */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.03) 0px,
+                    rgba(0, 0, 0, 0.03) 1px,
+                    transparent 1px,
+                    transparent 2px);
+            z-index: 1000;
+        }
+
+        @media (max-width: 600px) {
+            .emoticon {
+                font-size: 5rem;
+            }
+
+            .error-title {
+                font-size: 1.3rem;
+            }
+
+            .qr-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .home-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanlines"></div>
+
+    <div class="bsod-container">
+        <div class="emoticon">:(</div>
+
+        <h1 class="error-title">
+            Votre navigation a rencontré un problème et doit redémarrer.<br>
+            La page que vous cherchez n'existe pas.
+        </h1>
+
+        <p class="error-code">Erreur 404 - Page non trouvée</p>
+
+        <div class="progress-container">
+            <p class="progress-text">Recherche de la page en cours...</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <div class="qr-code">
+                <!-- Simple home icon instead of QR -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0078d4" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <div class="qr-text">
+                <p>
+                    Si vous souhaitez en savoir plus sur cette erreur, vous pouvez effectuer
+                    une recherche en ligne avec le code : <strong>PAGE_NOT_FOUND_EXCEPTION</strong>
+                </p>
+                <p style="margin-top: 0.5rem;">
+                    Ou mieux encore, retournez sur <a href="/">la page d'accueil</a> pour
+                    explorer mon portfolio !
+                </p>
+            </div>
+        </div>
+
+        <p class="stop-code">
+            Stop code: PORTFOLIO_PAGE_NOT_FOUND
+        </p>
+
+        <a href="/" class="home-button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Retour à l'accueil
+        </a>
+    </div>
+
+    <script>
+        // Add some interactive "glitch" effect occasionally
+        const container = document.querySelector('.bsod-container');
+
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                container.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+                setTimeout(() => {
+                    container.style.transform = 'translate(0, 0)';
+                }, 50);
+            }
+        }, 100);
+    </script>
+</body>
+
+</html>

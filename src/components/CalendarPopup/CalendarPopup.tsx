@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Globe } from 'lucide-react';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './CalendarPopup.module.css';
 
 interface CalendarPopupProps {
@@ -8,34 +9,26 @@ interface CalendarPopupProps {
   onClose: () => void;
 }
 
-const DAYS = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
-const MONTHS = [
-  'Janvier',
-  'Février',
-  'Mars',
-  'Avril',
-  'Mai',
-  'Juin',
-  'Juillet',
-  'Août',
-  'Septembre',
-  'Octobre',
-  'Novembre',
-  'Décembre',
+// World clock timezones
+const WORLD_CLOCKS = [
+  { city: 'Paris', timezone: 'Europe/Paris', flag: '🇫🇷' },
+  { city: 'New York', timezone: 'America/New_York', flag: '🇺🇸' },
+  { city: 'Tokyo', timezone: 'Asia/Tokyo', flag: '🇯🇵' },
 ];
 
 export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [displayDate, setDisplayDate] = useState(new Date());
   const popupRef = useRef<HTMLDivElement>(null);
+  const { t, locale } = useTranslation();
 
   const today = new Date();
 
-  // Update current time every minute
+  // Update current time every second for world clocks
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
-    }, 60000);
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -109,18 +102,26 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('fr-FR', {
+    return date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
   };
 
   const formatFullDate = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString(locale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+    });
+  };
+
+  const getTimeInTimezone = (timezone: string) => {
+    return currentDate.toLocaleTimeString(locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: timezone,
     });
   };
 
@@ -143,13 +144,13 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
 
           {/* Calendar navigation */}
           <div className={styles.navigation}>
-            <button onClick={prevMonth} className={styles.navButton} aria-label="Mois précédent">
+            <button onClick={prevMonth} className={styles.navButton} aria-label={t.common.close}>
               <ChevronLeft size={18} />
             </button>
             <button onClick={goToToday} className={styles.monthYear}>
-              {MONTHS[displayDate.getMonth()]} {displayDate.getFullYear()}
+              {t.calendar.months[displayDate.getMonth()]} {displayDate.getFullYear()}
             </button>
-            <button onClick={nextMonth} className={styles.navButton} aria-label="Mois suivant">
+            <button onClick={nextMonth} className={styles.navButton} aria-label={t.common.open}>
               <ChevronRight size={18} />
             </button>
           </div>
@@ -157,13 +158,30 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
           {/* Calendar grid */}
           <div className={styles.calendar}>
             <div className={styles.weekdays}>
-              {DAYS.map((day) => (
+              {t.calendar.days.map((day: string) => (
                 <div key={day} className={styles.weekday}>
                   {day}
                 </div>
               ))}
             </div>
             <div className={styles.days}>{renderCalendarDays()}</div>
+          </div>
+
+          {/* World Clock Section */}
+          <div className={styles.worldClockSection}>
+            <div className={styles.worldClockTitle}>
+              <Globe size={14} />
+              <span>{t.calendar.worldClocks}</span>
+            </div>
+            <div className={styles.worldClocks}>
+              {WORLD_CLOCKS.map((clock) => (
+                <div key={clock.city} className={styles.worldClockItem}>
+                  <span className={styles.worldClockFlag}>{clock.flag}</span>
+                  <span className={styles.worldClockCity}>{clock.city}</span>
+                  <span className={styles.worldClockTime}>{getTimeInTimezone(clock.timezone)}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
       )}

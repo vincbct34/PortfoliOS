@@ -78,8 +78,8 @@ export function FileSystemProvider({ children }: FileSystemProviderProps) {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also poll for changes (same-tab updates)
-    const interval = setInterval(loadFiles, 1000);
+    // Also poll for changes (same-tab updates) - 5s interval to reduce CPU usage
+    const interval = setInterval(loadFiles, 5000);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);

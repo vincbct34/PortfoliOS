@@ -1,16 +1,85 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/portfolios.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PortfoliOS</title>
+
+  <!-- Primary Meta Tags -->
+  <title>PortfoliOS | Vincent Bichat - Développeur Full Stack</title>
+  <meta name="title" content="PortfoliOS | Vincent Bichat - Développeur Full Stack" />
+  <meta name="description"
+    content="Portfolio interactif avec une interface Windows 11. Découvrez mes projets, compétences et expériences en développement web React, TypeScript et Node.js." />
+  <meta name="keywords"
+    content="Vincent Bichat, développeur, full stack, React, TypeScript, Node.js, portfolio, web developer, Montpellier, EPITECH" />
+  <meta name="author" content="Vincent Bichat" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/portfolios.svg" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+
+  <!-- Resource Hints for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://api.open-meteo.com" />
+
+  <!-- Preload Critical Assets -->
+  <link rel="preload" as="image" href="/portfolios.svg" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0078d4" />
+  <meta name="msapplication-TileColor" content="#0078d4" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PortfoliOS" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://portfoli-os.railway.app/" />
+  <meta property="og:title" content="PortfoliOS | Vincent Bichat - Développeur Full Stack" />
+  <meta property="og:description"
+    content="Portfolio interactif avec une interface Windows 11. Découvrez mes projets, compétences et expériences en développement web." />
+  <meta property="og:image" content="https://portfoli-os.railway.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="PortfoliOS" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://portfoli-os.railway.app/" />
+  <meta name="twitter:title" content="PortfoliOS | Vincent Bichat - Développeur Full Stack" />
+  <meta name="twitter:description"
+    content="Portfolio interactif avec une interface Windows 11. Découvrez mes projets, compétences et expériences en développement web." />
+  <meta name="twitter:image" content="https://portfoli-os.railway.app/og-image.png" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://portfoli-os.railway.app/" />
 </head>
 
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('SW registration failed:', error);
+          });
+      });
+    }
+  </script>
 </body>
 
 </html>

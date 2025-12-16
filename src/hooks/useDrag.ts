@@ -1,7 +1,6 @@
-import { useCallback, useRef } from 'react';
-import type { WindowPosition } from '../types/window';
-
-export type SnapZone = 'left' | 'right' | 'top' | null;
+import { useCallback, useRef, useEffect } from 'react';
+import type { WindowPosition, SnapZone } from '../types/window';
+import { SNAP_THRESHOLD } from '../constants/layout';
 
 interface DragStartInfo {
   cursorX: number;
@@ -19,8 +18,6 @@ interface UseDragOptions {
 interface UseDragReturn {
   handleMouseDown: (e: React.MouseEvent, initialPosition: WindowPosition) => void;
 }
-
-const SNAP_THRESHOLD = 20; // pixels from edge
 
 function detectSnapZone(x: number, y: number): SnapZone {
   const windowWidth = window.innerWidth;
@@ -54,6 +51,23 @@ export function useDrag({
   const startPos = useRef({ x: 0, y: 0 });
   const elementPos = useRef({ x: 0, y: 0 });
   const currentSnapZone = useRef<SnapZone>(null);
+  // Track event handlers for cleanup on unmount
+  const handlersRef = useRef<{
+    move: ((e: MouseEvent) => void) | null;
+    up: ((e: MouseEvent) => void) | null;
+  }>({ move: null, up: null });
+
+  // Cleanup event listeners on unmount
+  useEffect(() => {
+    return () => {
+      if (handlersRef.current.move) {
+        document.removeEventListener('mousemove', handlersRef.current.move);
+      }
+      if (handlersRef.current.up) {
+        document.removeEventListener('mouseup', handlersRef.current.up);
+      }
+    };
+  }, []);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent, initialPosition: WindowPosition) => {
@@ -98,7 +112,11 @@ export function useDrag({
         onSnapZoneChange?.(null); // Clear preview
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        handlersRef.current = { move: null, up: null };
       };
+
+      // Store refs for cleanup
+      handlersRef.current = { move: handleMouseMove, up: handleMouseUp };
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);

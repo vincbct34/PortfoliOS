@@ -7,6 +7,7 @@ export type SoundType =
   | 'window-open'
   | 'window-close'
   | 'startup'
+  | 'shutdown'
   | 'game-eat'
   | 'game-over';
 
@@ -159,6 +160,25 @@ class AudioService {
             g.gain.exponentialRampToValueAtTime(0.001, t + 2); // Long tail
             o.start(t + i * 0.1);
             o.stop(t + 2);
+          });
+          break;
+        }
+
+        case 'shutdown': {
+          // Descending chime
+          const frequencies = [987.77, 783.99, 659.25, 523.25]; // Reversed Cmaj7
+          frequencies.forEach((freq, i) => {
+            const o = this.context!.createOscillator();
+            const g = this.context!.createGain();
+            o.type = 'sine';
+            o.connect(g);
+            g.connect(this.masterGain!);
+            o.frequency.setValueAtTime(freq, t + i * 0.15);
+            g.gain.setValueAtTime(0, t + i * 0.15);
+            g.gain.linearRampToValueAtTime(0.08 * (volume / 100), t + i * 0.15 + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.15 + 0.8);
+            o.start(t + i * 0.15);
+            o.stop(t + i * 0.15 + 0.8);
           });
           break;
         }

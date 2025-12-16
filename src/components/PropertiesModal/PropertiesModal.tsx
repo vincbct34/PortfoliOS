@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+
+import { getIcon } from '../../utils/iconHelpers';
 import styles from './PropertiesModal.module.css';
 
 interface PropertiesModalProps {
@@ -12,12 +12,6 @@ interface PropertiesModalProps {
   initialLabel: string;
   initialIcon: string;
 }
-
-const getIcon = (iconName: string): LucideIcon => {
-  const formattedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[formattedName] || LucideIcons.File;
-};
 
 export default function PropertiesModal({
   isOpen,

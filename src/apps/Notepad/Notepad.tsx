@@ -11,6 +11,7 @@ import {
   Clipboard,
 } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './Notepad.module.css';
 
 interface SavedFile {
@@ -24,8 +25,9 @@ const CURRENT_FILE_KEY = 'notepad-current-file';
 
 export default function Notepad() {
   const { showToast, addNotification } = useNotification();
+  const { t, locale } = useTranslation();
   const [content, setContent] = useState('');
-  const [fileName, setFileName] = useState('Sans titre.txt');
+  const [fileName, setFileName] = useState(`${t.notepad.untitled}.txt`);
   const [savedFiles, setSavedFiles] = useState<SavedFile[]>([]);
   const [isModified, setIsModified] = useState(false);
   const [showFileMenu, setShowFileMenu] = useState(false);
@@ -74,17 +76,17 @@ export default function Notepad() {
 
   const handleNew = useCallback(() => {
     if (isModified) {
-      if (!confirm('Voulez-vous créer un nouveau fichier sans enregistrer les modifications ?')) {
+      if (!confirm(t.notepad.confirmNew)) {
         return;
       }
     }
     setContent('');
-    setFileName('Sans titre.txt');
+    setFileName(`${t.notepad.untitled}.txt`);
     setIsModified(false);
     localStorage.removeItem(CURRENT_FILE_KEY);
-    showToast('Nouveau fichier créé', 'info');
+    showToast(t.notepad.newFileCreated, 'info');
     setShowFileMenu(false);
-  }, [isModified, showToast]);
+  }, [isModified, showToast, t]);
 
   const handleSave = useCallback(() => {
     const file: SavedFile = {
@@ -107,13 +109,13 @@ export default function Notepad() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newFiles));
     localStorage.setItem(CURRENT_FILE_KEY, JSON.stringify(file));
     setIsModified(false);
-    showToast(`"${fileName}" enregistré`, 'success');
-    addNotification('Bloc-notes', `Fichier "${fileName}" enregistré`, 'success');
+    showToast(`"${fileName}" ${t.notepad.fileSaved}`, 'success');
+    addNotification(t.apps.notepad, `"${fileName}" ${t.notepad.fileSaved}`, 'success');
     setShowFileMenu(false);
-  }, [fileName, content, savedFiles, showToast, addNotification]);
+  }, [fileName, content, savedFiles, showToast, addNotification, t]);
 
   const handleSaveAs = useCallback(() => {
-    const newName = prompt('Nom du fichier:', fileName);
+    const newName = prompt(t.notepad.saveAs.replace('...', ':'), fileName);
     if (newName && newName.trim()) {
       const finalName = newName.endsWith('.txt') ? newName : `${newName}.txt`;
       setFileName(finalName);
@@ -129,15 +131,15 @@ export default function Notepad() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newFiles));
       localStorage.setItem(CURRENT_FILE_KEY, JSON.stringify(file));
       setIsModified(false);
-      showToast(`"${finalName}" enregistré`, 'success');
+      showToast(`"${finalName}" ${t.notepad.fileSaved}`, 'success');
     }
     setShowFileMenu(false);
-  }, [fileName, content, savedFiles, showToast]);
+  }, [fileName, content, savedFiles, showToast, t]);
 
   const handleOpen = useCallback(
     (file: SavedFile) => {
       if (isModified) {
-        if (!confirm('Voulez-vous ouvrir un fichier sans enregistrer les modifications ?')) {
+        if (!confirm(t.notepad.confirmOpen)) {
           return;
         }
       }
@@ -146,23 +148,27 @@ export default function Notepad() {
       setIsModified(false);
       localStorage.setItem(CURRENT_FILE_KEY, JSON.stringify(file));
       setShowOpenDialog(false);
-      showToast(`"${file.name}" ouvert`, 'info');
+      showToast(`"${file.name}" ${t.notepad.fileOpened}`, 'info');
     },
-    [isModified, showToast]
+    [isModified, showToast, t]
   );
 
   const handleDelete = useCallback(
     (fileToDelete: SavedFile, e: React.MouseEvent) => {
       e.stopPropagation();
-      if (confirm(`Supprimer "${fileToDelete.name}" ?`)) {
+      if (confirm(`${t.notepad.confirmDelete} "${fileToDelete.name}" ?`)) {
         const newFiles = savedFiles.filter((f) => f.name !== fileToDelete.name);
         setSavedFiles(newFiles);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newFiles));
-        showToast(`"${fileToDelete.name}" supprimé`, 'warning');
-        addNotification('Bloc-notes', `Fichier "${fileToDelete.name}" supprimé`, 'warning');
+        showToast(`"${fileToDelete.name}" ${t.notepad.fileDeleted}`, 'warning');
+        addNotification(
+          t.apps.notepad,
+          `"${fileToDelete.name}" ${t.notepad.fileDeleted}`,
+          'warning'
+        );
       }
     },
-    [savedFiles, showToast, addNotification]
+    [savedFiles, showToast, addNotification, t]
   );
 
   const handleExport = useCallback(() => {
@@ -173,9 +179,9 @@ export default function Notepad() {
     a.download = fileName;
     a.click();
     URL.revokeObjectURL(url);
-    showToast(`"${fileName}" téléchargé`, 'success');
+    showToast(`"${fileName}" ${t.notepad.fileDownloaded}`, 'success');
     setShowFileMenu(false);
-  }, [content, fileName, showToast]);
+  }, [content, fileName, showToast, t]);
 
   const handleCopy = useCallback(() => {
     const textarea = textareaRef.current;
@@ -183,14 +189,14 @@ export default function Notepad() {
       const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
       if (selectedText) {
         navigator.clipboard.writeText(selectedText);
-        showToast('Copié dans le presse-papiers', 'success');
+        showToast(t.notepad.copied, 'success');
       } else {
         navigator.clipboard.writeText(content);
-        showToast('Tout le contenu copié', 'success');
+        showToast(t.notepad.allCopied, 'success');
       }
     }
     setShowEditMenu(false);
-  }, [content, showToast]);
+  }, [content, showToast, t]);
 
   const handleCut = useCallback(() => {
     const textarea = textareaRef.current;
@@ -203,11 +209,11 @@ export default function Notepad() {
         const newContent = content.substring(0, start) + content.substring(end);
         setContent(newContent);
         setIsModified(true);
-        showToast('Coupé dans le presse-papiers', 'success');
+        showToast(t.notepad.cutDone, 'success');
       }
     }
     setShowEditMenu(false);
-  }, [content, showToast]);
+  }, [content, showToast, t]);
 
   const handlePaste = useCallback(async () => {
     try {
@@ -219,13 +225,13 @@ export default function Notepad() {
         const newContent = content.substring(0, start) + text + content.substring(end);
         setContent(newContent);
         setIsModified(true);
-        showToast('Collé depuis le presse-papiers', 'success');
+        showToast(t.notepad.pasted, 'success');
       }
     } catch {
-      showToast('Impossible de coller', 'error');
+      showToast(t.notepad.cannotPaste, 'error');
     }
     setShowEditMenu(false);
-  }, [content, showToast]);
+  }, [content, showToast, t]);
 
   // Calculate stats
   const lineCount = content.split('\n').length;
@@ -245,12 +251,12 @@ export default function Notepad() {
               setShowEditMenu(false);
             }}
           >
-            Fichier
+            {t.notepad.file}
           </button>
           {showFileMenu && (
             <div className={styles.dropdown}>
               <button onClick={handleNew}>
-                <FilePlus size={16} /> Nouveau
+                <FilePlus size={16} /> {t.notepad.new}
               </button>
               <button
                 onClick={(e) => {
@@ -259,18 +265,18 @@ export default function Notepad() {
                   setShowFileMenu(false);
                 }}
               >
-                <FolderOpen size={16} /> Ouvrir...
+                <FolderOpen size={16} /> {t.notepad.openFile}
               </button>
               <div className={styles.divider} />
               <button onClick={handleSave}>
-                <Save size={16} /> Enregistrer
+                <Save size={16} /> {t.notepad.saveFile}
               </button>
               <button onClick={handleSaveAs}>
-                <FileText size={16} /> Enregistrer sous...
+                <FileText size={16} /> {t.notepad.saveAs}
               </button>
               <div className={styles.divider} />
               <button onClick={handleExport}>
-                <Download size={16} /> Exporter
+                <Download size={16} /> {t.notepad.export}
               </button>
             </div>
           )}
@@ -285,18 +291,18 @@ export default function Notepad() {
               setShowFileMenu(false);
             }}
           >
-            Édition
+            {t.notepad.edit}
           </button>
           {showEditMenu && (
             <div className={styles.dropdown}>
               <button onClick={handleCut}>
-                <Scissors size={16} /> Couper
+                <Scissors size={16} /> {t.notepad.cut}
               </button>
               <button onClick={handleCopy}>
-                <Copy size={16} /> Copier
+                <Copy size={16} /> {t.notepad.copy}
               </button>
               <button onClick={handlePaste}>
-                <Clipboard size={16} /> Coller
+                <Clipboard size={16} /> {t.notepad.paste}
               </button>
             </div>
           )}
@@ -314,14 +320,15 @@ export default function Notepad() {
         className={styles.textArea}
         value={content}
         onChange={handleContentChange}
-        placeholder="Commencez à écrire..."
+        placeholder={t.notepad.startTyping}
         spellCheck={false}
       />
 
       {/* Status Bar */}
       <div className={styles.statusBar}>
         <span>
-          Ligne {lineCount} | {wordCount} mots | {charCount} caractères
+          {t.notepad.line} {lineCount} | {wordCount} {t.notepad.words} | {charCount}{' '}
+          {t.notepad.characters}
         </span>
         <span>UTF-8</span>
       </div>
@@ -330,9 +337,9 @@ export default function Notepad() {
       {showOpenDialog && (
         <div className={styles.dialogOverlay} onClick={() => setShowOpenDialog(false)}>
           <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-            <h3>Ouvrir un fichier</h3>
+            <h3>{t.notepad.openFile}</h3>
             {savedFiles.length === 0 ? (
-              <p className={styles.emptyMessage}>Aucun fichier enregistré</p>
+              <p className={styles.emptyMessage}>{t.notepad.noFiles}</p>
             ) : (
               <ul className={styles.fileList}>
                 {savedFiles.map((file) => (
@@ -341,13 +348,13 @@ export default function Notepad() {
                     <div className={styles.fileInfo}>
                       <span className={styles.fileListName}>{file.name}</span>
                       <span className={styles.fileDate}>
-                        {new Date(file.lastModified).toLocaleDateString('fr-FR')}
+                        {new Date(file.lastModified).toLocaleDateString(locale)}
                       </span>
                     </div>
                     <button
                       className={styles.deleteButton}
                       onClick={(e) => handleDelete(file, e)}
-                      title="Supprimer"
+                      title={t.common.delete}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -356,7 +363,7 @@ export default function Notepad() {
               </ul>
             )}
             <button className={styles.closeDialogButton} onClick={() => setShowOpenDialog(false)}>
-              Fermer
+              {t.common.close}
             </button>
           </div>
         </div>

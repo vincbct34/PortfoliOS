@@ -3,12 +3,18 @@
 
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_5xq6beo';
-const TEMPLATE_NOTIFICATION =
-  import.meta.env.VITE_EMAILJS_TEMPLATE_NOTIFICATION || 'template_oc29oje';
-const TEMPLATE_CONFIRMATION =
-  import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRMATION || 'template_b98cwjq';
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_NOTIFICATION = import.meta.env.VITE_EMAILJS_TEMPLATE_NOTIFICATION;
+const TEMPLATE_CONFIRMATION = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRMATION;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+// Validate configuration at runtime (only logs warning, doesn't break the app)
+const isEmailConfigured = Boolean(SERVICE_ID && TEMPLATE_NOTIFICATION && PUBLIC_KEY);
+if (!isEmailConfigured && import.meta.env.DEV) {
+  console.warn(
+    'EmailJS is not configured. Contact form will not work. Please check your .env file.'
+  );
+}
 
 interface ContactFormData {
   name: string;

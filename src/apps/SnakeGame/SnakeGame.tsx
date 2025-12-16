@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Pause, RotateCcw, Trophy } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './SnakeGame.module.css';
 
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -18,6 +19,7 @@ const HIGH_SCORE_KEY = 'snake-high-score';
 export default function SnakeGame() {
   const { showToast, addNotification } = useNotification();
   const { playSound } = useSystemSettings();
+  const { t, language } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [snake, setSnake] = useState<Position[]>([{ x: 10, y: 10 }]);
@@ -77,16 +79,20 @@ export default function SnakeGame() {
     setIsPlaying(false);
     setIsGameOver(true);
 
+    const newRecordText = language === 'fr' ? 'Nouveau record' : 'New record';
+    const gameOverText = language === 'fr' ? 'Partie terminée avec' : 'Game ended with';
+    const pointsText = language === 'fr' ? 'points' : 'points';
+
     if (score > highScore) {
       setHighScore(score);
       localStorage.setItem(HIGH_SCORE_KEY, score.toString());
-      showToast(`🏆 Nouveau record: ${score} points!`, 'success', 5000);
-      addNotification('Snake Game', `Nouveau record: ${score} points!`, 'success');
+      showToast(`🏆 ${newRecordText}: ${score} ${pointsText}!`, 'success', 5000);
+      addNotification('Snake Game', `${newRecordText}: ${score} ${pointsText}!`, 'success');
     } else {
-      showToast(`Game Over! Score: ${score}`, 'info');
-      addNotification('Snake Game', `Partie terminée avec ${score} points`, 'info');
+      showToast(`${t.snakeGame.gameOver} ${t.snakeGame.score}: ${score}`, 'info');
+      addNotification('Snake Game', `${gameOverText} ${score} ${pointsText}`, 'info');
     }
-  }, [score, highScore, showToast, addNotification, playSound]);
+  }, [score, highScore, showToast, addNotification, playSound, language, t]);
 
   // Move snake
   const moveSnake = useCallback(() => {
@@ -291,7 +297,7 @@ export default function SnakeGame() {
       <div className={styles.header}>
         <div className={styles.scoreSection}>
           <div className={styles.score}>
-            <span className={styles.label}>Score</span>
+            <span className={styles.label}>{t.snakeGame.score}</span>
             <span className={styles.value}>{score}</span>
           </div>
           <div className={styles.highScore}>
@@ -326,10 +332,10 @@ export default function SnakeGame() {
         {!isPlaying && !isGameOver && (
           <div className={styles.overlay}>
             <div className={styles.overlayContent}>
-              <h2>🐍 Snake</h2>
-              <p>Appuyez sur Espace ou cliquez sur Play pour commencer</p>
+              <h2>🐍 {t.snakeGame.title}</h2>
+              <p>{t.snakeGame.startHint}</p>
               <div className={styles.instructions}>
-                <span>↑ ↓ ← → ou WASD pour bouger</span>
+                <span>↑ ↓ ← → / WASD</span>
               </div>
             </div>
           </div>
@@ -338,14 +344,16 @@ export default function SnakeGame() {
         {isGameOver && (
           <div className={styles.overlay}>
             <div className={styles.overlayContent}>
-              <h2>Game Over!</h2>
-              <p className={styles.finalScore}>Score: {score}</p>
+              <h2>{t.snakeGame.gameOver}</h2>
+              <p className={styles.finalScore}>
+                {t.snakeGame.score}: {score}
+              </p>
               {score >= highScore && score > 0 && (
-                <p className={styles.newRecord}>🏆 Nouveau Record!</p>
+                <p className={styles.newRecord}>🏆 {t.snakeGame.highScore}!</p>
               )}
               <button className={styles.retryButton} onClick={togglePlay}>
                 <RotateCcw size={18} />
-                Rejouer
+                {t.snakeGame.playAgain}
               </button>
             </div>
           </div>
@@ -354,7 +362,7 @@ export default function SnakeGame() {
 
       {/* Footer */}
       <div className={styles.footer}>
-        <span>Espace: Pause | ↑↓←→: Déplacer</span>
+        <span>Space: Pause | ↑↓←→: Move</span>
       </div>
     </div>
   );

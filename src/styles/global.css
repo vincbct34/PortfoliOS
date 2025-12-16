@@ -31,6 +31,9 @@
 
   /* Typography */
   --font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(0, 120, 212, 0.4);
 }
 
 /* Dark Theme */
@@ -41,6 +44,7 @@
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
   --border-color: rgba(255, 255, 255, 0.1);
+  --focus-ring: 0 0 0 3px rgba(96, 205, 255, 0.4);
 }
 
 html,
@@ -106,10 +110,17 @@ textarea,
   color: white;
 }
 
-/* Focus styles */
+/* Focus styles - enhanced for better visibility */
 :focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* Remove focus ring for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
 }
 
 button {
@@ -133,6 +144,26 @@ a {
   border: 0;
 }
 
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100000;
+  padding: 1rem 2rem;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 /* Focus Mode - Disable all animations */
 [data-focus-mode='true'] *,
 [data-focus-mode='true'] *::before,
@@ -141,4 +172,31 @@ a {
   animation-delay: 0s !important;
   transition-duration: 0.001s !important;
   transition-delay: 0s !important;
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .dark {
+    --border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  :focus-visible {
+    outline-width: 3px;
+  }
 }

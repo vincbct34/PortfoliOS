@@ -156,9 +156,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
+  overflow: hidden;
+}
+
+.userAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .userName {
@@ -187,4 +191,63 @@
   width: 20px;
   height: 20px;
   color: white;
+}
+
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 24px;
+  font-size: 14px;
+}
+
+.powerMenu {
+  position: absolute;
+  bottom: 64px;
+  right: 24px;
+  background: #202020;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  min-width: 160px;
+  animation: slideUp 0.1s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.powerMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.powerMenuItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.powerMenuItem svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.9);
 }

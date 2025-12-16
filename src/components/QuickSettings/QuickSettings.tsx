@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Wifi, WifiOff, Moon, Sun, Focus, Volume2, VolumeX, Zap } from 'lucide-react';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './QuickSettings.module.css';
 
 interface QuickSettingsProps {
@@ -10,6 +11,7 @@ interface QuickSettingsProps {
 
 export default function QuickSettings({ onClose }: QuickSettingsProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const { t, language } = useTranslation();
   const {
     volume,
     isMuted,
@@ -60,7 +62,7 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
   }, [onClose]);
 
   const getConnectionLabel = () => {
-    if (!isOnline) return 'Hors ligne';
+    if (!isOnline) return language === 'fr' ? 'Hors ligne' : 'Offline';
     switch (connectionType) {
       case '4g':
         return '4G';
@@ -71,7 +73,7 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
       case 'ethernet':
         return 'Ethernet';
       default:
-        return 'Connecté';
+        return language === 'fr' ? 'Connecté' : 'Connected';
     }
   };
 
@@ -91,6 +93,9 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 20, scale: 0.95 }}
         transition={{ type: 'spring', damping: 25, stiffness: 400 }}
+        role="dialog"
+        aria-label={t.quickSettings.title}
+        aria-modal="true"
       >
         {/* Toggle Buttons */}
         <div className={styles.togglesSection}>
@@ -99,9 +104,14 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
             <button
               className={`${styles.toggleButton} ${isOnline ? styles.active : ''}`}
               title={getConnectionLabel()}
+              aria-label={getConnectionLabel()}
               disabled
             >
-              {isOnline ? <Wifi size={20} /> : <WifiOff size={20} />}
+              {isOnline ? (
+                <Wifi size={20} aria-hidden="true" />
+              ) : (
+                <WifiOff size={20} aria-hidden="true" />
+              )}
               <span>{getConnectionLabel()}</span>
             </button>
 
@@ -109,20 +119,28 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
             <button
               className={`${styles.toggleButton} ${nightMode ? styles.active : ''}`}
               onClick={toggleNightMode}
-              title="Mode Nuit"
+              title={t.quickSettings.nightMode}
+              aria-label={t.quickSettings.nightMode}
+              aria-pressed={nightMode}
             >
-              {nightMode ? <Moon size={20} /> : <Sun size={20} />}
-              <span>Mode Nuit</span>
+              {nightMode ? (
+                <Moon size={20} aria-hidden="true" />
+              ) : (
+                <Sun size={20} aria-hidden="true" />
+              )}
+              <span>{t.quickSettings.nightMode}</span>
             </button>
 
             {/* Focus Mode */}
             <button
               className={`${styles.toggleButton} ${focusMode ? styles.active : ''}`}
               onClick={toggleFocusMode}
-              title="Mode Focus"
+              title={t.quickSettings.focusMode}
+              aria-label={t.quickSettings.focusMode}
+              aria-pressed={focusMode}
             >
-              <Focus size={20} />
-              <span>Focus</span>
+              <Focus size={20} aria-hidden="true" />
+              <span>{t.quickSettings.focusMode}</span>
             </button>
           </div>
         </div>
@@ -130,13 +148,19 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
         {/* Sliders */}
         <div className={styles.slidersSection}>
           {/* Volume Slider */}
-          <div className={styles.sliderRow}>
+          <div className={styles.sliderRow} role="group" aria-label={t.quickSettings.volume}>
             <button
               className={`${styles.sliderIcon} ${isMuted ? styles.muted : ''}`}
               onClick={toggleMute}
-              title={isMuted ? 'Réactiver le son' : 'Couper le son'}
+              title={isMuted ? t.quickSettings.unmute : t.quickSettings.mute}
+              aria-label={isMuted ? t.quickSettings.unmute : t.quickSettings.mute}
+              aria-pressed={isMuted}
             >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              {isMuted ? (
+                <VolumeX size={18} aria-hidden="true" />
+              ) : (
+                <Volume2 size={18} aria-hidden="true" />
+              )}
             </button>
             <div className={styles.sliderContainer}>
               <input
@@ -146,17 +170,23 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
                 value={isMuted ? 0 : volume}
                 onChange={(e) => setVolume(Number(e.target.value))}
                 className={styles.slider}
+                aria-label="Volume"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={isMuted ? 0 : volume}
                 style={{
                   background: `linear-gradient(to right, var(--accent-primary) ${isMuted ? 0 : volume}%, var(--surface-secondary) ${isMuted ? 0 : volume}%)`,
                 }}
               />
             </div>
-            <span className={styles.sliderValue}>{isMuted ? 0 : volume}%</span>
+            <span className={styles.sliderValue} aria-live="polite">
+              {isMuted ? 0 : volume}%
+            </span>
           </div>
 
           {/* Brightness Slider */}
-          <div className={styles.sliderRow}>
-            <div className={styles.sliderIcon}>
+          <div className={styles.sliderRow} role="group" aria-label="Contrôle de la luminosité">
+            <div className={styles.sliderIcon} aria-hidden="true">
               <Sun size={18} />
             </div>
             <div className={styles.sliderContainer}>
@@ -167,12 +197,18 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
                 value={brightness}
                 onChange={(e) => setBrightness(Number(e.target.value))}
                 className={styles.slider}
+                aria-label="Luminosité"
+                aria-valuemin={50}
+                aria-valuemax={150}
+                aria-valuenow={brightness}
                 style={{
                   background: `linear-gradient(to right, var(--accent-primary) ${((brightness - 50) / 100) * 100}%, var(--surface-secondary) ${((brightness - 50) / 100) * 100}%)`,
                 }}
               />
             </div>
-            <span className={styles.sliderValue}>{brightness}%</span>
+            <span className={styles.sliderValue} aria-live="polite">
+              {brightness}%
+            </span>
           </div>
         </div>
 

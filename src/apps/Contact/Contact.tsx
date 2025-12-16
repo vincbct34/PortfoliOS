@@ -1,9 +1,10 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import styles from './Contact.module.css';
 import { contactMethods } from '../../data/portfolio';
 import { handleContactSubmission } from '../../services/emailService';
 import { useNotification } from '../../context/NotificationContext';
+import { useTranslation } from '../../context/I18nContext';
 
 interface FormData {
   name: string;
@@ -13,8 +14,11 @@ interface FormData {
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
+const SUBMIT_COOLDOWN = 5000; // 5 seconds between submissions
+
 export default function Contact() {
-  const { showToast, addNotification } = useNotification();
+  const { showToast } = useNotification();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -22,6 +26,8 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [honeypot, setHoneypot] = useState(''); // Anti-spam honeypot
+  const lastSubmitRef = useRef<number>(0);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -34,31 +40,69 @@ export default function Contact() {
     }
   };
 
+  const validateForm = (): string | null => {
+    // Honeypot check (bots fill this hidden field)
+    if (honeypot) {
+      return 'Spam detected';
+    }
+    // Name validation
+    if (formData.name.length < 2 || formData.name.length > 100) {
+      return 'Le nom doit contenir entre 2 et 100 caractères';
+    }
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return 'Email invalide';
+    }
+    // Message validation
+    if (formData.message.length < 10 || formData.message.length > 5000) {
+      return 'Le message doit contenir entre 10 et 5000 caractères';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Rate limiting
+    const now = Date.now();
+    if (now - lastSubmitRef.current < SUBMIT_COOLDOWN) {
+      showToast('Veuillez attendre avant de renvoyer un message', 'warning');
+      return;
+    }
+
+    // Validation
+    const validationError = validateForm();
+    if (validationError) {
+      if (validationError !== 'Spam detected') {
+        setStatus('error');
+        setErrorMessage(validationError);
+      }
+      return;
+    }
+
     setStatus('loading');
     setErrorMessage('');
+    lastSubmitRef.current = now;
 
     const result = await handleContactSubmission(formData);
 
     if (result.success) {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      showToast('✅ Message envoyé avec succès !', 'success');
-      addNotification('Contact', 'Votre message a été envoyé', 'success');
+      showToast(`✅ ${t.contactPage.success}`, 'success');
     } else {
       setStatus('error');
-      setErrorMessage(result.error || "Une erreur s'est produite");
-      showToast("❌ Échec de l'envoi du message", 'error');
-      addNotification('Contact', result.error || "Échec de l'envoi", 'error');
+      setErrorMessage(result.error || t.contactPage.errorDetail);
+      showToast(`❌ ${t.common.error}`, 'error');
     }
   };
 
   return (
     <div className={styles.contact}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Contactez-moi</h1>
-        <p className={styles.subtitle}>N'hésitez pas à me contacter pour discuter de vos projets</p>
+        <h1 className={styles.title}>{t.contactPage.title}</h1>
+        <p className={styles.subtitle}>{t.contactPage.otherWays}</p>
       </div>
 
       <div className={styles.methods}>
@@ -82,12 +126,12 @@ export default function Contact() {
       </div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h2 className={styles.formTitle}>Envoyer un message</h2>
+        <h2 className={styles.formTitle}>{t.contactPage.send}</h2>
 
         {status === 'success' && (
           <div className={styles.successMessage}>
             <CheckCircle size={20} />
-            <span>Message envoyé avec succès ! Je vous répondrai bientôt.</span>
+            <span>{t.contactPage.successDetail}</span>
           </div>
         )}
 
@@ -98,9 +142,21 @@ export default function Contact() {
           </div>
         )}
 
+        {/* Honeypot field - hidden from real users, bots will fill it */}
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          style={{ display: 'none' }}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+
         <div className={styles.formGroup}>
           <label className={styles.formLabel} htmlFor="name">
-            Nom
+            {t.contactPage.name}
           </label>
           <input
             type="text"
@@ -109,15 +165,16 @@ export default function Contact() {
             className={styles.formInput}
             value={formData.name}
             onChange={handleChange}
-            placeholder="Votre nom"
             required
+            minLength={2}
+            maxLength={100}
             disabled={status === 'loading'}
           />
         </div>
 
         <div className={styles.formGroup}>
           <label className={styles.formLabel} htmlFor="email">
-            Email
+            {t.contactPage.email}
           </label>
           <input
             type="email"
@@ -126,7 +183,7 @@ export default function Contact() {
             className={styles.formInput}
             value={formData.email}
             onChange={handleChange}
-            placeholder="votre@email.com"
+            placeholder="email@example.com"
             required
             disabled={status === 'loading'}
           />
@@ -134,7 +191,7 @@ export default function Contact() {
 
         <div className={styles.formGroup}>
           <label className={styles.formLabel} htmlFor="message">
-            Message
+            {t.contactPage.message}
           </label>
           <textarea
             id="message"
@@ -142,7 +199,6 @@ export default function Contact() {
             className={styles.formTextarea}
             value={formData.message}
             onChange={handleChange}
-            placeholder="Votre message..."
             required
             disabled={status === 'loading'}
           />
@@ -152,12 +208,12 @@ export default function Contact() {
           {status === 'loading' ? (
             <>
               <Loader2 size={16} className={styles.spinner} />
-              Envoi en cours...
+              {t.contactPage.sending}
             </>
           ) : (
             <>
               <Send size={16} />
-              Envoyer
+              {t.contactPage.send}
             </>
           )}
         </button>

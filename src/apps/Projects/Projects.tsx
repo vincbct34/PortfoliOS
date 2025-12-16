@@ -10,15 +10,17 @@ import {
 } from 'lucide-react';
 import styles from './Projects.module.css';
 import { projects } from '../../data/portfolio';
+import { useTranslation } from '../../context/I18nContext';
 
 type ViewMode = 'grid' | 'list';
 
 interface ProjectImageProps {
   src: string;
   alt: string;
+  errorText: string;
 }
 
-function ProjectImage({ src, alt }: ProjectImageProps) {
+function ProjectImage({ src, alt, errorText }: ProjectImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -37,7 +39,7 @@ function ProjectImage({ src, alt }: ProjectImageProps) {
       {hasError ? (
         <div className={styles.imageFallback}>
           <ImageOff size={32} />
-          <span>Image non disponible</span>
+          <span>{errorText}</span>
         </div>
       ) : (
         <img
@@ -55,28 +57,36 @@ function ProjectImage({ src, alt }: ProjectImageProps) {
 
 export default function Projects() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const { t } = useTranslation();
+
+  // Map project descriptions to translations
+  const projectDescriptions: Record<number, string> = {
+    1: t.projectsPage.project1Desc,
+    2: t.projectsPage.project2Desc,
+    3: t.projectsPage.project3Desc,
+  };
 
   return (
     <div className={styles.projects}>
       <div className={styles.toolbar}>
         <div className={styles.breadcrumb}>
           <Folder size={16} />
-          <span>Projets</span>
+          <span>{t.apps.projects}</span>
           <ChevronRight size={14} />
-          <span>Tous les projets</span>
+          <span>{t.projectsPage.title}</span>
         </div>
         <div className={styles.viewToggle}>
           <button
             className={`${styles.viewButton} ${viewMode === 'grid' ? styles.active : ''}`}
             onClick={() => setViewMode('grid')}
-            title="Vue grille"
+            title="Grid"
           >
             <LayoutGrid size={18} />
           </button>
           <button
             className={`${styles.viewButton} ${viewMode === 'list' ? styles.active : ''}`}
             onClick={() => setViewMode('list')}
-            title="Vue liste"
+            title="List"
           >
             <List size={18} />
           </button>
@@ -90,11 +100,13 @@ export default function Projects() {
             className={`${styles.projectCard} ${viewMode === 'list' ? styles.list : ''}`}
           >
             <div className={styles.projectPreview}>
-              <ProjectImage src={project.image} alt={project.title} />
+              <ProjectImage src={project.image} alt={project.title} errorText={t.common.error} />
             </div>
             <div className={styles.projectInfo}>
               <h3 className={styles.projectTitle}>{project.title}</h3>
-              <p className={styles.projectDescription}>{project.description}</p>
+              <p className={styles.projectDescription}>
+                {projectDescriptions[project.id] || project.description}
+              </p>
               <div className={styles.projectTags}>
                 {project.tags.map((tag) => (
                   <span key={tag} className={styles.tag}>
@@ -112,7 +124,7 @@ export default function Projects() {
                   className={styles.projectLink}
                 >
                   <Github />
-                  GitHub
+                  {t.projectsPage.viewCode}
                 </a>
               )}
               {project.demo && (
@@ -123,7 +135,7 @@ export default function Projects() {
                   className={styles.projectLink}
                 >
                   <ExternalLink />
-                  Demo
+                  {t.projectsPage.viewProject}
                 </a>
               )}
             </div>

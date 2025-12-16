@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useWindows } from '../../context/WindowContext';
 import { useSettings } from '../../context/SettingsContext';
+import { useTranslation } from '../../context/I18nContext';
 import { useDesktopIcons, type IconPosition } from '../../hooks/useDesktopIcons';
 import DesktopIcon from './DesktopIcon';
 import ContextMenu from '../ContextMenu/ContextMenu';
@@ -25,22 +26,10 @@ interface ContextMenuState {
   targetId?: string;
 }
 
-// Desktop icons configuration
-const desktopIconsConfig: DesktopIconConfig[] = [
-  { appId: 'about', label: 'À propos' },
-  { appId: 'projects', label: 'Projets' },
-  { appId: 'skills', label: 'Compétences' },
-  { appId: 'contact', label: 'Contact' },
-  { appId: 'terminal', label: 'Terminal' },
-  { appId: 'settings', label: 'Paramètres' },
-  { appId: 'notepad', label: 'Bloc-notes' },
-  { appId: 'snake', label: 'Snake' },
-  { appId: 'explorer', label: 'Explorateur' },
-];
-
 export default function Desktop({ children }: DesktopProps) {
   const { apps, windows, openWindow, restoreWindow, focusWindow } = useWindows();
   const { getWallpaperValue } = useSettings();
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
@@ -64,7 +53,23 @@ export default function Desktop({ children }: DesktopProps) {
     }
   );
 
-  const iconIds = useMemo(() => desktopIconsConfig.map((icon) => icon.appId), []);
+  // Create translated desktop icons config
+  const desktopIconsConfig: DesktopIconConfig[] = useMemo(
+    () => [
+      { appId: 'about', label: t.apps.about },
+      { appId: 'projects', label: t.apps.projects },
+      { appId: 'skills', label: t.apps.skills },
+      { appId: 'contact', label: t.apps.contact },
+      { appId: 'terminal', label: t.apps.terminal },
+      { appId: 'settings', label: t.apps.settings },
+      { appId: 'notepad', label: t.apps.notepad },
+      { appId: 'snake', label: t.apps.snake },
+      { appId: 'explorer', label: t.apps.explorer },
+    ],
+    [t]
+  );
+
+  const iconIds = useMemo(() => desktopIconsConfig.map((icon) => icon.appId), [desktopIconsConfig]);
   const { positions, customizations, updatePosition, updateCustomization, resetPositions } =
     useDesktopIcons({ iconIds });
 
@@ -169,6 +174,8 @@ export default function Desktop({ children }: DesktopProps) {
       onClick={handleDesktopClick}
       onContextMenu={handleDesktopContextMenu}
       style={{ background: getWallpaperValue() }}
+      role="main"
+      aria-label={t.desktop.ariaLabel}
     >
       <div className={styles.iconsContainer} ref={containerRef}>
         {desktopIconsConfig.map(({ appId, label: defaultLabel }) => {

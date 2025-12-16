@@ -1,26 +1,29 @@
 import { useState } from 'react';
-import { Moon, Sun, Palette, Monitor, Info, ChevronRight } from 'lucide-react';
+import { Moon, Sun, Palette, Monitor, Info, ChevronRight, Globe } from 'lucide-react';
 import { useSettings, wallpapers, accentColors } from '../../context/SettingsContext';
+import { useI18n } from '../../context/I18nContext';
 import styles from './Settings.module.css';
 
-type SettingsSection = 'personalization' | 'display' | 'about';
+type SettingsSection = 'personalization' | 'display' | 'language' | 'about';
 
 export default function Settings() {
   const [activeSection, setActiveSection] = useState<SettingsSection>('personalization');
   const { theme, wallpaperId, accentColorId, setTheme, setWallpaper, setAccentColor } =
     useSettings();
+  const { language, setLanguage, t } = useI18n();
 
   const sections = [
-    { id: 'personalization' as const, icon: Palette, label: 'Personnalisation' },
-    { id: 'display' as const, icon: Monitor, label: 'Affichage' },
-    { id: 'about' as const, icon: Info, label: 'À propos' },
+    { id: 'personalization' as const, icon: Palette, label: t.settingsPage.personalization },
+    { id: 'display' as const, icon: Monitor, label: t.settingsPage.theme },
+    { id: 'language' as const, icon: Globe, label: t.settingsPage.language },
+    { id: 'about' as const, icon: Info, label: t.aboutMe.about },
   ];
 
   return (
     <div className={styles.settings}>
       {/* Sidebar */}
       <nav className={styles.sidebar}>
-        <h2 className={styles.sidebarTitle}>Paramètres</h2>
+        <h2 className={styles.sidebarTitle}>{t.settingsPage.title}</h2>
         <ul className={styles.navList}>
           {sections.map((section) => {
             const Icon = section.icon;
@@ -44,11 +47,11 @@ export default function Settings() {
       <main className={styles.content}>
         {activeSection === 'personalization' && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Personnalisation</h3>
+            <h3 className={styles.sectionTitle}>{t.settingsPage.personalization}</h3>
 
             {/* Wallpaper Selection */}
             <div className={styles.settingGroup}>
-              <h4 className={styles.groupTitle}>Fond d'écran</h4>
+              <h4 className={styles.groupTitle}>{t.settingsPage.wallpaper}</h4>
               <div className={styles.wallpaperGrid}>
                 {wallpapers.map((wp) => (
                   <button
@@ -66,7 +69,9 @@ export default function Settings() {
 
             {/* Accent Color Selection */}
             <div className={styles.settingGroup}>
-              <h4 className={styles.groupTitle}>Couleur d'accentuation</h4>
+              <h4 className={styles.groupTitle}>
+                {language === 'fr' ? "Couleur d'accentuation" : 'Accent Color'}
+              </h4>
               <div className={styles.colorGrid}>
                 {accentColors.map((color) => (
                   <button
@@ -86,25 +91,49 @@ export default function Settings() {
 
         {activeSection === 'display' && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Affichage</h3>
+            <h3 className={styles.sectionTitle}>{t.settingsPage.theme}</h3>
 
             {/* Theme Toggle */}
             <div className={styles.settingGroup}>
-              <h4 className={styles.groupTitle}>Thème</h4>
               <div className={styles.themeToggle}>
                 <button
                   className={`${styles.themeOption} ${theme === 'light' ? styles.active : ''}`}
                   onClick={() => setTheme('light')}
                 >
                   <Sun size={24} />
-                  <span>Clair</span>
+                  <span>{t.settingsPage.themeLight}</span>
                 </button>
                 <button
                   className={`${styles.themeOption} ${theme === 'dark' ? styles.active : ''}`}
                   onClick={() => setTheme('dark')}
                 >
                   <Moon size={24} />
-                  <span>Sombre</span>
+                  <span>{t.settingsPage.themeDark}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeSection === 'language' && (
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>{t.settingsPage.language}</h3>
+
+            <div className={styles.settingGroup}>
+              <div className={styles.themeToggle}>
+                <button
+                  className={`${styles.themeOption} ${language === 'fr' ? styles.active : ''}`}
+                  onClick={() => setLanguage('fr')}
+                >
+                  <span className={styles.flagEmoji}>🇫🇷</span>
+                  <span>{t.settingsPage.languageFr}</span>
+                </button>
+                <button
+                  className={`${styles.themeOption} ${language === 'en' ? styles.active : ''}`}
+                  onClick={() => setLanguage('en')}
+                >
+                  <span className={styles.flagEmoji}>🇬🇧</span>
+                  <span>{t.settingsPage.languageEn}</span>
                 </button>
               </div>
             </div>
@@ -113,7 +142,7 @@ export default function Settings() {
 
         {activeSection === 'about' && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>À propos</h3>
+            <h3 className={styles.sectionTitle}>{t.aboutMe.about}</h3>
 
             <div className={styles.aboutCard}>
               <div className={styles.aboutLogo}>VD</div>
@@ -121,7 +150,9 @@ export default function Settings() {
                 <h4>VincentOS</h4>
                 <p className={styles.version}>Version 1.0.0</p>
                 <p className={styles.description}>
-                  Portfolio interactif développé avec React, TypeScript et Framer Motion.
+                  {language === 'fr'
+                    ? 'Portfolio interactif développé avec React, TypeScript et Framer Motion.'
+                    : 'Interactive portfolio built with React, TypeScript and Framer Motion.'}
                 </p>
               </div>
             </div>
@@ -132,7 +163,9 @@ export default function Settings() {
                 <span className={styles.specValue}>React 18</span>
               </div>
               <div className={styles.specItem}>
-                <span className={styles.specLabel}>Langage</span>
+                <span className={styles.specLabel}>
+                  {language === 'fr' ? 'Langage' : 'Language'}
+                </span>
                 <span className={styles.specValue}>TypeScript</span>
               </div>
               <div className={styles.specItem}>

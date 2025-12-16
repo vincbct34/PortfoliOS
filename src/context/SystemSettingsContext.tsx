@@ -2,7 +2,12 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { audioService, type SoundType } from '../services/audioService';
 
 // Types for system settings
+export type SystemStatus = 'locked' | 'booting' | 'ready' | 'shutdown' | 'off';
+
 interface SystemSettingsState {
+  // System Status
+  systemStatus: SystemStatus;
+
   // Audio
   volume: number; // 0-100
   isMuted: boolean;
@@ -35,9 +40,16 @@ interface SystemSettingsContextValue extends SystemSettingsState {
   toggleFocusMode: () => void;
   toggleBluetooth: () => void;
   playSound: (type: SoundType) => void;
+  // Power actions
+  lock: () => void;
+  restart: () => void;
+  shutdown: () => void;
+  wake: () => void;
+  setSystemStatus: (status: SystemStatus) => void;
 }
 
 const defaultSettings: SystemSettingsState = {
+  systemStatus: 'locked',
   volume: 75,
   isMuted: false,
   brightness: 100,
@@ -134,6 +146,8 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     const brightnessFilter = `brightness(${settings.brightness}%)`;
     document.documentElement.style.setProperty('--system-brightness', `${settings.brightness}%`);
 
+    let removeTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
     if (settings.nightMode) {
       // Create or get the night mode overlay
       let overlay = document.getElementById('night-mode-overlay');
@@ -161,10 +175,21 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
       const overlay = document.getElementById('night-mode-overlay');
       if (overlay) {
         overlay.style.opacity = '0';
-        setTimeout(() => overlay.remove(), 300);
+        removeTimeoutId = setTimeout(() => overlay.remove(), 300);
       }
       document.documentElement.style.filter = brightnessFilter;
     }
+
+    // Cleanup on unmount or settings change
+    return () => {
+      if (removeTimeoutId) {
+        clearTimeout(removeTimeoutId);
+      }
+      const overlay = document.getElementById('night-mode-overlay');
+      if (overlay) {
+        overlay.remove();
+      }
+    };
   }, [settings.brightness, settings.nightMode]);
 
   // Apply focus mode (disable animations and reduce motion)
@@ -255,10 +280,13 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
 
   // Actions
   const setVolume = useCallback((volume: number) => {
+    const clampedVolume = Math.max(0, Math.min(100, volume));
     setSettings((prev) => ({
       ...prev,
-      volume: Math.max(0, Math.min(100, volume)),
-      isMuted: volume === 0 ? true : prev.isMuted,
+      volume: clampedVolume,
+      // Mute at 0, unmute when raising from 0
+      isMuted:
+        clampedVolume === 0 ? true : clampedVolume > 0 && prev.volume === 0 ? false : prev.isMuted,
     }));
   }, []);
 
@@ -281,7 +309,8 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     setSettings((prev) => ({
       ...prev,
       focusMode: !prev.focusMode,
-      isMuted: !prev.focusMode ? true : prev.isMuted,
+      // Focus mode now only affects animations, not sound
+      // Users can manually mute if they want silence
     }));
   }, []);
 
@@ -298,6 +327,26 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     [settings.isMuted, settings.volume]
   );
 
+  const setSystemStatus = useCallback((status: SystemStatus) => {
+    setSettings((prev) => ({ ...prev, systemStatus: status }));
+  }, []);
+
+  const lock = useCallback(() => {
+    setSystemStatus('locked');
+  }, [setSystemStatus]);
+
+  const restart = useCallback(() => {
+    setSystemStatus('booting');
+  }, [setSystemStatus]);
+
+  const shutdown = useCallback(() => {
+    setSystemStatus('shutdown');
+  }, [setSystemStatus]);
+
+  const wake = useCallback(() => {
+    setSystemStatus('booting');
+  }, [setSystemStatus]);
+
   const value: SystemSettingsContextValue = {
     ...settings,
     setVolume,
@@ -307,6 +356,11 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     toggleFocusMode,
     toggleBluetooth,
     playSound,
+    lock,
+    restart,
+    shutdown,
+    wake,
+    setSystemStatus,
   };
 
   return <SystemSettingsContext.Provider value={value}>{children}</SystemSettingsContext.Provider>;

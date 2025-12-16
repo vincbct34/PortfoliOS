@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { LayoutGrid, Bell, Cloud, X, Settings2 } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { LayoutGrid, Bell, Cloud, X, Settings2, Loader2 } from 'lucide-react';
 import { useWindows } from '../../context/WindowContext';
 import { useNotification } from '../../context/NotificationContext';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
+import { useTranslation } from '../../context/I18nContext';
+import { getIcon } from '../../utils/iconHelpers';
 import StartMenu from '../StartMenu/StartMenu';
 import NotificationCenter from '../NotificationCenter/NotificationCenter';
 import WidgetPanel from '../WidgetPanel/WidgetPanel';
@@ -14,44 +14,34 @@ import QuickSettings from '../QuickSettings/QuickSettings';
 import CalendarPopup from '../CalendarPopup/CalendarPopup';
 import styles from './Taskbar.module.css';
 
-// Import app components for preview rendering
-import AboutMe from '../../apps/AboutMe/AboutMe';
-import Projects from '../../apps/Projects/Projects';
-import Skills from '../../apps/Skills/Skills';
-import Contact from '../../apps/Contact/Contact';
-import Terminal from '../../apps/Terminal/Terminal';
-import Settings from '../../apps/Settings/Settings';
-import Notepad from '../../apps/Notepad/Notepad';
-import SnakeGame from '../../apps/SnakeGame/SnakeGame';
-import FileExplorer from '../../apps/FileExplorer/FileExplorer';
-
-const previewComponents: Record<string, React.ComponentType> = {
-  about: AboutMe,
-  projects: Projects,
-  skills: Skills,
-  contact: Contact,
-  terminal: Terminal,
-  settings: Settings,
-  notepad: Notepad,
-  snake: SnakeGame,
-  explorer: FileExplorer,
+// Lazy load app components for preview rendering - reduces initial bundle size
+const previewComponents: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
+  about: lazy(() => import('../../apps/AboutMe/AboutMe')),
+  projects: lazy(() => import('../../apps/Projects/Projects')),
+  skills: lazy(() => import('../../apps/Skills/Skills')),
+  contact: lazy(() => import('../../apps/Contact/Contact')),
+  terminal: lazy(() => import('../../apps/Terminal/Terminal')),
+  settings: lazy(() => import('../../apps/Settings/Settings')),
+  notepad: lazy(() => import('../../apps/Notepad/Notepad')),
+  snake: lazy(() => import('../../apps/SnakeGame/SnakeGame')),
+  explorer: lazy(() => import('../../apps/FileExplorer/FileExplorer')),
 };
 
-const getIcon = (iconName: string): LucideIcon => {
-  // Convert kebab-case to PascalCase (e.g., 'file-text' -> 'FileText', 'gamepad-2' -> 'Gamepad2')
-  const formattedName = iconName
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[formattedName] || LucideIcons.File;
-};
+// Preview loading fallback
+function PreviewLoader() {
+  return (
+    <div className={styles.previewPlaceholder}>
+      <Loader2 size={32} className={styles.spinner} />
+    </div>
+  );
+}
 
 export default function Taskbar() {
   const { windows, focusWindow, restoreWindow, minimizeWindow, closeWindow, highestZIndex } =
     useWindows();
   const { unreadCount } = useNotification();
   const { playSound } = useSystemSettings();
+  const { t, locale } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
@@ -69,6 +59,15 @@ export default function Taskbar() {
     }, 1000);
 
     return () => clearInterval(timer);
+  }, []);
+
+  // Cleanup hover timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Toggle start menu
@@ -199,14 +198,14 @@ export default function Taskbar() {
   );
 
   const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString('fr-FR', {
+    return date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -255,9 +254,11 @@ export default function Taskbar() {
                 onClick={() => handleAppClick(window.id)}
                 onMouseEnter={(e) => handleAppMouseEnter(window.id, e)}
                 onMouseLeave={handleAppMouseLeave}
+                aria-label={`${window.title}${window.isMinimized ? ' (réduit)' : isActive ? ' (actif)' : ''}`}
+                aria-pressed={isActive}
               >
-                <Icon />
-                <div className={styles.activeIndicator} />
+                <Icon aria-hidden="true" />
+                <div className={styles.activeIndicator} aria-hidden="true" />
               </button>
             );
           })}
@@ -297,17 +298,19 @@ export default function Taskbar() {
                         onClick={() => handlePreviewClick(hoveredWindowId)}
                       >
                         {PreviewComponent ? (
-                          <div className={styles.previewScaler}>
-                            <div
-                              className={styles.previewWindow}
-                              style={{
-                                width: windowData.size.width,
-                                height: windowData.size.height - 32, // Subtract titlebar
-                              }}
-                            >
-                              <PreviewComponent />
+                          <Suspense fallback={<PreviewLoader />}>
+                            <div className={styles.previewScaler}>
+                              <div
+                                className={styles.previewWindow}
+                                style={{
+                                  width: windowData.size.width,
+                                  height: windowData.size.height - 32, // Subtract titlebar
+                                }}
+                              >
+                                <PreviewComponent />
+                              </div>
                             </div>
-                          </div>
+                          </Suspense>
                         ) : (
                           <div className={styles.previewPlaceholder}>
                             {(() => {
@@ -349,16 +352,15 @@ export default function Taskbar() {
             )}
           </button>
 
-          <div
+          <button
             className={`${styles.clock} ${isCalendarOpen ? styles.active : ''}`}
             onClick={handleCalendarClick}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleCalendarClick()}
+            aria-label={t.taskbar.openCalendar}
+            aria-expanded={isCalendarOpen}
           >
             <span className={styles.clockTime}>{formatTime(currentTime)}</span>
             <span className={styles.clockDate}>{formatDate(currentTime)}</span>
-          </div>
+          </button>
         </div>
       </div>
 

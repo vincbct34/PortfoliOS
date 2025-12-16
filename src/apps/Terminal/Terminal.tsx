@@ -1,131 +1,14 @@
-import { useState, useRef, useEffect, type KeyboardEvent, type FormEvent } from 'react';
+import { useState, useRef, useEffect, useMemo, type KeyboardEvent, type FormEvent } from 'react';
 import { useNotification } from '../../context/NotificationContext';
+import { createCommands, ASCII_ART, type HistoryLine } from '../../data/terminalCommands';
 import styles from './Terminal.module.css';
-
-interface HistoryLine {
-  type: 'command' | 'output' | 'error' | 'success' | 'info' | 'ascii';
-  text: string;
-}
-
-interface Command {
-  description: string;
-  execute: () => HistoryLine[] | 'CLEAR';
-}
-
-const ASCII_ART = `
-██╗   ██╗██╗███╗   ██╗ ██████╗███████╗███╗   ██╗████████╗
-██║   ██║██║████╗  ██║██╔════╝██╔════╝████╗  ██║╚══██╔══╝
-██║   ██║██║██╔██╗ ██║██║     █████╗  ██╔██╗ ██║   ██║   
-╚██╗ ██╔╝██║██║╚██╗██║██║     ██╔══╝  ██║╚██╗██║   ██║   
- ╚████╔╝ ██║██║ ╚████║╚██████╗███████╗██║ ╚████║   ██║   
-  ╚═══╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   
-`;
-
-const COMMANDS: Record<string, Command> = {
-  help: {
-    description: 'Affiche la liste des commandes disponibles',
-    execute: () => [
-      { type: 'info', text: 'Commandes disponibles:' },
-      { type: 'output', text: '' },
-      { type: 'output', text: '  help      - Affiche cette aide' },
-      { type: 'output', text: '  about     - À propos de moi' },
-      { type: 'output', text: '  skills    - Mes compétences' },
-      { type: 'output', text: '  projects  - Liste des projets' },
-      { type: 'output', text: '  contact   - Informations de contact' },
-      { type: 'output', text: '  clear     - Efface le terminal' },
-      { type: 'output', text: '  neofetch  - Affiche les infos système' },
-      { type: 'output', text: '  matrix    - Easter egg 🐰' },
-      { type: 'output', text: '  toast     - Démonstration des notifications' },
-    ],
-  },
-  about: {
-    description: 'À propos de moi',
-    execute: () => [
-      { type: 'success', text: '╔══════════════════════════════════════╗' },
-      { type: 'success', text: '║           À PROPOS DE MOI            ║' },
-      { type: 'success', text: '╚══════════════════════════════════════╝' },
-      { type: 'output', text: '' },
-      { type: 'output', text: 'Développeur Full Stack passionné par le code.' },
-      { type: 'output', text: 'Je crée des applications modernes et performantes.' },
-      { type: 'output', text: '' },
-      { type: 'info', text: 'Tapez "skills" pour voir mes compétences.' },
-    ],
-  },
-  skills: {
-    description: 'Mes compétences',
-    execute: () => [
-      { type: 'info', text: '💻 Compétences Techniques:' },
-      { type: 'output', text: '' },
-      { type: 'output', text: '  Frontend:  React, TypeScript, Next.js' },
-      { type: 'output', text: '  Backend:   Node.js, Python, Express' },
-      { type: 'output', text: '  Database:  PostgreSQL, MongoDB, Redis' },
-      { type: 'output', text: '  DevOps:    Docker, GitHub Actions, AWS' },
-      { type: 'output', text: '  Tools:     Git, VS Code, Figma' },
-    ],
-  },
-  projects: {
-    description: 'Liste des projets',
-    execute: () => [
-      { type: 'info', text: '📁 Projets:' },
-      { type: 'output', text: '' },
-      { type: 'output', text: '  [1] Portfolio Windows     - Ce portfolio original' },
-      { type: 'output', text: '  [2] CV Generator          - Générateur de CV' },
-      { type: 'output', text: '  [3] Mobile App            - Application React Native' },
-      { type: 'output', text: '  [4] API REST              - Backend Node.js' },
-      { type: 'output', text: '' },
-      { type: 'info', text: 'Visitez la fenêtre "Projets" pour plus de détails.' },
-    ],
-  },
-  contact: {
-    description: 'Informations de contact',
-    execute: () => [
-      { type: 'info', text: '📧 Contact:' },
-      { type: 'output', text: '' },
-      { type: 'output', text: '  Email:    portfoli-os@outlook.fr' },
-      { type: 'output', text: '  GitHub:   github.com/vincbct34' },
-      { type: 'output', text: '  LinkedIn: linkedin.com/in/vincent-bichat' },
-    ],
-  },
-  neofetch: {
-    description: 'Affiche les infos système',
-    execute: () => [
-      { type: 'ascii', text: ASCII_ART },
-      { type: 'output', text: '' },
-      { type: 'info', text: 'vincent@portfolio' },
-      { type: 'output', text: '-------------------' },
-      { type: 'output', text: 'OS: Windows 11 (Web Edition)' },
-      { type: 'output', text: 'Host: Portfolio v1.0.0' },
-      { type: 'output', text: 'Kernel: React 18.x + TypeScript' },
-      { type: 'output', text: 'Shell: portfolio-terminal' },
-      { type: 'output', text: 'Resolution: ' + window.innerWidth + 'x' + window.innerHeight },
-      { type: 'output', text: 'Theme: Windows 11 (Glassmorphism)' },
-      { type: 'output', text: 'Icons: Lucide React' },
-      { type: 'output', text: 'Terminal: Custom Terminal App' },
-    ],
-  },
-  matrix: {
-    description: 'Easter egg',
-    execute: () => [
-      { type: 'success', text: 'Wake up, Neo...' },
-      { type: 'success', text: 'The Matrix has you...' },
-      { type: 'success', text: 'Follow the white rabbit. 🐰' },
-      { type: 'output', text: '' },
-      { type: 'ascii', text: '  ██╗  ██╗███████╗██╗     ██╗      ██████╗ ' },
-      { type: 'ascii', text: '  ██║  ██║██╔════╝██║     ██║     ██╔═══██╗' },
-      { type: 'ascii', text: '  ███████║█████╗  ██║     ██║     ██║   ██║' },
-      { type: 'ascii', text: '  ██╔══██║██╔══╝  ██║     ██║     ██║   ██║' },
-      { type: 'ascii', text: '  ██║  ██║███████╗███████╗███████╗╚██████╔╝' },
-      { type: 'ascii', text: '  ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ' },
-    ],
-  },
-  clear: {
-    description: 'Efface le terminal',
-    execute: () => 'CLEAR',
-  },
-};
 
 export default function Terminal() {
   const { showToast, addNotification } = useNotification();
+
+  // Memoize commands to avoid recreating on every render
+  const COMMANDS = useMemo(() => createCommands(), []);
+
   const [history, setHistory] = useState<HistoryLine[]>([
     { type: 'ascii', text: ASCII_ART },
     { type: 'info', text: 'Bienvenue dans le terminal de Vincent!' },

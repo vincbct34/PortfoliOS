@@ -1,24 +1,14 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Minus, Square, X } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { useWindows } from '../../context/WindowContext';
-import { useDrag, type SnapZone } from '../../hooks/useDrag';
+import { useDrag } from '../../hooks/useDrag';
 import { useResize, type ResizeHandle } from '../../hooks/useResize';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
+import { getIcon } from '../../utils/iconHelpers';
 import SnapPreview from '../SnapPreview/SnapPreview';
-import type { WindowPosition, WindowSize } from '../../types/window';
+import type { WindowPosition, WindowSize, SnapZone } from '../../types/window';
 import styles from './Window.module.css';
-
-const getIcon = (iconName: string): LucideIcon => {
-  // Convert kebab-case to PascalCase (e.g., 'file-text' -> 'FileText', 'gamepad-2' -> 'Gamepad2')
-  const formattedName = iconName
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[formattedName] || LucideIcons.File;
-};
 
 interface WindowProps {
   windowId: string;
@@ -55,6 +45,16 @@ export default function Window({ windowId, children }: WindowProps) {
     },
     [windowId, updatePosition]
   );
+
+  // Keyboard navigation for WCAG accessibility (Ctrl+Arrow to move window)
+  useKeyboardNavigation({
+    windowId,
+    position: windowData?.position || { x: 0, y: 0 },
+    isMaximized: windowData?.isMaximized,
+    isSnapped: windowData?.isSnapped,
+    isFocused,
+    onMove: handleDragUpdate,
+  });
 
   const handleDragEnd = useCallback(
     (snapZone: SnapZone) => {
@@ -94,6 +94,16 @@ export default function Window({ windowId, children }: WindowProps) {
   // Track current snap zone for preview
   const [currentSnapZone, setCurrentSnapZone] = useState<SnapZone>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const rafIdRef = useRef<number | null>(null);
+
+  // Cleanup RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
+  }, []);
 
   const handleSnapZoneChange = useCallback((zone: SnapZone) => {
     setCurrentSnapZone(zone);
@@ -115,8 +125,9 @@ export default function Window({ windowId, children }: WindowProps) {
     (snapZone: SnapZone) => {
       setIsDragging(false);
       // Delay snap to next frame so layout animation can trigger
-      requestAnimationFrame(() => {
+      rafIdRef.current = requestAnimationFrame(() => {
         handleDragEnd(snapZone);
+        rafIdRef.current = null;
       });
     },
     [handleDragEnd]
@@ -221,6 +232,9 @@ export default function Window({ windowId, children }: WindowProps) {
         }}
         onMouseDown={handleWindowClick}
         onContextMenu={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-label={windowData.title}
+        aria-modal="false"
       >
         {/* Titlebar */}
         <div

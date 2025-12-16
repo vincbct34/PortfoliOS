@@ -12,12 +12,7 @@ import { Mail, Github, Linkedin } from 'lucide-react';
 // ----------------------------------------------------------------------------
 export interface Profile {
   name: string;
-  title: string;
   avatar: string;
-  bio: string;
-  location: string;
-  experience: string;
-  availability: string;
   socials: {
     github: string;
     linkedin: string;
@@ -27,16 +22,7 @@ export interface Profile {
 
 export const profile: Profile = {
   name: 'Vincent Bichat',
-  title: 'Développeur Full Stack',
-  avatar: 'V',
-  bio: `Étudiant en informatique à EPITECH Montpellier, passionné par le développement web et les nouvelles technologies.
-
-Je crée des applications modernes et performantes avec une expertise en React, TypeScript et Node.js.
-
-N'hésitez pas à me contacter pour discuter de vos projets !`,
-  location: 'Montpellier, France',
-  experience: '2+ ans',
-  availability: 'Disponible',
+  avatar: '/profile.png',
   socials: {
     github: 'https://github.com/vincbct34',
     linkedin: 'https://www.linkedin.com/in/vincent-bichat',

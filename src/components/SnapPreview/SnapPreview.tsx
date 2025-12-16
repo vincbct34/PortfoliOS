@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import type { SnapZone } from '../../hooks/useDrag';
+import type { SnapZone } from '../../types/window';
 import styles from './SnapPreview.module.css';
 
 interface SnapPreviewProps {

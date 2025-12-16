@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
+import { useTranslation } from '../../context/I18nContext';
 import bootLogo from '../../assets/boot.png';
 import './BootScreen.css';
 
 interface BootScreenProps {
   onBootComplete: () => void;
   duration?: number;
+  mode?: 'boot' | 'shutdown';
 }
 
 // Windows 11 style spinning dots
@@ -31,36 +33,31 @@ const LoadingDots = () => (
   </div>
 );
 
-const bootMessages = [
-  'Initializing portfolio...',
-  'Loading projects...',
-  'Preparing skills database...',
-  'Setting up workspace...',
-  'Almost ready...',
-];
-
-function BootScreen({ onBootComplete, duration = 4000 }: BootScreenProps) {
+function BootScreen({ onBootComplete, duration = 4000, mode = 'boot' }: BootScreenProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const { playSound } = useSystemSettings();
+  const { t } = useTranslation();
+
+  const messages = mode === 'boot' ? t.bootScreen.messages : t.bootScreen.shutdownMessages;
 
   useEffect(() => {
-    // Play startup sound
+    // Play sound
     const soundTimer = setTimeout(() => {
-      playSound('startup');
+      playSound(mode === 'boot' ? 'startup' : 'shutdown');
     }, 500);
 
     // Cycle through messages
     const messageInterval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % bootMessages.length);
-    }, duration / bootMessages.length);
+      setMessageIndex((prev) => (prev + 1) % messages.length);
+    }, duration / messages.length);
 
     // Start exit animation before completing
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
     }, duration - 500);
 
-    // Complete boot
+    // Complete boot/shutdown
     const completeTimer = setTimeout(() => {
       onBootComplete();
     }, duration);
@@ -71,7 +68,7 @@ function BootScreen({ onBootComplete, duration = 4000 }: BootScreenProps) {
       clearTimeout(exitTimer);
       clearTimeout(completeTimer);
     };
-  }, [duration, onBootComplete, playSound]);
+  }, [duration, onBootComplete, playSound, messages.length, mode]);
 
   return (
     <AnimatePresence>
@@ -102,7 +99,7 @@ function BootScreen({ onBootComplete, duration = 4000 }: BootScreenProps) {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              {bootMessages[messageIndex]}
+              {messages[messageIndex]}
             </motion.p>
           </div>
         </motion.div>

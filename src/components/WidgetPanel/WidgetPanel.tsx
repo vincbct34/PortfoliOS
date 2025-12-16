@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Cloud,
@@ -23,6 +23,7 @@ import {
   getWeatherIcon,
   type WeatherData,
 } from '../../services/weatherService';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './WidgetPanel.module.css';
 
 interface WidgetPanelProps {
@@ -38,6 +39,7 @@ interface WeatherState {
 
 export default function WidgetPanel({ onClose }: WidgetPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
   const [weather, setWeather] = useState<WeatherState>({
     data: null,
     loading: true,
@@ -45,29 +47,30 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
     city: 'Paris',
   });
 
-  const loadWeather = useCallback(async () => {
-    setWeather((prev) => ({ ...prev, loading: true, error: false }));
-    try {
-      const location = await getUserLocation();
-      const data = await fetchWeather(location.latitude, location.longitude);
-      if (data) {
-        setWeather({
-          data,
-          loading: false,
-          error: false,
-          city: location.city,
-        });
-      } else {
+  // Load weather on mount
+  useEffect(() => {
+    const loadWeather = async () => {
+      setWeather((prev) => ({ ...prev, loading: true, error: false }));
+      try {
+        const location = await getUserLocation();
+        const data = await fetchWeather(location.latitude, location.longitude);
+        if (data) {
+          setWeather({
+            data,
+            loading: false,
+            error: false,
+            city: location.city,
+          });
+        } else {
+          setWeather((prev) => ({ ...prev, loading: false, error: true }));
+        }
+      } catch {
         setWeather((prev) => ({ ...prev, loading: false, error: true }));
       }
-    } catch {
-      setWeather((prev) => ({ ...prev, loading: false, error: true }));
-    }
-  }, []);
+    };
 
-  useEffect(() => {
     loadWeather();
-  }, [loadWeather]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -97,8 +100,6 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
       document.removeEventListener('keydown', handleEscape);
     };
   }, [onClose]);
-
-  const now = new Date();
 
   const getIconComponent = () => {
     if (!weather.data) return Cloud;
@@ -145,34 +146,19 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
         exit={{ x: '-100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
-        {/* Clock Widget */}
-        <div className={styles.widget}>
-          <div className={styles.clockWidget}>
-            <div className={styles.clockTime}>
-              {now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-            </div>
-            <div className={styles.clockDate}>
-              {now.toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-              })}
-            </div>
-          </div>
-        </div>
-
         {/* Weather Widget */}
         <div className={styles.widget}>
+          <h3 className={styles.widgetTitle}>{t.widgets.weather}</h3>
           <div className={styles.weatherWidget}>
             {weather.loading ? (
               <div className={styles.weatherLoading}>
                 <Loader2 size={32} className={styles.spinner} />
-                <span>Chargement météo...</span>
+                <span>{t.widgets.weatherLoading}</span>
               </div>
             ) : weather.error ? (
               <div className={styles.weatherError}>
                 <Cloud size={32} />
-                <span>Météo indisponible</span>
+                <span>{t.widgets.weatherUnavailable}</span>
               </div>
             ) : (
               <>
@@ -201,7 +187,7 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
 
         {/* Quick Links Widget */}
         <div className={styles.widget}>
-          <h3 className={styles.widgetTitle}>Liens rapides</h3>
+          <h3 className={styles.widgetTitle}>{t.widgets.quickLinks}</h3>
           <div className={styles.quickLinks}>
             {quickLinks.map((link) => {
               const Icon = link.icon;
@@ -224,19 +210,19 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
 
         {/* Stats Widget */}
         <div className={styles.widget}>
-          <h3 className={styles.widgetTitle}>Portfolio Stats</h3>
+          <h3 className={styles.widgetTitle}>{t.widgets.stats}</h3>
           <div className={styles.stats}>
             <div className={styles.stat}>
               <span className={styles.statValue}>5+</span>
-              <span className={styles.statLabel}>Projets</span>
+              <span className={styles.statLabel}>{t.widgets.projects}</span>
             </div>
             <div className={styles.stat}>
-              <span className={styles.statValue}>3+</span>
-              <span className={styles.statLabel}>Années XP</span>
+              <span className={styles.statValue}>2+</span>
+              <span className={styles.statLabel}>{t.widgets.yearsXp}</span>
             </div>
             <div className={styles.stat}>
               <span className={styles.statValue}>10+</span>
-              <span className={styles.statLabel}>Technologies</span>
+              <span className={styles.statLabel}>{t.widgets.technologies}</span>
             </div>
           </div>
         </div>

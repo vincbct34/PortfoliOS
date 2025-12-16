@@ -34,6 +34,9 @@
 }
 
 .widgetTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -210,4 +213,114 @@
   .clockTime {
     font-size: 42px;
   }
+}
+
+/* World Clock Widget */
+.worldClocks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.worldClockItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.worldClockItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.worldClockFlag {
+  font-size: 18px;
+}
+
+.worldClockCity {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.worldClockTime {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--accent-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Calendar Widget */
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendarMonth {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.calendarNavButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.calendarNavButton:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendarDayHeader {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 6px 0;
+}
+
+.calendarDay {
+  text-align: center;
+  font-size: 12px;
+  padding: 6px 0;
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.calendarDay:not(.empty):hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendarDay.today {
+  background: var(--accent-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.calendarDay.empty {
+  cursor: default;
 }

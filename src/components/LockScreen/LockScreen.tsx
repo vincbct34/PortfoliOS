@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '../../context/I18nContext';
 import styles from './LockScreen.module.css';
 
 interface LockScreenProps {
@@ -9,19 +10,30 @@ interface LockScreenProps {
 export default function LockScreen({ onUnlock }: LockScreenProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const [canUnlock, setCanUnlock] = useState(false);
+  const { t, locale } = useTranslation();
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(timer);
+    // Prevent immediate unlock from the event that caused the lock
+    const unlockTimer = setTimeout(() => {
+      setCanUnlock(true);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(unlockTimer);
+    };
   }, []);
 
   const handleUnlock = useCallback(() => {
+    if (!canUnlock) return;
     setIsUnlocking(true);
     setTimeout(onUnlock, 500);
-  }, [onUnlock]);
+  }, [onUnlock, canUnlock]);
 
   useEffect(() => {
     const handleKeyDown = () => {
@@ -46,14 +58,14 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
   }, [handleUnlock, isUnlocking]);
 
   const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString('fr-FR', {
+    return date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString(locale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -65,11 +77,15 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
       {!isUnlocking && (
         <motion.div
           className={styles.lockScreen}
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -50 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          role="dialog"
+          aria-label="Lock Screen"
+          aria-modal="true"
         >
-          <div className={styles.content}>
+          <div className={styles.content} role="status" aria-live="polite">
             <motion.div
               className={styles.time}
               initial={{ y: 20, opacity: 0 }}
@@ -94,7 +110,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
               animate={{ opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              Cliquez ou appuyez sur une touche pour déverrouiller
+              {t.lockScreen.hint}
             </motion.div>
           </div>
 

@@ -65,14 +65,6 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       timestamp: new Date(),
       read: false,
     },
-    {
-      id: 'welcome-2',
-      title: 'Astuce',
-      message: 'Tapez "toast" dans le Terminal pour tester les notifications.',
-      type: 'info',
-      timestamp: new Date(Date.now() - 60000),
-      read: false,
-    },
   ]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;

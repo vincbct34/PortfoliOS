@@ -1,19 +1,8 @@
 import { memo, useRef } from 'react';
 import { motion, type PanInfo } from 'framer-motion';
-import * as LucideIcons from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import type { IconPosition } from '../../hooks/useDesktopIcons';
+import { getIcon } from '../../utils/iconHelpers';
 import styles from './Desktop.module.css';
-
-const getIcon = (iconName: string): LucideIcon => {
-  // Convert kebab-case to PascalCase (e.g., "file-text" -> "FileText", "gamepad-2" -> "Gamepad2")
-  const formattedName = iconName
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[formattedName] || LucideIcons.File;
-};
 
 interface DesktopIconProps {
   appId: string;
@@ -108,7 +97,17 @@ const DesktopIcon = memo(function DesktopIcon({
         e.stopPropagation();
         onContextMenu(e, appId);
       }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onDoubleClick(appId);
+        }
+      }}
       whileDrag={{ scale: 1.05, zIndex: 1000 }}
+      role="button"
+      tabIndex={0}
+      aria-label={`${label}, double-cliquez pour ouvrir`}
+      aria-selected={isSelected}
     >
       <div className={styles.iconWrapper}>
         <Icon />

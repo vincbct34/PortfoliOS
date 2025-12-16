@@ -35,6 +35,7 @@ interface FileNode {
   content?: string;
   size?: string;
   modified?: string;
+  downloadUrl?: string; // URL for downloadable files like PDFs
 }
 
 // Virtual file system data
@@ -50,11 +51,12 @@ const fileSystem: FileNode = {
       children: [
         {
           id: 'cv',
-          name: 'CV_Vincent.pdf',
+          name: 'CV_Vincent_Bichat.pdf',
           type: 'file',
           icon: 'file',
           size: '245 Ko',
-          modified: '15/12/2024',
+          modified: '16/12/2024',
+          downloadUrl: '/cv-vincent-bichat.pdf',
         },
         {
           id: 'lettre',
@@ -405,6 +407,18 @@ export default function FileExplorer() {
   // Download file content
   const handleDownloadFile = useCallback(
     (item: FileNode) => {
+      // Check if it's a file with a downloadUrl (like PDF)
+      if (item.downloadUrl) {
+        const a = document.createElement('a');
+        a.href = item.downloadUrl;
+        a.download = item.name;
+        a.click();
+        showToast(`"${item.name}" téléchargé`, 'success');
+        closeContextMenu();
+        return;
+      }
+
+      // Check if it's a user file
       const userFile = userFiles.find((f) => f.id === item.id);
       if (userFile) {
         const blob = new Blob([userFile.content], { type: 'text/plain' });
@@ -640,7 +654,7 @@ export default function FileExplorer() {
                   <FolderOpen size={16} />
                   Ouvrir
                 </button>
-                {isUserFile(contextMenu.item.id) && (
+                {(isUserFile(contextMenu.item.id) || contextMenu.item.downloadUrl) && (
                   <button onClick={() => handleDownloadFile(contextMenu.item!)}>
                     <Download size={16} />
                     Télécharger
