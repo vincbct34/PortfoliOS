@@ -4,7 +4,19 @@
  */
 
 // Taskbar dimensions
-export const TASKBAR_HEIGHT = 48; // pixels
+export const TASKBAR_HEIGHT = 48; // pixels (desktop)
+export const TASKBAR_HEIGHT_MOBILE = 56; // pixels (mobile - taller for touch targets)
+
+/**
+ * Get the appropriate taskbar height based on viewport width.
+ * Returns TASKBAR_HEIGHT_MOBILE for screens <= 768px, otherwise TASKBAR_HEIGHT.
+ */
+export function getTaskbarHeight(): number {
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
+    return TASKBAR_HEIGHT_MOBILE;
+  }
+  return TASKBAR_HEIGHT;
+}
 
 // Window snapping thresholds
 export const SNAP_THRESHOLD = 20; // pixels from edge to trigger snap

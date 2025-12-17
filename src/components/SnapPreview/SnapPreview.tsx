@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { SnapZone } from '../../types/window';
+import { getTaskbarHeight } from '../../constants/layout';
 import styles from './SnapPreview.module.css';
 
 interface SnapPreviewProps {
@@ -9,6 +10,8 @@ interface SnapPreviewProps {
 export default function SnapPreview({ snapZone }: SnapPreviewProps) {
   if (!snapZone) return null;
 
+  const taskbarHeight = getTaskbarHeight();
+
   const getPreviewStyle = (): React.CSSProperties => {
     switch (snapZone) {
       case 'left':
@@ -16,21 +19,21 @@ export default function SnapPreview({ snapZone }: SnapPreviewProps) {
           left: 0,
           top: 0,
           width: '50%',
-          height: 'calc(100vh - 48px)',
+          height: `calc(100vh - ${taskbarHeight}px)`,
         };
       case 'right':
         return {
           right: 0,
           top: 0,
           width: '50%',
-          height: 'calc(100vh - 48px)',
+          height: `calc(100vh - ${taskbarHeight}px)`,
         };
       case 'top':
         return {
           left: 0,
           top: 0,
           width: '100%',
-          height: 'calc(100vh - 48px)',
+          height: `calc(100vh - ${taskbarHeight}px)`,
         };
       default:
         return {};

@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react';
 import { useSystemSettings } from './SystemSettingsContext';
 import { initialApps } from '../data/apps';
-import { BASE_Z_INDEX, MAX_Z_INDEX } from '../constants/layout';
+import { BASE_Z_INDEX, MAX_Z_INDEX, getTaskbarHeight } from '../constants/layout';
 import type {
   WindowsState,
   WindowAction,
@@ -124,7 +124,10 @@ function windowReducer(state: WindowsState, action: WindowAction): WindowsState 
               : { x: 0, y: 0 },
             size: window.isMaximized
               ? window.previousSize || window.size
-              : { width: globalThis.innerWidth, height: globalThis.innerHeight - 48 },
+              : {
+                  width: globalThis.innerWidth,
+                  height: globalThis.innerHeight - getTaskbarHeight(),
+                },
           },
         },
       };
@@ -222,7 +225,7 @@ function windowReducer(state: WindowsState, action: WindowAction): WindowsState 
 
       // Calculate snapped position and size
       const screenWidth = globalThis.innerWidth;
-      const screenHeight = globalThis.innerHeight - 48; // Minus taskbar
+      const screenHeight = globalThis.innerHeight - getTaskbarHeight(); // Minus taskbar
 
       let newPosition: WindowPosition;
       let newSize: WindowSize;
