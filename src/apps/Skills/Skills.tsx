@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from './Skills.module.css';
 import { skills, skillStats } from '../../data/portfolio';
 import { useTranslation } from '../../context/I18nContext';
+import GitHubPerformance from './GitHubPerformance';
 
 type TabType = 'processes' | 'performance';
 
@@ -43,55 +44,61 @@ export default function Skills() {
       </div>
 
       <div className={styles.content}>
-        <div className={styles.statsBar}>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>{t.skillsPage.statSkills}</div>
-            <div className={styles.statValue}>{skillStats.totalSkills}</div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>{t.skillsPage.statAvgLevel}</div>
-            <div className={styles.statValue}>{skillStats.avgProficiency}%</div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>{t.skillsPage.statSpecialty}</div>
-            <div className={styles.statValue}>
-              {categoryTranslations[skillStats.topCategory] || skillStats.topCategory}
+        {activeTab === 'processes' ? (
+          <>
+            <div className={styles.statsBar}>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>{t.skillsPage.statSkills}</div>
+                <div className={styles.statValue}>{skillStats.totalSkills}</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>{t.skillsPage.statAvgLevel}</div>
+                <div className={styles.statValue}>{skillStats.avgProficiency}%</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>{t.skillsPage.statSpecialty}</div>
+                <div className={styles.statValue}>
+                  {categoryTranslations[skillStats.topCategory] || skillStats.topCategory}
+                </div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>{t.skillsPage.statExperience}</div>
+                <div className={styles.statValue}>
+                  {skillStats.yearsExp} {t.skillsPage.years}
+                </div>
+              </div>
             </div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>{t.skillsPage.statExperience}</div>
-            <div className={styles.statValue}>
-              {skillStats.yearsExp} {t.skillsPage.years}
-            </div>
-          </div>
-        </div>
 
-        <div className={styles.processList}>
-          <div className={styles.processHeader}>
-            <span>{t.skillsPage.colName}</span>
-            <span>{t.skillsPage.colCategory}</span>
-            <span>{t.skillsPage.colLevel}</span>
-            <span>{t.skillsPage.colProficiency}</span>
-          </div>
-          {skills.map((skill) => (
-            <div key={skill.name} className={styles.processRow}>
-              <div className={styles.processName}>
-                <span className={styles.processIcon}>{skill.icon}</span>
-                <span>{skill.name}</span>
+            <div className={styles.processList}>
+              <div className={styles.processHeader}>
+                <span>{t.skillsPage.colName}</span>
+                <span>{t.skillsPage.colCategory}</span>
+                <span>{t.skillsPage.colLevel}</span>
+                <span>{t.skillsPage.colProficiency}</span>
               </div>
-              <span className={styles.processCategory}>
-                {categoryTranslations[skill.category] || skill.category}
-              </span>
-              <span className={styles.processLevel}>{skill.level}%</span>
-              <div className={styles.progressBar}>
-                <div
-                  className={`${styles.progressFill} ${getProgressClass(skill.level)}`}
-                  style={{ width: `${skill.level}%` }}
-                />
-              </div>
+              {skills.map((skill) => (
+                <div key={skill.name} className={styles.processRow}>
+                  <div className={styles.processName}>
+                    <span className={styles.processIcon}>{skill.icon}</span>
+                    <span>{skill.name}</span>
+                  </div>
+                  <span className={styles.processCategory}>
+                    {categoryTranslations[skill.category] || skill.category}
+                  </span>
+                  <span className={styles.processLevel}>{skill.level}%</span>
+                  <div className={styles.progressBar}>
+                    <div
+                      className={`${styles.progressFill} ${getProgressClass(skill.level)}`}
+                      style={{ width: `${skill.level}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        ) : (
+          <GitHubPerformance />
+        )}
       </div>
     </div>
   );

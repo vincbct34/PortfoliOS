@@ -4,6 +4,25 @@ All notable changes to PortfoliOS will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2025-12-17
+
+### Added
+- **GitHub Performance Dashboard**: New Performance tab in Skills app with Task Manager-style interface
+  - Animated canvas graphs showing weekly/daily commit activity
+  - Repository stats (public + private with token)
+  - Language usage bar with GitHub color scheme
+  - Recent activity feed with event icons
+  - GitHub API integration with localStorage caching (1h TTL)
+  - Support for `VITE_GITHUB_TOKEN` environment variable for private repo access
+  - Responsive design for mobile/tablet/desktop
+
+### Changed
+- **Skills App**: Now has two tabs - Processes (existing) and Performance (new)
+- **Environment**: Added `VITE_GITHUB_TOKEN` to `.env.example`
+- **TypeScript**: Added env type declarations in `vite-env.d.ts`
+
+---
+
 ## [1.1.0] - 2025-12-17
 
 ### Added

@@ -1,0 +1,465 @@
+/* GitHub Performance - Task Manager Style */
+
+.performanceContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  height: 100%;
+  padding: 16px;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+/* Left Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.metricCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.metricCard:hover {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+.metricCard.active {
+  background: #2d2d2d;
+  border-color: var(--accent-primary);
+}
+
+.metricIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00d4aa15, #00d4aa30);
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.metricInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.metricValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.miniGraph {
+  width: 60px;
+  height: 30px;
+}
+
+.miniGraphCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Main Panel */
+.mainPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #333;
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.panelSubtitle {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Graph Container */
+.graphContainer {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.graphHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.graphLabel {
+  font-size: 13px;
+  color: #888;
+}
+
+.graphValue {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.graphWrapper {
+  width: 100%;
+  height: 120px;
+  background: #0a0a0a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.graphCanvas {
+  display: block;
+}
+
+.graphFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #666;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.statBox {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.statBoxLabel {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.statBoxValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: #00d4aa;
+}
+
+.statBoxSubtext {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Languages Chart */
+.languagesContainer {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.languagesTitle {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.languageBar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.languageSegment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.languagesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.languageItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.languageDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.languageName {
+  color: #ccc;
+}
+
+.languagePercent {
+  color: #888;
+}
+
+/* Activity Feed */
+.activityContainer {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.activityTitle {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  border-radius: 50%;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.activityContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.activityType {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.activityRepo {
+  font-size: 11px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activityTime {
+  font-size: 10px;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* Loading & Error States */
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  color: #888;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #333;
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorIcon {
+  font-size: 48px;
+}
+
+.errorMessage {
+  font-size: 14px;
+  color: #888;
+}
+
+.retryButton {
+  padding: 8px 16px;
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s ease;
+}
+
+.retryButton:hover {
+  background: #0065b8;
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .performanceContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .sidebar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+
+  .metricCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 6px;
+  }
+
+  .metricInfo {
+    text-align: center;
+  }
+
+  .metricLabel {
+    font-size: 10px;
+  }
+
+  .metricValue {
+    font-size: 16px;
+  }
+
+  .miniGraph {
+    display: none;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .performanceContainer {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .sidebar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metricCard {
+    padding: 8px 4px;
+  }
+
+  .metricIcon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .metricValue {
+    font-size: 14px;
+  }
+
+  .metricLabel {
+    font-size: 9px;
+  }
+
+  .graphWrapper {
+    height: 80px;
+  }
+
+  .graphLabel {
+    font-size: 11px;
+  }
+
+  .graphValue {
+    font-size: 16px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .statBox {
+    padding: 10px;
+  }
+
+  .statBoxLabel {
+    font-size: 9px;
+  }
+
+  .statBoxValue {
+    font-size: 16px;
+  }
+
+  .statBoxSubtext {
+    font-size: 9px;
+  }
+
+  .panelTitle {
+    font-size: 14px;
+  }
+
+  .panelSubtitle {
+    font-size: 11px;
+  }
+}

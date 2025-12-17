@@ -146,6 +146,19 @@ export interface Translations {
     colCategory: string;
     colLevel: string;
     colProficiency: string;
+    // Performance tab
+    perfLoading: string;
+    perfRetry: string;
+    perfCommits: string;
+    perfRepos: string;
+    perfLanguages: string;
+    perfActivity: string;
+    perfWeeklyCommits: string;
+    perfDailyCommits: string;
+    perfTotalCommits: string;
+    perfActiveRepos: string;
+    perfLanguageUsage: string;
+    perfRecentActivity: string;
   };
 
   // Contact
@@ -443,6 +456,19 @@ N'hésitez pas à me contacter pour discuter de vos projets !`,
     colCategory: 'Catégorie',
     colLevel: 'Niveau',
     colProficiency: 'Maîtrise',
+    // Performance tab
+    perfLoading: 'Chargement des données GitHub...',
+    perfRetry: 'Réessayer',
+    perfCommits: 'Commits',
+    perfRepos: 'Dépôts',
+    perfLanguages: 'Langages',
+    perfActivity: 'Activité',
+    perfWeeklyCommits: 'Commits hebdomadaires (6 derniers mois)',
+    perfDailyCommits: 'Commits quotidiens (8 dernières semaines)',
+    perfTotalCommits: 'Total cette année',
+    perfActiveRepos: 'Dépôts actifs',
+    perfLanguageUsage: 'Utilisation des langages',
+    perfRecentActivity: 'Activité récente',
   },
   contactPage: {
     title: 'Me Contacter',
@@ -721,6 +747,19 @@ Feel free to contact me to discuss your projects!`,
     colCategory: 'Category',
     colLevel: 'Level',
     colProficiency: 'Proficiency',
+    // Performance tab
+    perfLoading: 'Loading GitHub data...',
+    perfRetry: 'Retry',
+    perfCommits: 'Commits',
+    perfRepos: 'Repositories',
+    perfLanguages: 'Languages',
+    perfActivity: 'Activity',
+    perfWeeklyCommits: 'Weekly Commits (last 6 months)',
+    perfDailyCommits: 'Daily Commits (last 8 weeks)',
+    perfTotalCommits: 'Total This Year',
+    perfActiveRepos: 'Active Repos',
+    perfLanguageUsage: 'Language Usage',
+    perfRecentActivity: 'Recent Activity',
   },
   contactPage: {
     title: 'Contact Me',
