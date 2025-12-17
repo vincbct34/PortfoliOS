@@ -194,7 +194,9 @@ export default function Window({ windowId, children }: WindowProps) {
         left: 0,
         top: 0,
         width: '100%',
-        height: isMobile ? 'calc(100vh - 56px)' : 'calc(100vh - 48px)', // Adjust for mobile taskbar height
+        // Use 100dvh (dynamic viewport height) on mobile to account for browser chrome
+        // 100dvh excludes the mobile browser address bar, unlike 100vh
+        height: isMobile ? 'calc(100dvh - 56px)' : 'calc(100vh - 48px)',
         zIndex: windowData.zIndex,
       }
     : {
