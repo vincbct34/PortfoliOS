@@ -258,3 +258,97 @@
 .flagEmoji {
   font-size: 24px;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .settings {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 8px 0;
+  }
+
+  .sidebarTitle {
+    display: none;
+  }
+
+  .navList {
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+    padding: 0 8px;
+  }
+
+  .navItem {
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+
+  .navItem span {
+    display: none;
+  }
+
+  .navItem .chevron {
+    display: none;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .wallpaperGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .colorGrid {
+    gap: 8px;
+  }
+
+  .colorItem {
+    width: 36px;
+    height: 36px;
+  }
+
+  .themeToggle {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .themeOption {
+    padding: 16px 24px;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .aboutCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .aboutLogo {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .aboutInfo h4 {
+    font-size: 18px;
+  }
+
+  .specItem {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}

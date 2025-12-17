@@ -253,3 +253,55 @@
 :global(.dark) .formTextarea:focus {
   background: rgba(255, 255, 255, 0.08);
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .contact {
+    padding: 16px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .methods {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .methodCard {
+    padding: 16px;
+  }
+
+  .methodIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .methodIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .form {
+    max-width: 100%;
+  }
+
+  .formTitle {
+    font-size: 16px;
+  }
+
+  .formInput,
+  .formTextarea {
+    padding: 10px 12px;
+  }
+
+  .submitButton {
+    padding: 12px 20px;
+  }
+}

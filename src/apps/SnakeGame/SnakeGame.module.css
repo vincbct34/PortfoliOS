@@ -235,6 +235,38 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .container {
+    overflow: hidden;
+  }
+
+  .header {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .scoreSection {
+    gap: 12px;
+  }
+
+  .value {
+    font-size: 20px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+
+  .highScore {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .controlButton {
+    width: 32px;
+    height: 32px;
+  }
+
   .canvas {
     max-width: 100%;
     height: auto;
@@ -242,15 +274,65 @@
 
   .dpad {
     display: flex;
-    /* Show controls on mobile */
+    padding: 12px;
+    flex-shrink: 0;
+  }
+
+  .dpadButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dpadCenter {
+    width: 44px;
+    height: 44px;
   }
 
   .gameWrapper {
     padding: 10px;
+    min-height: 0;
+    flex: 1 1 auto;
   }
 
   .footer {
     display: none;
-    /* Hide keyboard hints on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 10px;
+  }
+
+  .value {
+    font-size: 18px;
+  }
+
+  .highScore {
+    display: none;
+  }
+
+  .dpad {
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .dpadRow {
+    gap: 4px;
+  }
+
+  .dpadButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  .dpadCenter {
+    width: 40px;
+    height: 40px;
+  }
+
+  .gameWrapper {
+    padding: 6px;
   }
 }

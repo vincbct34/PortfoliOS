@@ -286,3 +286,68 @@
 :global(.dark) .projectLinks {
   border-color: rgba(255, 255, 255, 0.05);
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 6px 8px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .viewButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .projectsGrid {
+    padding: 12px;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .projectPreview {
+    height: 120px;
+  }
+
+  .projectCard.list .projectPreview {
+    width: 80px;
+    height: 60px;
+  }
+
+  .projectInfo {
+    padding: 12px;
+  }
+
+  .projectTitle {
+    font-size: 13px;
+  }
+
+  .projectDescription {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .projectLinks {
+    padding: 8px 12px;
+  }
+
+  .projectLink {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .projectsGrid {
+    grid-template-columns: 1fr;
+  }
+}

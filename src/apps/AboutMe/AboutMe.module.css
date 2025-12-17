@@ -188,3 +188,49 @@
 :global(.dark) .downloadButton {
   background: linear-gradient(135deg, #60cdff, #764ba2);
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .aboutMe {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .headerInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .name {
+    font-size: 22px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .socialLinks {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 14px;
+  }
+}

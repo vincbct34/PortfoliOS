@@ -237,3 +237,49 @@
 .closeDialogButton:hover {
   background: rgba(255, 255, 255, 0.15);
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .menuBar {
+    padding: 2px 6px;
+    overflow-x: auto;
+  }
+
+  .menuButton {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .fileNameDisplay {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .textArea {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .statusBar {
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+
+  .dialog {
+    width: calc(100% - 32px);
+    max-width: 400px;
+    padding: 16px;
+  }
+
+  .dialog h3 {
+    font-size: 14px;
+  }
+
+  .fileList li {
+    padding: 8px 10px;
+  }
+
+  .fileListName {
+    font-size: 12px;
+  }
+}

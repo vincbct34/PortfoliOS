@@ -154,3 +154,63 @@
 .progressFill.low {
   background: linear-gradient(90deg, #2196f3, #03a9f4);
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .statsBar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .statCard {
+    padding: 12px;
+  }
+
+  .statValue {
+    font-size: 18px;
+  }
+
+  .statLabel {
+    font-size: 11px;
+  }
+
+  .processHeader {
+    display: none;
+  }
+
+  .processRow {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .processName {
+    grid-column: 1 / -1;
+  }
+
+  .processCategory,
+  .processLevel {
+    display: none;
+  }
+
+  .progressBar {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    height: 6px;
+  }
+}

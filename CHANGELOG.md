@@ -6,14 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [1.1.0] - 2025-12-17
 
+### Added
+- **Mobile Responsiveness**: Added responsive CSS media queries (768px breakpoint) to 7 apps:
+  - **AboutMe**: Vertical header layout, centered avatar, stacked info grid
+  - **Contact**: Single-column contact methods, full-width form
+  - **FileExplorer**: Hidden sidebar, compact toolbar and grid items
+  - **Notepad**: Compact menu bar, responsive dialogs
+  - **Projects**: Smaller card widths, extra 480px breakpoint for single column
+  - **Settings**: Horizontal tab navigation, 2-column wallpaper grid
+  - **Skills**: 2-column stats bar, simplified process list
+
 ### Changed
 - **Desktop**: Hide desktop icons on mobile devices (use taskbar/start menu instead)
 - **README**: Updated README with latest changes
 - **.gitattributes**: Convert line endings to LF
-- **SnakeGame**: Improved mobile controls and styling
+- **SnakeGame**: Improved mobile controls and styling; fixed D-pad overlapping taskbar on small screens
 - **Terminal**: Updated CSS module styling
 - **Desktop**: Updated module styling
-- **StartMenu**: Updated styling for better mobile responsiveness
+- **StartMenu**: Updated styling for better mobile responsiveness; removed search auto-focus to prevent keyboard popup on mobile
 - **Taskbar**: Improved styling with icon-only mode, active indicator, and mobile responsiveness
 - **Window**: Hide resize handles when window is maximized
 

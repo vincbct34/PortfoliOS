@@ -441,3 +441,79 @@
 .deleteAction:hover {
   background: rgba(239, 68, 68, 0.15) !important;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .toolbar {
+    padding: 6px 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .navButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .addressBar {
+    min-width: 0;
+    flex: 1 1 100%;
+    order: 2;
+    padding: 4px 8px;
+  }
+
+  .searchBox {
+    flex: 1 1 auto;
+    order: 1;
+    padding: 4px 8px;
+  }
+
+  .searchBox input {
+    width: 80px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .gridItem {
+    padding: 8px 4px;
+  }
+
+  .gridIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .gridIcon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .gridName {
+    font-size: 11px;
+  }
+
+  .listHeader,
+  .listItem {
+    grid-template-columns: 1fr 80px;
+    gap: 8px;
+    padding: 6px 12px;
+  }
+
+  .listHeader span:nth-child(3),
+  .listItem .listSize {
+    display: none;
+  }
+
+  .statusBar {
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+}

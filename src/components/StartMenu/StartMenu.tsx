@@ -80,7 +80,6 @@ export default function StartMenu({ onClose }: StartMenuProps) {
               type="text"
               placeholder={t.startMenu.search}
               className={styles.searchInput}
-              autoFocus
               aria-label={t.common.search}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
