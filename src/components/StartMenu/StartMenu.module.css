@@ -251,3 +251,51 @@
   height: 16px;
   color: rgba(255, 255, 255, 0.9);
 }
+
+@media (max-width: 768px) {
+  .startMenu {
+    width: 100%;
+    max-width: 100%;
+    bottom: 56px;
+    /* Match new taskbar height */
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    /* Rounded top corners only */
+    border-bottom: none;
+  }
+
+  .header {
+    padding: 16px;
+  }
+
+  .pinnedSection {
+    padding: 0 16px 16px;
+  }
+
+  .appsGrid {
+    grid-template-columns: repeat(4, 1fr);
+    /* Reduce columns */
+    gap: 4px;
+  }
+
+  .appItem {
+    padding: 8px 4px;
+  }
+
+  .appIconWrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer {
+    padding: 12px 16px;
+  }
+
+  .powerMenu {
+    bottom: 72px;
+    /* Adjust for taller taskbar */
+    right: 16px;
+  }
+}

@@ -190,3 +190,67 @@
   color: rgba(255, 255, 255, 0.4);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* D-Pad - Default hidden */
+.dpad {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dpadRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dpadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dpadButton:active {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.95);
+}
+
+/* Spacer for the cross layout */
+.dpadCenter {
+  width: 48px;
+  height: 48px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .dpad {
+    display: flex;
+    /* Show controls on mobile */
+  }
+
+  .gameWrapper {
+    padding: 10px;
+  }
+
+  .footer {
+    display: none;
+    /* Hide keyboard hints on mobile */
+  }
+}

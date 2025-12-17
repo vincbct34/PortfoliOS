@@ -133,12 +133,24 @@ export default function Window({ windowId, children }: WindowProps) {
     [handleDragEnd]
   );
 
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { handleMouseDown: startDrag } = useDrag({
     onDragStart: handleDragStartWrapper,
     onDrag: handleDragUpdate,
     onDragEnd: handleDragEndWrapper,
     onSnapZoneChange: handleSnapZoneChange,
-    disabled: false, // Never disable - always allow dragging
+    disabled: isMobile, // Disable dragging on mobile
   });
 
   const handleResizeUpdate = useCallback(
@@ -151,7 +163,7 @@ export default function Window({ windowId, children }: WindowProps) {
   const { handleResizeStart, RESIZE_HANDLES } = useResize({
     onResize: handleResizeUpdate,
     minSize: windowData?.minSize,
-    disabled: windowData?.isMaximized || windowData?.isSnapped,
+    disabled: isMobile || windowData?.isMaximized || windowData?.isSnapped, // Disable resize on mobile
   });
 
   const handleWindowClick = useCallback(() => {
@@ -159,12 +171,13 @@ export default function Window({ windowId, children }: WindowProps) {
   }, [focusWindow, windowId]);
 
   const handleTitlebarDoubleClick = useCallback(() => {
+    if (isMobile) return; // Disable double click maximize on mobile
     if (windowData?.isSnapped) {
       snapWindow(windowId, null);
     } else {
       maximizeWindow(windowId);
     }
-  }, [maximizeWindow, snapWindow, windowId, windowData?.isSnapped]);
+  }, [maximizeWindow, snapWindow, windowId, windowData?.isSnapped, isMobile]);
 
   if (!windowData) return null;
 
@@ -174,14 +187,14 @@ export default function Window({ windowId, children }: WindowProps) {
   const Icon = getIcon(windowData.icon);
 
   // Use snapped state or maximized state for fullscreen positioning
-  const isFullscreen = windowData.isMaximized || windowData.snapZone === 'top';
+  const isFullscreen = isMobile || windowData.isMaximized || windowData.snapZone === 'top';
 
   const windowStyle: React.CSSProperties = isFullscreen
     ? {
         left: 0,
         top: 0,
         width: '100%',
-        height: 'calc(100vh - 48px)', // Full viewport height minus taskbar
+        height: isMobile ? 'calc(100vh - 56px)' : 'calc(100vh - 48px)', // Adjust for mobile taskbar height
         zIndex: windowData.zIndex,
       }
     : {
@@ -256,17 +269,19 @@ export default function Window({ windowId, children }: WindowProps) {
             >
               <Minus />
             </button>
-            <button
-              className={`${styles.titlebarButton} ${styles.maximize}`}
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation();
-                maximizeWindow(windowId);
-              }}
-              aria-label="Maximize"
-            >
-              <Square />
-            </button>
+            {!isMobile && (
+              <button
+                className={`${styles.titlebarButton} ${styles.maximize}`}
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  maximizeWindow(windowId);
+                }}
+                aria-label="Maximize"
+              >
+                <Square />
+              </button>
+            )}
             <button
               className={`${styles.titlebarButton} ${styles.close}`}
               onMouseDown={(e) => e.stopPropagation()}
@@ -285,7 +300,8 @@ export default function Window({ windowId, children }: WindowProps) {
         <div className={styles.content}>{children}</div>
 
         {/* Resize handles */}
-        {!windowData.isMaximized &&
+        {!isMobile &&
+          !windowData.isMaximized &&
           RESIZE_HANDLES.map((handle: ResizeHandle) => (
             <div
               key={handle}

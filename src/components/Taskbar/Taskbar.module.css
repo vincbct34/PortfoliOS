@@ -313,3 +313,64 @@
   pointer-events: none;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  .taskbar {
+    padding: 0 4px;
+    height: 56px; /* Slightly taller for better touch targets */
+  }
+
+  .startButton {
+    width: 48px;
+    height: 48px;
+  }
+
+  .startButton svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .appButtons {
+    margin-left: 4px;
+    gap: 2px;
+  }
+
+  .appButton {
+    padding: 0 8px; /* Reduce padding */
+    height: 48px;
+    width: 48px; /* Square buttons on mobile */
+  }
+
+  .appButton svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .appButtonLabel {
+    display: none; /* Hide labels on mobile */
+  }
+
+  /* Adjust active indicator for icon-only mode */
+  .activeIndicator {
+    width: 20px !important; /* Force wider indicator */
+  }
+
+  .systemTray {
+    gap: 2px;
+    padding: 0 4px;
+  }
+
+  .clock {
+    padding: 4px 8px;
+  }
+
+  .clockDate {
+    display: none; /* Hide date on mobile */
+  }
+
+  .widgetButton,
+  .trayButton {
+    width: 36px;
+    height: 36px;
+  }
+}

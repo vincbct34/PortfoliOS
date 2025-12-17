@@ -1,5 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Pause, RotateCcw, Trophy } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Trophy,
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+} from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
 import { useTranslation } from '../../context/I18nContext';
@@ -208,6 +217,25 @@ export default function SnakeGame() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPlaying]);
 
+  const handleDirectionClick = (newDir: Direction) => {
+    if (!isPlaying) return;
+    const currentDir = directionRef.current; // Use ref for most up-to-date direction
+
+    if (newDir === 'UP' && currentDir !== 'DOWN') {
+      setDirection('UP');
+      directionRef.current = 'UP';
+    } else if (newDir === 'DOWN' && currentDir !== 'UP') {
+      setDirection('DOWN');
+      directionRef.current = 'DOWN';
+    } else if (newDir === 'LEFT' && currentDir !== 'RIGHT') {
+      setDirection('LEFT');
+      directionRef.current = 'LEFT';
+    } else if (newDir === 'RIGHT' && currentDir !== 'LEFT') {
+      setDirection('RIGHT');
+      directionRef.current = 'RIGHT';
+    }
+  };
+
   // Draw game
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -358,6 +386,29 @@ export default function SnakeGame() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* D-Pad controls (Mobile only) */}
+      <div className={styles.dpad}>
+        <div className={styles.dpadRow}>
+          <button className={styles.dpadButton} onClick={() => handleDirectionClick('UP')}>
+            <ArrowUp size={24} />
+          </button>
+        </div>
+        <div className={styles.dpadRow}>
+          <button className={styles.dpadButton} onClick={() => handleDirectionClick('LEFT')}>
+            <ArrowLeft size={24} />
+          </button>
+          <div className={styles.dpadCenter} />
+          <button className={styles.dpadButton} onClick={() => handleDirectionClick('RIGHT')}>
+            <ArrowRight size={24} />
+          </button>
+        </div>
+        <div className={styles.dpadRow}>
+          <button className={styles.dpadButton} onClick={() => handleDirectionClick('DOWN')}>
+            <ArrowDown size={24} />
+          </button>
+        </div>
       </div>
 
       {/* Footer */}

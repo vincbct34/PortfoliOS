@@ -1,0 +1,82 @@
+# Changelog
+
+All notable changes to PortfoliOS will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [1.1.0] - 2025-12-17
+
+### Changed
+- **README**: Updated README with latest changes
+- **.gitattributes**: Convert line endings to LF
+- **SnakeGame**: Improved mobile controls and styling
+- **Terminal**: Updated CSS module styling
+- **Desktop**: Updated module styling
+- **StartMenu**: Updated styling for better mobile responsiveness
+- **Taskbar**: Improved styling with icon-only mode, active indicator, and mobile responsiveness
+- **Window**: Hide resize handles when window is maximized
+
+---
+
+## [1.0.0] - 2025-12-17
+
+### Added
+- **MIT License**: Added MIT License to the project for open source distribution (`2534b0d`)
+
+### Changed
+- **CI Workflow**: Updated CI workflow to use `check:ci` script for consistency in checks (`6f26b0a`)
+
+---
+
+## [0.3.0] - 2025-12-16 (Deployed Version)
+
+> This is the version deployed at commit `7a6ae60ceaba1d25077c5ac33d6179c24c61cf46`
+
+### Fixed
+- **Code Quality**: Formatting fixes to complete the check script (`7a6ae60`)
+
+### Changed
+- **Email Service**: Refactored email service config to validate configuration at runtime and use local variables for environment values (`11c15f0`)
+- **Testing**: Updated framer-motion mocks in Desktop and Window tests to handle additional props
+- **Error Handling**: Replaced `console.log` with `console.error` for window close error reporting in App.tsx
+- **CI Workflow**: Refactored CI workflow for improved readability and consistency (`16b2b41`)
+
+---
+
+## [0.2.0] - 2025-12-16
+
+### Added
+- **Vitest Testing Setup**: Introduced Vitest and Testing Library for unit testing, including configuration and initial test files for components and contexts (`801b4a4`)
+- **PWA Support**: Enhanced PWA support with manifest, service worker, and meta tags in index.html
+- **Public Assets**: Added public assets for PWA functionality
+- **SEO & Social Sharing**: Improved SEO and social sharing metadata
+
+### Changed
+- Updated `.gitignore` for test and coverage files
+
+---
+
+## [0.1.0] - 2025-12-16
+
+### Added
+- **Portfolio Data**: Centralized portfolio content in `src/data/portfolio.ts` (`cbd671e`)
+- **Email Service**: Added EmailJS integration via a new emailService
+- **CI Workflow**: Added CI workflow and environment variable example
+- **Custom Cursor**: Added custom cursor resize states
+
+### Changed
+- **AboutMe, Skills, Projects, Contact Apps**: Refactored to use centralized portfolio data
+- **Contact Form**: Updated with async submission, status messages, and spinner
+- **Project Images**: Improved project image handling
+- Various UI elements and documentation updates
+
+---
+
+## [0.0.1] - 2025-12-16
+
+### Added
+- **Initial Release**: Set up a new React project using Vite (`9bde608`)
+- Initial configuration files (`.gitignore`, Prettier, ESLint)
+- Project structure with essential components, contexts, hooks, and services
+- Example apps showcasing the OS-like interface
+- Global styles and asset files to provide a functional starting point

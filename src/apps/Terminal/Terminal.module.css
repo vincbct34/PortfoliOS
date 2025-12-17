@@ -99,3 +99,24 @@
 .content::-webkit-scrollbar-thumb:hover {
   background: #4c4c4c;
 }
+
+@media (max-width: 768px) {
+  .terminal {
+    font-size: 12px;
+    /* Slightly smaller base font */
+  }
+
+  .ascii {
+    font-size: 6px;
+    /* Much smaller font for ASCII art to fit */
+    line-height: 1.2;
+    overflow-x: auto;
+    /* Allow horizontal scroll if it still overflows */
+    white-space: pre;
+    /* Keep formatting but allow scroll */
+  }
+
+  .content {
+    padding: 12px;
+  }
+}
