@@ -32,6 +32,22 @@ interface UseDesktopIconsReturn {
 const POSITIONS_STORAGE_KEY = 'portfolio-desktop-icons';
 const CUSTOMIZATIONS_STORAGE_KEY = 'portfolio-desktop-customizations';
 
+// Get a stable viewport height that doesn't change when mobile keyboard opens
+function getStableViewportHeight(): number {
+  // On mobile, visualViewport.height changes with keyboard, but we want the stable height
+  // Use screen.height as a reference for mobile, fallback to innerHeight
+  if (typeof window === 'undefined') return 800;
+
+  // For mobile devices, use screen.availHeight which doesn't change with keyboard
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile && window.screen?.availHeight) {
+    // Use the smaller of availHeight and innerHeight to account for browser chrome
+    return Math.min(window.screen.availHeight, window.innerHeight);
+  }
+
+  return window.innerHeight;
+}
+
 function calculateDefaultPositions(
   iconIds: string[],
   iconWidth: number,
@@ -40,8 +56,9 @@ function calculateDefaultPositions(
   padding: number
 ): IconPositions {
   const positions: IconPositions = {};
-  const desktopHeight = window.innerHeight - 48 - padding * 2; // minus taskbar and padding
-  const iconsPerColumn = Math.floor(desktopHeight / (iconHeight + gap));
+  const taskbarHeight = window.innerWidth <= 768 ? 56 : 48;
+  const desktopHeight = getStableViewportHeight() - taskbarHeight - padding * 2;
+  const iconsPerColumn = Math.max(1, Math.floor(desktopHeight / (iconHeight + gap)));
 
   iconIds.forEach((id, index) => {
     const column = Math.floor(index / iconsPerColumn);
