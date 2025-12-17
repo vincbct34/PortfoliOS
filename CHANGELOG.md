@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [1.1.0] - 2025-12-17
 
 ### Changed
+- **Desktop**: Hide desktop icons on mobile devices (use taskbar/start menu instead)
 - **README**: Updated README with latest changes
 - **.gitattributes**: Convert line endings to LF
 - **SnakeGame**: Improved mobile controls and styling
