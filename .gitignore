@@ -30,6 +30,7 @@ dist-ssr
 # Claude Code
 CLAUDE.md
 .claude/
+.agent/
 
 # Vitest
 coverage/
