@@ -1,5 +1,6 @@
 import { useCallback, Suspense, lazy } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
+import Snowfall from 'react-snowfall';
 import { WindowProvider, useWindows } from './context/WindowContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -185,6 +186,22 @@ function OperatingSystem() {
         transition={{ duration: 0.5, delay: systemStatus === 'ready' ? 0.3 : 0 }}
         style={{ width: '100%', height: '100%' }}
       >
+        {/* Snowfall effect */}
+        {systemStatus === 'ready' && (
+          <Snowfall
+            style={{
+              position: 'fixed',
+              width: '100vw',
+              height: '100vh',
+              zIndex: 9999,
+              pointerEvents: 'none',
+            }}
+            snowflakeCount={150}
+            speed={[0.5, 2]}
+            wind={[-0.5, 1]}
+            radius={[1, 4]}
+          />
+        )}
         <WindowProvider>
           <Desktop>
             <WindowsRenderer />
