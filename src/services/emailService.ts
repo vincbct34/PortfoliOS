@@ -74,6 +74,7 @@ async function sendConfirmation(data: ContactFormData): Promise<boolean> {
       serviceId,
       templateId,
       {
+        site_name: 'PortfoliOS',
         name: data.name,
         email: data.email,
         message: data.message,
