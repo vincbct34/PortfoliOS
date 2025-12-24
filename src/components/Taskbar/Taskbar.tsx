@@ -1,3 +1,8 @@
+/**
+ * @file Taskbar.tsx
+ * @description Windows-style taskbar with start menu, app buttons, system tray, and window previews.
+ */
+
 import { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,7 +19,7 @@ import QuickSettings from '../QuickSettings/QuickSettings';
 import CalendarPopup from '../CalendarPopup/CalendarPopup';
 import styles from './Taskbar.module.css';
 
-// Lazy load app components for preview rendering - reduces initial bundle size
+/** Lazy-loaded components for window previews */
 const previewComponents: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   about: lazy(() => import('../../apps/AboutMe/AboutMe')),
   projects: lazy(() => import('../../apps/Projects/Projects')),
@@ -27,7 +32,7 @@ const previewComponents: Record<string, React.LazyExoticComponent<React.Componen
   explorer: lazy(() => import('../../apps/FileExplorer/FileExplorer')),
 };
 
-// Preview loading fallback
+/** Loading placeholder for window previews */
 function PreviewLoader() {
   return (
     <div className={styles.previewPlaceholder}>
@@ -36,6 +41,10 @@ function PreviewLoader() {
   );
 }
 
+/**
+ * Taskbar component.
+ * Central navigation hub with start menu, running apps, system tray, and clock.
+ */
 export default function Taskbar() {
   const { windows, focusWindow, restoreWindow, minimizeWindow, closeWindow, highestZIndex } =
     useWindows();
@@ -52,7 +61,6 @@ export default function Taskbar() {
   const [previewPosition, setPreviewPosition] = useState<{ x: number } | null>(null);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Update clock
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -61,7 +69,6 @@ export default function Taskbar() {
     return () => clearInterval(timer);
   }, []);
 
-  // Cleanup hover timeout on unmount
   useEffect(() => {
     return () => {
       if (hoverTimeoutRef.current) {
@@ -70,7 +77,6 @@ export default function Taskbar() {
     };
   }, []);
 
-  // Toggle start menu
   const toggleStartMenu = useCallback(() => {
     playSound('click');
     setIsStartMenuOpen((prev) => !prev);
@@ -153,7 +159,6 @@ export default function Taskbar() {
     setIsCalendarOpen(false);
   }, []);
 
-  // Hover preview handlers
   const handleAppMouseEnter = useCallback(
     (windowId: string, e: React.MouseEvent<HTMLButtonElement>) => {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -163,7 +168,7 @@ export default function Taskbar() {
       hoverTimeoutRef.current = setTimeout(() => {
         setHoveredWindowId(windowId);
         setPreviewPosition({ x: rect.left + rect.width / 2 });
-      }, 400); // 400ms delay before showing
+      }, 400);
     },
     []
   );
@@ -172,7 +177,7 @@ export default function Taskbar() {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
-    // Add delay before closing to allow mouse to reach preview
+
     hoverTimeoutRef.current = setTimeout(() => {
       setHoveredWindowId(null);
       setPreviewPosition(null);
@@ -222,7 +227,6 @@ export default function Taskbar() {
       </AnimatePresence>
 
       <div className={styles.taskbar}>
-        {/* Widget Button */}
         <button
           className={`${styles.widgetButton} ${isWidgetPanelOpen ? styles.active : ''}`}
           onClick={handleWidgetClick}
@@ -230,8 +234,6 @@ export default function Taskbar() {
         >
           <Cloud size={18} />
         </button>
-
-        {/* Start Button */}
         <button
           className={styles.startButton}
           onClick={handleStartClick}
@@ -263,7 +265,6 @@ export default function Taskbar() {
             );
           })}
 
-          {/* Window Preview Popup - using portal for correct positioning */}
           {createPortal(
             <AnimatePresence>
               {hoveredWindowId &&
@@ -304,7 +305,7 @@ export default function Taskbar() {
                                 className={styles.previewWindow}
                                 style={{
                                   width: windowData.size.width,
-                                  height: windowData.size.height - 32, // Subtract titlebar
+                                  height: windowData.size.height - 32,
                                 }}
                               >
                                 <PreviewComponent />
@@ -329,7 +330,6 @@ export default function Taskbar() {
         </div>
 
         <div className={styles.systemTray}>
-          {/* Quick Settings */}
           <button
             className={`${styles.trayButton} ${isQuickSettingsOpen ? styles.active : ''}`}
             onClick={handleQuickSettingsClick}
@@ -337,8 +337,6 @@ export default function Taskbar() {
           >
             <Settings2 size={16} />
           </button>
-
-          {/* Notification Bell */}
           <button
             className={`${styles.trayButton} ${isNotificationCenterOpen ? styles.active : ''}`}
             onClick={handleNotificationClick}
@@ -363,18 +361,12 @@ export default function Taskbar() {
           </button>
         </div>
       </div>
-
-      {/* Widget Panel */}
       <AnimatePresence>
         {isWidgetPanelOpen && <WidgetPanel onClose={closeWidgetPanel} />}
       </AnimatePresence>
-
-      {/* Quick Settings Panel */}
       <AnimatePresence>
         {isQuickSettingsOpen && <QuickSettings onClose={closeQuickSettings} />}
       </AnimatePresence>
-
-      {/* Calendar Popup */}
       <CalendarPopup isOpen={isCalendarOpen} onClose={closeCalendar} />
     </>
   );

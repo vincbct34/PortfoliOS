@@ -1,9 +1,15 @@
+/**
+ * @file ContextMenu.tsx
+ * @description Right-click context menu for desktop with personalization and settings options.
+ */
+
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Palette, Settings, LayoutGrid } from 'lucide-react';
 import { useWindows } from '../../context/WindowContext';
 import styles from './ContextMenu.module.css';
 
+/** Props for the ContextMenu component */
 interface ContextMenuProps {
   x: number;
   y: number;
@@ -11,6 +17,7 @@ interface ContextMenuProps {
   onResetIcons?: () => void;
 }
 
+/** Menu item configuration */
 interface MenuItem {
   id: string;
   label: string;
@@ -19,11 +26,14 @@ interface MenuItem {
   divider?: boolean;
 }
 
+/**
+ * Desktop Context Menu component.
+ * Shows options like reset icons, personalize, and settings.
+ */
 export default function ContextMenu({ x, y, onClose, onResetIcons }: ContextMenuProps) {
   const { openWindow } = useWindows();
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Adjust position if menu would overflow viewport
   const adjustedPosition = {
     x: Math.min(x, window.innerWidth - 200),
     y: Math.min(y, window.innerHeight - 200),

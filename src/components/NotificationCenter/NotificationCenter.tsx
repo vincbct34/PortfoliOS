@@ -1,3 +1,8 @@
+/**
+ * @file NotificationCenter.tsx
+ * @description Slide-out notification panel with date/time and notification list.
+ */
+
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info, Trash2, CheckCheck } from 'lucide-react';
@@ -8,10 +13,12 @@ import {
 } from '../../context/NotificationContext';
 import styles from './NotificationCenter.module.css';
 
+/** Props for the NotificationCenter component */
 interface NotificationCenterProps {
   onClose: () => void;
 }
 
+/** Icon mapping for notification types */
 const notificationIcons: Record<ToastType, React.ElementType> = {
   success: CheckCircle,
   error: AlertCircle,
@@ -19,6 +26,7 @@ const notificationIcons: Record<ToastType, React.ElementType> = {
   info: Info,
 };
 
+/** Color mapping for notification types */
 const notificationColors: Record<ToastType, string> = {
   success: '#22c55e',
   error: '#ef4444',
@@ -26,6 +34,10 @@ const notificationColors: Record<ToastType, string> = {
   info: '#3b82f6',
 };
 
+/**
+ * Notification Center component.
+ * Displays all notifications with read/unread status and management controls.
+ */
 export default function NotificationCenter({ onClose }: NotificationCenterProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const { notifications, markAsRead, markAllAsRead, clearNotifications, removeNotification } =
@@ -34,7 +46,7 @@ export default function NotificationCenter({ onClose }: NotificationCenterProps)
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Don't close if clicking on taskbar buttons
+
       if (target.closest('[class*="taskbar"]')) {
         return;
       }
@@ -49,7 +61,6 @@ export default function NotificationCenter({ onClose }: NotificationCenterProps)
       }
     };
 
-    // Delay adding listener to prevent immediate close
     const timeout = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside);
     }, 100);
@@ -80,15 +91,12 @@ export default function NotificationCenter({ onClose }: NotificationCenterProps)
         exit={{ x: '100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
-        {/* Calendar Section */}
         <div className={styles.calendarSection}>
           <div className={styles.date}>{dateStr}</div>
           <div className={styles.time}>
             {now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
           </div>
         </div>
-
-        {/* Notifications */}
         <div className={styles.notificationsSection}>
           <div className={styles.notificationsHeader}>
             <h3 className={styles.sectionTitle}>Notifications</h3>

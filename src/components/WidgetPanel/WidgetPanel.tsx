@@ -1,3 +1,8 @@
+/**
+ * @file WidgetPanel.tsx
+ * @description Slide-out widget panel with weather, quick links, and portfolio stats.
+ */
+
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -26,10 +31,12 @@ import {
 import { useTranslation } from '../../context/I18nContext';
 import styles from './WidgetPanel.module.css';
 
+/** Props for the WidgetPanel component */
 interface WidgetPanelProps {
   onClose: () => void;
 }
 
+/** State for weather widget data */
 interface WeatherState {
   data: WeatherData | null;
   loading: boolean;
@@ -37,6 +44,10 @@ interface WeatherState {
   city: string;
 }
 
+/**
+ * Widget Panel component.
+ * Displays weather information, social links, and portfolio statistics.
+ */
 export default function WidgetPanel({ onClose }: WidgetPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -47,7 +58,6 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
     city: 'Paris',
   });
 
-  // Load weather on mount
   useEffect(() => {
     const loadWeather = async () => {
       setWeather((prev) => ({ ...prev, loading: true, error: false }));
@@ -146,7 +156,6 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
         exit={{ x: '-100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
-        {/* Weather Widget */}
         <div className={styles.widget}>
           <h3 className={styles.widgetTitle}>{t.widgets.weather}</h3>
           <div className={styles.weatherWidget}>
@@ -184,8 +193,6 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
             )}
           </div>
         </div>
-
-        {/* Quick Links Widget */}
         <div className={styles.widget}>
           <h3 className={styles.widgetTitle}>{t.widgets.quickLinks}</h3>
           <div className={styles.quickLinks}>
@@ -207,8 +214,6 @@ export default function WidgetPanel({ onClose }: WidgetPanelProps) {
             })}
           </div>
         </div>
-
-        {/* Stats Widget */}
         <div className={styles.widget}>
           <h3 className={styles.widgetTitle}>{t.widgets.stats}</h3>
           <div className={styles.stats}>

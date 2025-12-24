@@ -64,7 +64,6 @@
   transform-origin: left;
 }
 
-/* Type Variants */
 .success {
   border-left: 3px solid #22c55e;
   color: #22c55e;

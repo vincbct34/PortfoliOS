@@ -1,37 +1,37 @@
+/**
+ * @file SystemSettingsContext.tsx
+ * @description Context for system-level settings including volume, brightness, network, battery, and power controls.
+ */
+
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { audioService, type SoundType } from '../services/audioService';
 
-// Types for system settings
+/** System lifecycle states */
 export type SystemStatus = 'locked' | 'booting' | 'ready' | 'shutdown' | 'off';
 
+/** System settings state shape */
 interface SystemSettingsState {
-  // System Status
   systemStatus: SystemStatus;
 
-  // Audio
-  volume: number; // 0-100
+  volume: number;
   isMuted: boolean;
 
-  // Display
-  brightness: number; // 50-150 (100 = normal)
+  brightness: number;
   nightMode: boolean;
 
-  // Focus
   focusMode: boolean;
 
-  // Connectivity (read-only, detected)
   isOnline: boolean;
   connectionType: string;
 
-  // Battery (read-only, detected)
-  batteryLevel: number; // 0-100
+  batteryLevel: number;
   isCharging: boolean;
   batterySupported: boolean;
 
-  // Bluetooth (decorative)
   bluetoothEnabled: boolean;
 }
 
+/** Context value with state and control functions */
 interface SystemSettingsContextValue extends SystemSettingsState {
   setVolume: (volume: number) => void;
   toggleMute: () => void;
@@ -40,7 +40,7 @@ interface SystemSettingsContextValue extends SystemSettingsState {
   toggleFocusMode: () => void;
   toggleBluetooth: () => void;
   playSound: (type: SoundType) => void;
-  // Power actions
+
   lock: () => void;
   restart: () => void;
   shutdown: () => void;
@@ -48,6 +48,7 @@ interface SystemSettingsContextValue extends SystemSettingsState {
   setSystemStatus: (status: SystemStatus) => void;
 }
 
+/** Default system settings */
 const defaultSettings: SystemSettingsState = {
   systemStatus: 'locked',
   volume: 75,
@@ -63,15 +64,17 @@ const defaultSettings: SystemSettingsState = {
   bluetoothEnabled: false,
 };
 
+/** Storage key for persisting system settings */
 const STORAGE_KEY = 'portfolio-system-settings';
 
 const SystemSettingsContext = createContext<SystemSettingsContextValue | null>(null);
 
+/** Props for the SystemSettingsProvider component */
 interface SystemSettingsProviderProps {
   children: ReactNode;
 }
 
-// Battery Manager interface (not fully typed in TS)
+/** Battery API interface */
 interface BatteryManager extends EventTarget {
   charging: boolean;
   level: number;
@@ -79,7 +82,7 @@ interface BatteryManager extends EventTarget {
   removeEventListener(type: 'chargingchange' | 'levelchange', listener: EventListener): void;
 }
 
-// Network Information API
+/** Network Information API interface */
 interface NetworkInformation extends EventTarget {
   effectiveType?: string;
   type?: string;
@@ -96,9 +99,12 @@ declare global {
   }
 }
 
+/**
+ * System Settings Provider component.
+ * Manages hardware interfaces, power state, and system preferences.
+ */
 export function SystemSettingsProvider({ children }: SystemSettingsProviderProps) {
   const [settings, setSettings] = useState<SystemSettingsState>(() => {
-    // Load persisted settings from localStorage
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -121,7 +127,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     return defaultSettings;
   });
 
-  // Persist user-controlled settings to localStorage
   useEffect(() => {
     const toSave = {
       volume: settings.volume,
@@ -141,7 +146,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     settings.bluetoothEnabled,
   ]);
 
-  // Apply brightness and night mode filter
   useEffect(() => {
     const brightnessFilter = `brightness(${settings.brightness}%)`;
     document.documentElement.style.setProperty('--system-brightness', `${settings.brightness}%`);
@@ -149,7 +153,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     let removeTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
     if (settings.nightMode) {
-      // Create or get the night mode overlay
       let overlay = document.getElementById('night-mode-overlay');
       if (!overlay) {
         overlay = document.createElement('div');
@@ -171,7 +174,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
       overlay.style.opacity = '1';
       document.documentElement.style.filter = brightnessFilter;
     } else {
-      // Remove the overlay
       const overlay = document.getElementById('night-mode-overlay');
       if (overlay) {
         overlay.style.opacity = '0';
@@ -180,7 +182,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
       document.documentElement.style.filter = brightnessFilter;
     }
 
-    // Cleanup on unmount or settings change
     return () => {
       if (removeTimeoutId) {
         clearTimeout(removeTimeoutId);
@@ -192,7 +193,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     };
   }, [settings.brightness, settings.nightMode]);
 
-  // Apply focus mode (disable animations and reduce motion)
   useEffect(() => {
     if (settings.focusMode) {
       document.documentElement.setAttribute('data-focus-mode', 'true');
@@ -205,7 +205,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     }
   }, [settings.focusMode]);
 
-  // Monitor online/offline status
   useEffect(() => {
     const updateOnlineStatus = () => {
       setSettings((prev) => ({ ...prev, isOnline: navigator.onLine }));
@@ -221,7 +220,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     };
   }, []);
 
-  // Monitor connection type
   useEffect(() => {
     const connection =
       navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -241,7 +239,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     }
   }, []);
 
-  // Monitor battery status
   useEffect(() => {
     let battery: BatteryManager | null = null;
 
@@ -265,9 +262,7 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
           battery.addEventListener('levelchange', updateBattery);
           battery.addEventListener('chargingchange', updateBattery);
         })
-        .catch(() => {
-          // Battery API not supported or blocked
-        });
+        .catch(() => {});
     }
 
     return () => {
@@ -278,13 +273,12 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     };
   }, []);
 
-  // Actions
   const setVolume = useCallback((volume: number) => {
     const clampedVolume = Math.max(0, Math.min(100, volume));
     setSettings((prev) => ({
       ...prev,
       volume: clampedVolume,
-      // Mute at 0, unmute when raising from 0
+
       isMuted:
         clampedVolume === 0 ? true : clampedVolume > 0 && prev.volume === 0 ? false : prev.isMuted,
     }));
@@ -309,8 +303,6 @@ export function SystemSettingsProvider({ children }: SystemSettingsProviderProps
     setSettings((prev) => ({
       ...prev,
       focusMode: !prev.focusMode,
-      // Focus mode now only affects animations, not sound
-      // Users can manually mute if they want silence
     }));
   }, []);
 

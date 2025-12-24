@@ -1,15 +1,26 @@
+/**
+ * @file ErrorBoundary.tsx
+ * @description React error boundary component for catching and displaying errors gracefully.
+ */
+
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 
+/** Props for the ErrorBoundary component */
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
+/** State for the ErrorBoundary component */
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
 }
 
+/**
+ * Error Boundary component.
+ * Catches JavaScript errors in child components and displays a fallback UI.
+ */
 export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);

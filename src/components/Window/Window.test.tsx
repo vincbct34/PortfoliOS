@@ -6,14 +6,12 @@ import { SystemSettingsProvider } from '../../context/SystemSettingsContext';
 import { I18nProvider } from '../../context/I18nContext';
 import React, { useEffect, useState } from 'react';
 
-// Mock audioService
 vi.mock('../../services/audioService', () => ({
   audioService: {
     play: vi.fn(),
   },
 }));
 
-// Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({
@@ -38,7 +36,6 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-// Test wrapper with all required providers
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
     <I18nProvider>
@@ -49,7 +46,6 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Helper component to open a window before testing
 function WindowTestHarness({
   windowId,
   children,
@@ -75,7 +71,7 @@ function WindowTestHarness({
 describe('Window', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock window dimensions
+
     Object.defineProperty(window, 'innerWidth', { writable: true, value: 1920 });
     Object.defineProperty(window, 'innerHeight', { writable: true, value: 1080 });
   });
@@ -105,7 +101,6 @@ describe('Window', () => {
       );
 
       await waitFor(() => {
-        // Look for window control buttons by their aria-labels
         expect(screen.getByRole('button', { name: /minimize/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /maximize/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();

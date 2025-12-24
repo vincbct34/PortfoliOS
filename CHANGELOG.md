@@ -4,6 +4,29 @@ All notable changes to PortfoliOS will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.1] - 2025-12-24
+
+### Fixed
+- **CI/CD**: Fixed linting and type errors to ensure `npm run check` passes successfully
+  - Removed unused variables in `useOpenGraphImage`
+  - Fixed type safety in `Projects.tsx`
+
+### Removed
+- **Keyboard Shortcuts**: Removed all keyboard shortcut functionality
+  - Deleted `useKeyboardNavigation` hook (Window movement with Ctrl+Keys)
+  - Deleted `useKeyboardShortcuts` hook (Global shortcuts)
+  - Updated `Window` component to remove keyboard navigation integration
+## [1.3.0] - 2025-12-24
+
+### Added
+- **Code Documentation**: Added consistent JSDoc-style comments to 57 TypeScript files
+  - File headers with `@file` and `@description` tags
+  - Interface and type documentation
+  - Function and component JSDoc with `@param` and `@returns` tags
+  - Documented files include: core files, apps, components, contexts, hooks, services, data, types, constants, and utilities
+
+---
+
 ## [1.2.0] - 2025-12-17
 
 ### Added

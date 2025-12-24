@@ -1,3 +1,8 @@
+/**
+ * @file Notepad.tsx
+ * @description Text editor app with file management, clipboard operations, and localStorage persistence.
+ */
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   FileText,
@@ -14,15 +19,21 @@ import { useNotification } from '../../context/NotificationContext';
 import { useTranslation } from '../../context/I18nContext';
 import styles from './Notepad.module.css';
 
+/** Saved file structure for localStorage */
 interface SavedFile {
   name: string;
   content: string;
   lastModified: number;
 }
 
+/** LocalStorage keys */
 const STORAGE_KEY = 'notepad-files';
 const CURRENT_FILE_KEY = 'notepad-current-file';
 
+/**
+ * Notepad application component.
+ * Full-featured text editor with save, open, export, and clipboard functions.
+ */
 export default function Notepad() {
   const { showToast, addNotification } = useNotification();
   const { t, locale } = useTranslation();
@@ -35,7 +46,6 @@ export default function Notepad() {
   const [showOpenDialog, setShowOpenDialog] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load saved files on mount
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -46,7 +56,6 @@ export default function Notepad() {
       }
     }
 
-    // Load last opened file
     const currentFile = localStorage.getItem(CURRENT_FILE_KEY);
     if (currentFile) {
       try {
@@ -54,12 +63,11 @@ export default function Notepad() {
         setFileName(file.name);
         setContent(file.content);
       } catch {
-        // Ignore
+        void 0;
       }
     }
   }, []);
 
-  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
       setShowFileMenu(false);
@@ -233,14 +241,12 @@ export default function Notepad() {
     setShowEditMenu(false);
   }, [content, showToast, t]);
 
-  // Calculate stats
   const lineCount = content.split('\n').length;
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
   const charCount = content.length;
 
   return (
     <div className={styles.notepad}>
-      {/* Menu Bar */}
       <div className={styles.menuBar}>
         <div className={styles.menuItem}>
           <button
@@ -313,8 +319,6 @@ export default function Notepad() {
           {fileName}
         </div>
       </div>
-
-      {/* Text Area */}
       <textarea
         ref={textareaRef}
         className={styles.textArea}
@@ -323,8 +327,6 @@ export default function Notepad() {
         placeholder={t.notepad.startTyping}
         spellCheck={false}
       />
-
-      {/* Status Bar */}
       <div className={styles.statusBar}>
         <span>
           {t.notepad.line} {lineCount} | {wordCount} {t.notepad.words} | {charCount}{' '}
@@ -333,7 +335,6 @@ export default function Notepad() {
         <span>UTF-8</span>
       </div>
 
-      {/* Open Dialog */}
       {showOpenDialog && (
         <div className={styles.dialogOverlay} onClick={() => setShowOpenDialog(false)}>
           <div className={styles.dialog} onClick={(e) => e.stopPropagation()}>

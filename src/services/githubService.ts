@@ -1,22 +1,21 @@
-// ============================================================================
-// GitHub Service
-// ============================================================================
-// Fetches GitHub API data with localStorage caching to minimize API calls.
-// Public API allows 60 requests/hour without authentication.
-// With a token (VITE_GITHUB_TOKEN), allows 5000 requests/hour + private repos.
-// ============================================================================
+/**
+ * @file githubService.ts
+ * @description GitHub API service for fetching user stats, commits, languages, and activity.
+ */
 
+/** GitHub API base URL */
 const GITHUB_API_BASE = 'https://api.github.com';
-const GITHUB_USERNAME = 'vincbct34';
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-// GitHub Personal Access Token (optional, enables private repo access)
+/** GitHub username to fetch data for */
+const GITHUB_USERNAME = 'vincbct34';
+
+/** Cache time-to-live in milliseconds (1 hour) */
+const CACHE_TTL_MS = 60 * 60 * 1000;
+
+/** GitHub API token from environment */
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN as string | undefined;
 
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
+/** User profile statistics */
 export interface GitHubUserStats {
   publicRepos: number;
   privateRepos: number;
@@ -29,16 +28,19 @@ export interface GitHubUserStats {
   bio: string | null;
 }
 
+/** Weekly commit activity data */
 export interface CommitWeek {
-  week: number; // Unix timestamp
-  days: number[]; // Sun-Sat commit counts
+  week: number;
+  days: number[];
   total: number;
 }
 
+/** Language usage statistics */
 export interface LanguageStats {
-  [language: string]: number; // bytes per language
+  [language: string]: number;
 }
 
+/** GitHub event data */
 export interface GitHubEvent {
   id: string;
   type: string;
@@ -61,10 +63,6 @@ export interface GitHubData {
   isAuthenticated: boolean;
   error?: string;
 }
-
-// ----------------------------------------------------------------------------
-// Cache Helpers
-// ----------------------------------------------------------------------------
 
 interface CacheEntry<T> {
   data: T;
@@ -98,13 +96,9 @@ function setCache<T>(key: string, data: T): void {
     };
     localStorage.setItem(key, JSON.stringify(entry));
   } catch {
-    // localStorage might be full or unavailable
+    void 0;
   }
 }
-
-// ----------------------------------------------------------------------------
-// API Fetchers
-// ----------------------------------------------------------------------------
 
 function getAuthHeaders(): HeadersInit {
   const headers: HeadersInit = {
@@ -163,7 +157,6 @@ async function fetchUserStats(): Promise<GitHubUserStats> {
     bio: string | null;
   }
 
-  // Use authenticated endpoint if token available (includes private repo info)
   const endpoint = GITHUB_TOKEN
     ? `${GITHUB_API_BASE}/user`
     : `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`;
@@ -192,7 +185,6 @@ async function fetchCommitActivity(): Promise<CommitWeek[]> {
   const cached = getFromCache<CommitWeek[]>(cacheKey);
   if (cached) return cached;
 
-  // Fetch repos - use authenticated endpoint if token available (includes private repos)
   interface RepoResponse {
     name: string;
     fork: boolean;
@@ -205,10 +197,8 @@ async function fetchCommitActivity(): Promise<CommitWeek[]> {
 
   const repos = await fetchWithRetry<RepoResponse[]>(reposEndpoint);
 
-  // Filter non-fork repos and get top 10 most recently pushed
   const ownRepos = repos.filter((r) => !r.fork).slice(0, 10);
 
-  // Aggregate commit activity from repos
   const allWeeks: Map<number, CommitWeek> = new Map();
 
   interface CommitActivityResponse {
@@ -219,7 +209,6 @@ async function fetchCommitActivity(): Promise<CommitWeek[]> {
 
   for (const repo of ownRepos) {
     try {
-      // GitHub stats API may return 202 while computing - we need to retry
       const repoPath = repo.owner?.login
         ? `${repo.owner.login}/${repo.name}`
         : `${GITHUB_USERNAME}/${repo.name}`;
@@ -231,7 +220,6 @@ async function fetchCommitActivity(): Promise<CommitWeek[]> {
         });
 
         if (response.status === 202) {
-          // Stats being computed, wait and retry
           await new Promise((r) => setTimeout(r, 1000));
           continue;
         }
@@ -258,7 +246,7 @@ async function fetchCommitActivity(): Promise<CommitWeek[]> {
         }
       }
     } catch {
-      // Skip repos that fail
+      void 0;
     }
   }
 
@@ -272,7 +260,6 @@ async function fetchLanguages(): Promise<LanguageStats> {
   const cached = getFromCache<LanguageStats>(cacheKey);
   if (cached) return cached;
 
-  // Fetch repos - use authenticated endpoint if token available (includes private repos)
   interface RepoResponse {
     name: string;
     fork: boolean;
@@ -298,7 +285,7 @@ async function fetchLanguages(): Promise<LanguageStats> {
         aggregatedLanguages[lang] = (aggregatedLanguages[lang] || 0) + bytes;
       }
     } catch {
-      // Skip repos that fail
+      void 0;
     }
   }
 
@@ -338,10 +325,6 @@ async function fetchRecentEvents(): Promise<GitHubEvent[]> {
   return result;
 }
 
-// ----------------------------------------------------------------------------
-// Main Export
-// ----------------------------------------------------------------------------
-
 export async function fetchGitHubData(): Promise<GitHubData> {
   const cacheKey = `github_full_data_${GITHUB_USERNAME}`;
   const cached = getFromCache<GitHubData>(cacheKey);
@@ -355,10 +338,8 @@ export async function fetchGitHubData(): Promise<GitHubData> {
       fetchRecentEvents().catch(() => []),
     ]);
 
-    // Calculate total commits this year
     const totalCommitsThisYear = commitActivity.reduce((sum, week) => sum + week.total, 0);
 
-    // Count active repos (those with commits in the last 3 months)
     const threeMonthsAgo = Date.now() / 1000 - 90 * 24 * 60 * 60;
     const activeReposCount = new Set(
       recentEvents

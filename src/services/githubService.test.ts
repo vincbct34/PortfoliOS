@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Mock fetch globally
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
-// Mock localStorage
 const mockLocalStorage: Record<string, string> = {};
 const localStorageMock = {
   getItem: (key: string) => mockLocalStorage[key] || null,
@@ -20,7 +18,6 @@ const localStorageMock = {
 };
 Object.defineProperty(global, 'localStorage', { value: localStorageMock });
 
-// Import after mocking
 import { fetchGitHubData, clearGitHubCache } from './githubService';
 
 describe('githubService', () => {
@@ -61,7 +58,7 @@ describe('githubService', () => {
     });
 
     it('should fetch data from API when cache is expired', async () => {
-      const expiredTimestamp = Date.now() - 2 * 60 * 60 * 1000; // 2 hours ago
+      const expiredTimestamp = Date.now() - 2 * 60 * 60 * 1000;
       localStorageMock.setItem(
         'github_full_data_vincbct34',
         JSON.stringify({
@@ -105,18 +102,15 @@ describe('githubService', () => {
     });
 
     it('should return error data when API fails', async () => {
-      // Mock all API calls to fail (user, repos for commits, repos for languages, events)
       mockFetch.mockRejectedValue(new Error('Network error'));
 
       const result = await fetchGitHubData();
 
-      // Should still return a valid structure with nulls
       expect(result.user).toBeNull();
       expect(result.commitActivity).toEqual([]);
     });
 
     it('should handle rate limit errors', async () => {
-      // Mock rate limit response
       mockFetch.mockResolvedValue({
         ok: false,
         status: 403,
@@ -124,7 +118,6 @@ describe('githubService', () => {
 
       const result = await fetchGitHubData();
 
-      // Rate limit should result in null user and empty data
       expect(result.user).toBeNull();
     });
   });

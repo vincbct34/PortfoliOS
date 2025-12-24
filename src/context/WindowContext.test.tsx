@@ -4,14 +4,12 @@ import { WindowProvider, useWindows } from './WindowContext';
 import { SystemSettingsProvider } from './SystemSettingsContext';
 import { BASE_Z_INDEX } from '../constants/layout';
 
-// Mock audioService
 vi.mock('../services/audioService', () => ({
   audioService: {
     play: vi.fn(),
   },
 }));
 
-// Wrapper with required providers
 function AllProviders({ children }: { children: React.ReactNode }) {
   return (
     <SystemSettingsProvider>
@@ -22,7 +20,6 @@ function AllProviders({ children }: { children: React.ReactNode }) {
 
 describe('WindowContext', () => {
   beforeEach(() => {
-    // Mock window dimensions
     Object.defineProperty(window, 'innerWidth', { writable: true, value: 1920 });
     Object.defineProperty(window, 'innerHeight', { writable: true, value: 1080 });
   });
@@ -151,7 +148,6 @@ describe('WindowContext', () => {
         result.current.closeWindow('non-existent');
       });
 
-      // Should not throw and state should be unchanged
       expect(result.current.windows).toEqual({});
     });
   });
@@ -182,7 +178,6 @@ describe('WindowContext', () => {
         result.current.minimizeWindow('non-existent');
       });
 
-      // Should not throw
       expect(result.current.windows).toEqual({});
     });
   });

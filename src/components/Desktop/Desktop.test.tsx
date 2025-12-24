@@ -7,14 +7,12 @@ import { I18nProvider } from '../../context/I18nContext';
 import { SettingsProvider } from '../../context/SettingsContext';
 import { FileSystemProvider } from '../../context/FileSystemContext';
 
-// Mock audioService
 vi.mock('../../services/audioService', () => ({
   audioService: {
     play: vi.fn(),
   },
 }));
 
-// Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({
@@ -38,7 +36,6 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-// Test wrapper with all required providers
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
     <I18nProvider>
@@ -57,7 +54,7 @@ describe('Desktop', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    // Mock window dimensions
+
     Object.defineProperty(window, 'innerWidth', { writable: true, value: 1920 });
     Object.defineProperty(window, 'innerHeight', { writable: true, value: 1080 });
   });

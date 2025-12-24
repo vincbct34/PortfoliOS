@@ -1,3 +1,8 @@
+/**
+ * @file QuickSettings.tsx
+ * @description Quick settings panel with volume, brightness, network, and system toggles.
+ */
+
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Wifi, WifiOff, Moon, Sun, Focus, Volume2, VolumeX, Zap } from 'lucide-react';
@@ -5,10 +10,15 @@ import { useSystemSettings } from '../../context/SystemSettingsContext';
 import { useTranslation } from '../../context/I18nContext';
 import styles from './QuickSettings.module.css';
 
+/** Props for the QuickSettings component */
 interface QuickSettingsProps {
   onClose: () => void;
 }
 
+/**
+ * Quick Settings panel component.
+ * Provides toggles and sliders for system settings like volume, brightness, and display modes.
+ */
 export default function QuickSettings({ onClose }: QuickSettingsProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const { t, language } = useTranslation();
@@ -33,7 +43,7 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Don't close if clicking on taskbar buttons
+
       if (target.closest('[class*="taskbar"]')) {
         return;
       }
@@ -48,7 +58,6 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
       }
     };
 
-    // Delay adding listener to prevent immediate close
     const timeout = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside);
     }, 100);
@@ -97,10 +106,8 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
         aria-label={t.quickSettings.title}
         aria-modal="true"
       >
-        {/* Toggle Buttons */}
         <div className={styles.togglesSection}>
           <div className={styles.togglesGrid}>
-            {/* Network Status */}
             <button
               className={`${styles.toggleButton} ${isOnline ? styles.active : ''}`}
               title={getConnectionLabel()}
@@ -114,8 +121,6 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
               )}
               <span>{getConnectionLabel()}</span>
             </button>
-
-            {/* Night Mode */}
             <button
               className={`${styles.toggleButton} ${nightMode ? styles.active : ''}`}
               onClick={toggleNightMode}
@@ -130,8 +135,6 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
               )}
               <span>{t.quickSettings.nightMode}</span>
             </button>
-
-            {/* Focus Mode */}
             <button
               className={`${styles.toggleButton} ${focusMode ? styles.active : ''}`}
               onClick={toggleFocusMode}
@@ -144,10 +147,7 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
             </button>
           </div>
         </div>
-
-        {/* Sliders */}
         <div className={styles.slidersSection}>
-          {/* Volume Slider */}
           <div className={styles.sliderRow} role="group" aria-label={t.quickSettings.volume}>
             <button
               className={`${styles.sliderIcon} ${isMuted ? styles.muted : ''}`}
@@ -183,8 +183,6 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
               {isMuted ? 0 : volume}%
             </span>
           </div>
-
-          {/* Brightness Slider */}
           <div className={styles.sliderRow} role="group" aria-label="Contrôle de la luminosité">
             <div className={styles.sliderIcon} aria-hidden="true">
               <Sun size={18} />
@@ -211,8 +209,6 @@ export default function QuickSettings({ onClose }: QuickSettingsProps) {
             </span>
           </div>
         </div>
-
-        {/* Status Bar */}
         <div className={styles.statusSection}>
           <div className={`${styles.statusItem} ${isOnline ? styles.online : styles.offline}`}>
             {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}

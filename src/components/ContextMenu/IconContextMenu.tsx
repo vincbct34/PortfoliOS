@@ -1,8 +1,14 @@
+/**
+ * @file IconContextMenu.tsx
+ * @description Right-click context menu for desktop icons with open and properties options.
+ */
+
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, ExternalLink } from 'lucide-react';
 import styles from './ContextMenu.module.css';
 
+/** Props for the IconContextMenu component */
 interface IconContextMenuProps {
   x: number;
   y: number;
@@ -11,6 +17,7 @@ interface IconContextMenuProps {
   onProperties: () => void;
 }
 
+/** Menu item configuration */
 interface MenuItem {
   id: string;
   label: string;
@@ -19,6 +26,10 @@ interface MenuItem {
   divider?: boolean;
 }
 
+/**
+ * Icon Context Menu component.
+ * Shows options for opening and configuring desktop icons.
+ */
 export default function IconContextMenu({
   x,
   y,
@@ -28,7 +39,6 @@ export default function IconContextMenu({
 }: IconContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Adjust position if menu would overflow viewport
   const adjustedPosition = {
     x: Math.min(x, window.innerWidth - 200),
     y: Math.min(y, window.innerHeight - 150),

@@ -1,3 +1,8 @@
+/**
+ * @file StartMenu.tsx
+ * @description Windows 11-style start menu with app grid, search, and power options.
+ */
+
 import { useCallback, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Power, Moon, RotateCcw } from 'lucide-react';
@@ -10,10 +15,15 @@ import { useTranslation } from '../../context/I18nContext';
 import { getIcon } from '../../utils/iconHelpers';
 import styles from './StartMenu.module.css';
 
+/** Props for the StartMenu component */
 interface StartMenuProps {
   onClose: () => void;
 }
 
+/**
+ * Start Menu component.
+ * Displays pinned apps, search functionality, user profile, and power controls.
+ */
 export default function StartMenu({ onClose }: StartMenuProps) {
   const { apps, openWindow } = useWindows();
   const { t } = useTranslation();

@@ -17,7 +17,6 @@
   overflow: hidden;
 }
 
-/* Desktop Icon */
 .desktopIcon {
   display: flex;
   flex-direction: column;
@@ -72,10 +71,8 @@
 @media (max-width: 768px) {
   .desktop {
     bottom: 56px;
-    /* Match new taskbar height */
   }
 
-  /* Hide desktop icons on mobile - use taskbar/start menu instead */
   .iconsContainer {
     display: none;
   }

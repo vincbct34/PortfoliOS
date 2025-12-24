@@ -1,5 +1,11 @@
+/**
+ * @file ConfirmDialog.tsx
+ * @description Modal confirmation dialog with promise-based API and context provider.
+ */
+
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 
+/** Options for configuring the confirmation dialog */
 export interface ConfirmOptions {
   title: string;
   message: string;
@@ -9,10 +15,12 @@ export interface ConfirmOptions {
   icon?: ReactNode;
 }
 
+/** Context value for confirm functionality */
 interface ConfirmContextValue {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
 }
 
+/** Internal state for the confirm dialog */
 interface ConfirmState extends ConfirmOptions {
   isOpen: boolean;
   resolve: ((value: boolean) => void) | null;
@@ -20,10 +28,15 @@ interface ConfirmState extends ConfirmOptions {
 
 const ConfirmContext = createContext<ConfirmContextValue | null>(null);
 
+/** Props for the ConfirmProvider component */
 interface ConfirmProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Confirm Provider component.
+ * Provides context for showing confirmation dialogs throughout the app.
+ */
 export function ConfirmProvider({ children }: ConfirmProviderProps) {
   const [state, setState] = useState<ConfirmState>({
     isOpen: false,
@@ -82,7 +95,6 @@ export function useConfirm(): ConfirmContextValue {
   return context;
 }
 
-// The visual dialog component
 interface ConfirmDialogProps extends ConfirmOptions {
   onConfirm: () => void;
   onCancel: () => void;
@@ -161,11 +173,11 @@ function ConfirmDialog({
         }
 
         @keyframes scaleIn {
-          from { 
+          from {
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.95);
           }
-          to { 
+          to {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
           }

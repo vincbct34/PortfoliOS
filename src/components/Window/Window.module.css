@@ -24,7 +24,6 @@
   border-radius: 0;
 }
 
-/* Titlebar */
 .titlebar {
   display: flex;
   align-items: center;
@@ -91,14 +90,12 @@
   height: 10px;
 }
 
-/* Content */
 .content {
   flex: 1;
   overflow: auto;
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Resize handles */
 .resizeHandle {
   position: absolute;
   z-index: 10;
@@ -168,7 +165,6 @@
   cursor: sw-resize;
 }
 
-/* Dark theme */
 :global(.dark) .window {
   background: rgba(32, 32, 32, 0.85);
   border-color: rgba(255, 255, 255, 0.1);

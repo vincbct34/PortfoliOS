@@ -6,7 +6,6 @@
   font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
 }
 
-/* Terminal content */
 .content {
   flex: 1;
   padding: 16px;
@@ -53,7 +52,6 @@
   color: #bb9af7;
 }
 
-/* Input line */
 .inputLine {
   display: flex;
   align-items: center;
@@ -82,7 +80,6 @@
   caret-color: #c0caf5;
 }
 
-/* Scrollbar */
 .content::-webkit-scrollbar {
   width: 8px;
 }
@@ -103,17 +100,15 @@
 @media (max-width: 768px) {
   .terminal {
     font-size: 12px;
-    /* Slightly smaller base font */
   }
 
   .ascii {
     font-size: 6px;
-    /* Much smaller font for ASCII art to fit */
+
     line-height: 1.2;
     overflow-x: auto;
-    /* Allow horizontal scroll if it still overflows */
+
     white-space: pre;
-    /* Keep formatting but allow scroll */
   }
 
   .content {

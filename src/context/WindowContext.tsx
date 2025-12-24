@@ -1,3 +1,8 @@
+/**
+ * @file WindowContext.tsx
+ * @description Context for managing window state including open/close, minimize/maximize, focus, and snap functionality.
+ */
+
 import { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react';
 import { useSystemSettings } from './SystemSettingsContext';
 import { initialApps } from '../data/apps';
@@ -11,6 +16,7 @@ import type {
   SnapZone,
 } from '../types/window';
 
+/** Initial state for window management */
 const initialState: WindowsState = {
   windows: {},
   windowOrder: [],
@@ -19,8 +25,9 @@ const initialState: WindowsState = {
 };
 
 /**
- * Get next z-index with overflow protection.
- * Resets to BASE_Z_INDEX when approaching MAX_Z_INDEX to prevent integer overflow.
+ * Gets the next z-index for window stacking.
+ * @param current - Current z-index
+ * @returns Next z-index value
  */
 function getNextZIndex(current: number): number {
   if (current >= MAX_Z_INDEX) {
@@ -29,6 +36,10 @@ function getNextZIndex(current: number): number {
   return current + 1;
 }
 
+/**
+ * Reducer for window state management.
+ * Handles all window actions like open, close, minimize, maximize, focus, and snap.
+ */
 function windowReducer(state: WindowsState, action: WindowAction): WindowsState {
   switch (action.type) {
     case 'OPEN_WINDOW': {
@@ -36,7 +47,6 @@ function windowReducer(state: WindowsState, action: WindowAction): WindowsState 
       const app = state.apps[appId];
       if (!app) return state;
 
-      // If window already exists, just focus it
       if (state.windows[appId]) {
         const newZIndex = getNextZIndex(state.highestZIndex);
         return {
@@ -204,7 +214,6 @@ function windowReducer(state: WindowsState, action: WindowAction): WindowsState 
       if (!state.windows[windowId]) return state;
       const windowState = state.windows[windowId];
 
-      // If unsnapping (snapZone is null), restore previous position/size
       if (!snapZone) {
         return {
           ...state,
@@ -223,9 +232,8 @@ function windowReducer(state: WindowsState, action: WindowAction): WindowsState 
         };
       }
 
-      // Calculate snapped position and size
       const screenWidth = globalThis.innerWidth;
-      const screenHeight = globalThis.innerHeight - getTaskbarHeight(); // Minus taskbar
+      const screenHeight = globalThis.innerHeight - getTaskbarHeight();
 
       let newPosition: WindowPosition;
       let newSize: WindowSize;

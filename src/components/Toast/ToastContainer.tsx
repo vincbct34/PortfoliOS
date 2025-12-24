@@ -1,8 +1,17 @@
+/**
+ * @file ToastContainer.tsx
+ * @description Container for animated toast notifications positioned at screen corner.
+ */
+
 import { AnimatePresence } from 'framer-motion';
 import { useNotification } from '../../context/NotificationContext';
 import Toast from './Toast';
 import styles from './ToastContainer.module.css';
 
+/**
+ * Toast Container component.
+ * Renders all active toasts with enter/exit animations.
+ */
 export default function ToastContainer() {
   const { toasts, removeToast } = useNotification();
 

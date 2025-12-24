@@ -1,3 +1,8 @@
+/**
+ * @file AboutMe.tsx
+ * @description Personal profile app displaying bio, social links, and professional info.
+ */
+
 import { Github, Linkedin, Mail, MapPin, Calendar, Briefcase, FileText } from 'lucide-react';
 import styles from './AboutMe.module.css';
 import { profile } from '../../data/portfolio';
@@ -5,13 +10,16 @@ import { useWindows } from '../../context/WindowContext';
 import { useNotification } from '../../context/NotificationContext';
 import { useTranslation } from '../../context/I18nContext';
 
+/**
+ * About Me application component.
+ * Displays user profile with avatar, bio, social links, and CV download option.
+ */
 export default function AboutMe() {
   const { openWindow } = useWindows();
   const { showToast } = useNotification();
   const { t } = useTranslation();
 
   const handleOpenCV = () => {
-    // Open File Explorer - the CV is in Documents folder
     openWindow('explorer');
     showToast(t.aboutMe.cvLocation, 'info');
   };

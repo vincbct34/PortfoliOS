@@ -1,6 +1,12 @@
+/**
+ * @file TaskManagerGraph.tsx
+ * @description Animated canvas-based line graph component inspired by Windows Task Manager.
+ */
+
 import { useRef, useEffect, useCallback } from 'react';
 import styles from './GitHubPerformance.module.css';
 
+/** Props for the task manager graph component */
 interface TaskManagerGraphProps {
   data: number[];
   label: string;
@@ -10,6 +16,10 @@ interface TaskManagerGraphProps {
   showGrid?: boolean;
 }
 
+/**
+ * Task Manager Graph component.
+ * Renders an animated line graph with gradient fill and scrolling grid effect.
+ */
 export default function TaskManagerGraph({
   data,
   label,
@@ -31,7 +41,6 @@ export default function TaskManagerGraph({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Handle high DPI displays
     const dpr = window.devicePixelRatio || 1;
     const rect = container.getBoundingClientRect();
     canvas.width = rect.width * dpr;
@@ -43,18 +52,14 @@ export default function TaskManagerGraph({
     const width = rect.width;
     const graphHeight = height;
 
-    // Clear canvas
     ctx.clearRect(0, 0, width, graphHeight);
 
-    // Calculate max value for scaling
     const maxValue = propMaxValue || Math.max(...data, 1);
 
-    // Draw grid lines if enabled
     if (showGrid) {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
       ctx.lineWidth = 1;
 
-      // Horizontal lines
       const horizontalLines = 4;
       for (let i = 0; i <= horizontalLines; i++) {
         const y = (graphHeight / horizontalLines) * i;
@@ -64,7 +69,6 @@ export default function TaskManagerGraph({
         ctx.stroke();
       }
 
-      // Vertical lines with scrolling effect
       const verticalSpacing = 40;
       const offset = offsetRef.current % verticalSpacing;
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
@@ -76,12 +80,10 @@ export default function TaskManagerGraph({
       }
     }
 
-    // Draw the area fill
     if (data.length > 0) {
       const pointSpacing = width / Math.max(data.length - 1, 1);
       const padding = 4;
 
-      // Create gradient for fill
       const gradient = ctx.createLinearGradient(0, 0, 0, graphHeight);
       gradient.addColorStop(0, `${color}40`);
       gradient.addColorStop(1, `${color}05`);
@@ -105,7 +107,6 @@ export default function TaskManagerGraph({
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // Draw the line
       ctx.beginPath();
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
@@ -125,14 +126,12 @@ export default function TaskManagerGraph({
 
       ctx.stroke();
 
-      // Glow effect
       ctx.shadowColor = color;
       ctx.shadowBlur = 10;
       ctx.stroke();
       ctx.shadowBlur = 0;
     }
 
-    // Animate scroll offset
     offsetRef.current += 0.5;
     animationRef.current = requestAnimationFrame(draw);
   }, [data, color, height, propMaxValue, showGrid]);
@@ -154,7 +153,6 @@ export default function TaskManagerGraph({
     };
   }, [draw]);
 
-  // Get current and max values for display
   const currentValue = data.length > 0 ? data[data.length - 1] : 0;
   const maxDisplayValue = propMaxValue || Math.max(...data, 1);
 

@@ -3,7 +3,6 @@ import { renderHook, act } from '@testing-library/react';
 import { SystemSettingsProvider, useSystemSettings } from './SystemSettingsContext';
 import { audioService } from '../services/audioService';
 
-// Mock audioService
 vi.mock('../services/audioService', () => ({
   audioService: {
     play: vi.fn(),
@@ -99,13 +98,11 @@ describe('SystemSettingsContext', () => {
         wrapper: ({ children }) => <SystemSettingsProvider>{children}</SystemSettingsProvider>,
       });
 
-      // First set to 0
       act(() => {
         result.current.setVolume(0);
       });
       expect(result.current.isMuted).toBe(true);
 
-      // Raise volume
       act(() => {
         result.current.setVolume(50);
       });
@@ -454,7 +451,6 @@ describe('SystemSettingsContext', () => {
         wrapper: ({ children }) => <SystemSettingsProvider>{children}</SystemSettingsProvider>,
       });
 
-      // Should fall back to defaults
       expect(result.current.volume).toBe(75);
       expect(result.current.isMuted).toBe(false);
       expect(result.current.brightness).toBe(100);
@@ -468,7 +464,7 @@ describe('SystemSettingsContext', () => {
       });
 
       expect(result.current.volume).toBe(30);
-      // Other settings should use defaults
+
       expect(result.current.brightness).toBe(100);
       expect(result.current.nightMode).toBe(false);
     });
@@ -480,7 +476,6 @@ describe('SystemSettingsContext', () => {
         wrapper: ({ children }) => <SystemSettingsProvider>{children}</SystemSettingsProvider>,
       });
 
-      // In test environment, navigator.onLine is typically true
       expect(typeof result.current.isOnline).toBe('boolean');
     });
   });

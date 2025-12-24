@@ -1,16 +1,25 @@
+/**
+ * @file useResize.ts
+ * @description Hook for handling window resizing from all edges and corners.
+ */
+
 import { useCallback, useRef } from 'react';
 import type { WindowSize, WindowPosition } from '../types/window';
 
+/** Resize handle directions */
 type ResizeHandle = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 
+/** All available resize handles */
 const RESIZE_HANDLES: ResizeHandle[] = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
 
+/** Options for the useResize hook */
 interface UseResizeOptions {
   onResize?: (data: { size: WindowSize; position: WindowPosition }) => void;
   minSize?: WindowSize;
   disabled?: boolean;
 }
 
+/** Return type for the useResize hook */
 interface UseResizeReturn {
   handleResizeStart: (
     e: React.MouseEvent,
@@ -21,6 +30,10 @@ interface UseResizeReturn {
   RESIZE_HANDLES: ResizeHandle[];
 }
 
+/**
+ * Hook for handling window resizing.
+ * Supports all 8 resize directions with minimum size constraints.
+ */
 export function useResize({
   onResize,
   minSize = { width: 200, height: 150 },
@@ -61,7 +74,6 @@ export function useResize({
         let newX = startPosition.current.x;
         let newY = startPosition.current.y;
 
-        // Handle horizontal resize
         if (handle.current.includes('e')) {
           newWidth = Math.max(minSize.width, startSize.current.width + deltaX);
         }
@@ -71,13 +83,11 @@ export function useResize({
             newWidth = proposedWidth;
             newX = startPosition.current.x + deltaX;
           } else {
-            // Clamp to minimum - adjust position to keep right edge fixed
             newWidth = minSize.width;
             newX = startPosition.current.x + (startSize.current.width - minSize.width);
           }
         }
 
-        // Handle vertical resize
         if (handle.current.includes('s')) {
           newHeight = Math.max(minSize.height, startSize.current.height + deltaY);
         }
@@ -87,7 +97,6 @@ export function useResize({
             newHeight = proposedHeight;
             newY = startPosition.current.y + deltaY;
           } else {
-            // Clamp to minimum - adjust position to keep bottom edge fixed
             newHeight = minSize.height;
             newY = startPosition.current.y + (startSize.current.height - minSize.height);
           }

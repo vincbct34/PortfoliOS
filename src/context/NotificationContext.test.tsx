@@ -5,7 +5,6 @@ import { I18nProvider } from './I18nContext';
 import { SettingsProvider } from './SettingsContext';
 import { SystemSettingsProvider } from './SystemSettingsContext';
 
-// Wrapper with all required providers
 function AllProviders({ children }: { children: React.ReactNode }) {
   return (
     <I18nProvider>
@@ -133,7 +132,6 @@ describe('NotificationContext', () => {
       result.current.showToast('Test toast', 'info');
     });
 
-    // Just verify it doesn't throw
     expect(result.current.showToast).toBeDefined();
   });
 });

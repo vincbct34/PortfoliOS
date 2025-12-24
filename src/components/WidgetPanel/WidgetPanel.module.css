@@ -25,7 +25,6 @@
   overflow-y: auto;
 }
 
-/* Widget Card */
 .widget {
   background: var(--surface-secondary);
   border-radius: 12px;
@@ -45,7 +44,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Clock Widget */
 .clockWidget {
   text-align: center;
 }
@@ -64,7 +62,6 @@
   text-transform: capitalize;
 }
 
-/* Weather Widget */
 .weatherWidget {
   display: flex;
   align-items: center;
@@ -142,7 +139,6 @@
   }
 }
 
-/* Quick Links */
 .quickLinks {
   display: flex;
   flex-direction: column;
@@ -179,7 +175,6 @@
   opacity: 1;
 }
 
-/* Stats */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -204,7 +199,6 @@
   color: var(--text-secondary);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .panel {
     width: 100%;
@@ -215,7 +209,6 @@
   }
 }
 
-/* World Clock Widget */
 .worldClocks {
   display: flex;
   flex-direction: column;
@@ -253,7 +246,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Calendar Widget */
 .calendarHeader {
   display: flex;
   align-items: center;

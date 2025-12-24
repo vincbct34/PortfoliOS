@@ -1,27 +1,31 @@
 /**
- * Terminal command definitions
- * Extracted from Terminal.tsx for maintainability
+ * @file terminalCommands.ts
+ * @description Terminal command definitions including help, system info, and easter eggs.
  */
 
+/** Terminal history line output */
 export interface HistoryLine {
   type: 'command' | 'output' | 'error' | 'success' | 'info' | 'ascii';
   text: string;
 }
 
+/** Terminal command definition */
 export interface Command {
   description: string;
   execute: () => HistoryLine[] | 'CLEAR';
 }
 
+/** ASCII art banner for neofetch command */
 export const ASCII_ART = `
 ██╗   ██╗██╗███╗   ██╗ ██████╗███████╗███╗   ██╗████████╗
 ██║   ██║██║████╗  ██║██╔════╝██╔════╝████╗  ██║╚══██╔══╝
-██║   ██║██║██╔██╗ ██║██║     █████╗  ██╔██╗ ██║   ██║   
-╚██╗ ██╔╝██║██║╚██╗██║██║     ██╔══╝  ██║╚██╗██║   ██║   
- ╚████╔╝ ██║██║ ╚████║╚██████╗███████╗██║ ╚████║   ██║   
-  ╚═══╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   
+██║   ██║██║██╔██╗ ██║██║     █████╗  ██╔██╗ ██║   ██║
+╚██╗ ██╔╝██║██║╚██╗██║██║     ██╔══╝  ██║╚██╗██║   ██║
+ ╚████╔╝ ██║██║ ╚████║╚██████╗███████╗██║ ╚████║   ██║
+  ╚═══╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═══╝   ╚═╝
 `;
 
+/** Fortune cookie messages */
 export const FORTUNES = [
   "Un bon code est comme une bonne blague : il n'a pas besoin d'explication.",
   'Il y a 10 types de personnes : ceux qui comprennent le binaire et ceux qui ne comprennent pas.',
@@ -33,14 +37,19 @@ export const FORTUNES = [
   'La simplicité est la sophistication ultime. - Léonard de Vinci (et les devs)',
 ];
 
+/** Cowsay ASCII template function */
 export const COWSAY_TEMPLATE = () => `
         \\\\   ^__^
          \\\\  (oo)\\\\_______
-            (__)\\\\       )\\\\/\\\\
+            (__)\\       )\\\\/\\\\
                 ||----w |
                 ||     ||
 `;
 
+/**
+ * Creates all available terminal commands.
+ * @returns Record of command name to command definition
+ */
 export function createCommands(): Record<string, Command> {
   return {
     help: {

@@ -1,6 +1,11 @@
+/**
+ * @file App.tsx
+ * @description Main application component. Orchestrates the OS-like interface with
+ * boot sequence, lock screen, desktop, taskbar, and window management.
+ */
+
 import { useCallback, Suspense, lazy } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
-import Snowfall from 'react-snowfall';
 import { WindowProvider, useWindows } from './context/WindowContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -19,7 +24,7 @@ import ToastContainer from './components/Toast/ToastContainer';
 
 import './styles/global.css';
 
-// Lazy load app components for code splitting
+/* ===== Lazy-loaded App Components ===== */
 const AboutMe = lazy(() => import('./apps/AboutMe/AboutMe'));
 const Projects = lazy(() => import('./apps/Projects/Projects'));
 const Skills = lazy(() => import('./apps/Skills/Skills'));
@@ -30,10 +35,11 @@ const Notepad = lazy(() => import('./apps/Notepad/Notepad'));
 const SnakeGame = lazy(() => import('./apps/SnakeGame/SnakeGame'));
 const FileExplorer = lazy(() => import('./apps/FileExplorer/FileExplorer'));
 
-// Loading fallback for lazy-loaded apps
+/**
+ * Loading spinner displayed while lazy-loading app components.
+ * @returns Centered spinner with loading text
+ */
 function AppLoader() {
-  // Note: This component is inside providers in App, so we can use hooks
-  // But since it's used in Suspense fallback before full render, we use a simple approach
   return (
     <div
       style={{
@@ -61,18 +67,22 @@ function AppLoader() {
   );
 }
 
-// Separate component to use i18n hook
+/** Displays localized loading text. Separated to use i18n hook. */
 function AppLoaderText() {
   const { t } = useTranslation();
   return <>{t.common.loading}</>;
 }
 
-// Motion wrapper that respects focus mode
+/**
+ * Wrapper that configures Framer Motion based on focus mode setting.
+ * Disables animations when focus mode is enabled for accessibility.
+ */
 function MotionWrapper({ children }: { children: React.ReactNode }) {
   const { focusMode } = useSystemSettings();
   return <MotionConfig reducedMotion={focusMode ? 'always' : 'never'}>{children}</MotionConfig>;
 }
 
+/** Maps app IDs to their lazy-loaded components */
 const appComponents: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   about: AboutMe,
   projects: Projects,
@@ -85,6 +95,10 @@ const appComponents: Record<string, React.LazyExoticComponent<React.ComponentTyp
   explorer: FileExplorer,
 };
 
+/**
+ * Renders all non-minimized windows with their corresponding app components.
+ * Uses Suspense for lazy-loading with AppLoader fallback.
+ */
 function WindowsRenderer() {
   const { windows } = useWindows();
   const openWindows = Object.values(windows);
@@ -108,7 +122,10 @@ function WindowsRenderer() {
   );
 }
 
-// Main OS Component containing the logic
+/**
+ * Core OS component managing system states: locked, booting, ready, shutdown, off.
+ * Handles transitions between states and renders appropriate screens.
+ */
 function OperatingSystem() {
   const { systemStatus, setSystemStatus } = useSystemSettings();
   const { t } = useTranslation();
@@ -133,26 +150,19 @@ function OperatingSystem() {
   return (
     <FileSystemProvider>
       <CustomCursor />
-      {/* Lock Screen */}
       <AnimatePresence>
         {systemStatus === 'locked' && <LockScreen onUnlock={handleUnlock} />}
       </AnimatePresence>
-
-      {/* Boot Screen */}
       <AnimatePresence>
         {systemStatus === 'booting' && (
           <BootScreen onBootComplete={handleBootComplete} duration={6000} />
         )}
       </AnimatePresence>
-
-      {/* Shutdown Screen */}
       <AnimatePresence>
         {systemStatus === 'shutdown' && (
           <BootScreen mode="shutdown" onBootComplete={handleShutdownComplete} duration={4000} />
         )}
       </AnimatePresence>
-
-      {/* Off Screen */}
       <AnimatePresence>
         {systemStatus === 'off' && (
           <motion.div
@@ -178,30 +188,12 @@ function OperatingSystem() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Desktop - always mounted but initially hidden */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: systemStatus === 'ready' ? 1 : 0 }}
         transition={{ duration: 0.5, delay: systemStatus === 'ready' ? 0.3 : 0 }}
         style={{ width: '100%', height: '100%' }}
       >
-        {/* Snowfall effect */}
-        {systemStatus === 'ready' && (
-          <Snowfall
-            style={{
-              position: 'fixed',
-              width: '100vw',
-              height: '100vh',
-              zIndex: 9999,
-              pointerEvents: 'none',
-            }}
-            snowflakeCount={150}
-            speed={[0.5, 2]}
-            wind={[-0.5, 1]}
-            radius={[1, 4]}
-          />
-        )}
         <WindowProvider>
           <Desktop>
             <WindowsRenderer />
@@ -209,13 +201,15 @@ function OperatingSystem() {
           <Taskbar />
         </WindowProvider>
       </motion.div>
-
-      {/* Toast Notifications */}
       <ToastContainer />
     </FileSystemProvider>
   );
 }
 
+/**
+ * Root application component.
+ * Wraps the OS in all required context providers and error boundary.
+ */
 function App() {
   return (
     <ErrorBoundary>

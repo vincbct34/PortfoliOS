@@ -1,18 +1,29 @@
+/**
+ * @file useDesktopIcons.ts
+ * @description Hook for managing desktop icon positions and customizations with localStorage persistence.
+ */
+
 import { useState, useCallback, useEffect } from 'react';
 
+/** Position coordinates for a desktop icon */
 export interface IconPosition {
   x: number;
   y: number;
 }
 
+/** Custom label and icon for a desktop icon */
 export interface IconCustomization {
   label?: string;
   icon?: string;
 }
 
+/** Map of icon IDs to their positions */
 export type IconPositions = Record<string, IconPosition>;
+
+/** Map of icon IDs to their customizations */
 export type IconCustomizations = Record<string, IconCustomization>;
 
+/** Options for the useDesktopIcons hook */
 interface UseDesktopIconsOptions {
   iconIds: string[];
   iconWidth?: number;
@@ -21,6 +32,7 @@ interface UseDesktopIconsOptions {
   padding?: number;
 }
 
+/** Return type for the useDesktopIcons hook */
 interface UseDesktopIconsReturn {
   positions: IconPositions;
   customizations: IconCustomizations;
@@ -40,7 +52,7 @@ function calculateDefaultPositions(
   padding: number
 ): IconPositions {
   const positions: IconPositions = {};
-  const desktopHeight = window.innerHeight - 48 - padding * 2; // minus taskbar and padding
+  const desktopHeight = window.innerHeight - 48 - padding * 2;
   const iconsPerColumn = Math.floor(desktopHeight / (iconHeight + gap));
 
   iconIds.forEach((id, index) => {
@@ -63,7 +75,6 @@ export function useDesktopIcons({
   gap = 8,
   padding = 16,
 }: UseDesktopIconsOptions): UseDesktopIconsReturn {
-  // Positions State
   const [positions, setPositions] = useState<IconPositions>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(POSITIONS_STORAGE_KEY);
@@ -75,14 +86,13 @@ export function useDesktopIcons({
             return parsed;
           }
         } catch {
-          // Invalid JSON
+          void 0;
         }
       }
     }
     return calculateDefaultPositions(iconIds, iconWidth, iconHeight, gap, padding);
   });
 
-  // Customizations State
   const [customizations, setCustomizations] = useState<IconCustomizations>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(CUSTOMIZATIONS_STORAGE_KEY);
@@ -90,19 +100,17 @@ export function useDesktopIcons({
         try {
           return JSON.parse(saved) as IconCustomizations;
         } catch {
-          // Invalid JSON
+          void 0;
         }
       }
     }
     return {};
   });
 
-  // Persist positions
   useEffect(() => {
     localStorage.setItem(POSITIONS_STORAGE_KEY, JSON.stringify(positions));
   }, [positions]);
 
-  // Persist customizations
   useEffect(() => {
     localStorage.setItem(CUSTOMIZATIONS_STORAGE_KEY, JSON.stringify(customizations));
   }, [customizations]);

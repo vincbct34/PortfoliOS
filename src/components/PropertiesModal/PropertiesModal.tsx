@@ -1,3 +1,8 @@
+/**
+ * @file PropertiesModal.tsx
+ * @description Modal for editing desktop icon properties (label and icon name).
+ */
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -5,6 +10,7 @@ import { X } from 'lucide-react';
 import { getIcon } from '../../utils/iconHelpers';
 import styles from './PropertiesModal.module.css';
 
+/** Props for the PropertiesModal component */
 interface PropertiesModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +19,10 @@ interface PropertiesModalProps {
   initialIcon: string;
 }
 
+/**
+ * Properties Modal component.
+ * Allows users to customize desktop icon label and icon from Lucide library.
+ */
 export default function PropertiesModal({
   isOpen,
   onClose,
@@ -23,7 +33,6 @@ export default function PropertiesModal({
   const [label, setLabel] = useState(initialLabel);
   const [iconName, setIconName] = useState(initialIcon);
 
-  // Reset state when opening
   useEffect(() => {
     if (isOpen) {
       setLabel(initialLabel);

@@ -1,3 +1,8 @@
+/**
+ * @file SnakeGame.tsx
+ * @description Classic Snake game with canvas rendering, keyboard/touch controls, and high score tracking.
+ */
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Play,
@@ -14,17 +19,24 @@ import { useSystemSettings } from '../../context/SystemSettingsContext';
 import { useTranslation } from '../../context/I18nContext';
 import styles from './SnakeGame.module.css';
 
+/** Movement direction */
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+
+/** Grid position */
 type Position = { x: number; y: number };
 
+/* ===== Game Constants ===== */
 const GRID_SIZE = 20;
 const CELL_SIZE = 20;
 const INITIAL_SPEED = 150;
 const SPEED_INCREMENT = 5;
 const MIN_SPEED = 50;
-
 const HIGH_SCORE_KEY = 'snake-high-score';
 
+/**
+ * Snake Game application component.
+ * Fully playable snake game with score tracking and sound effects.
+ */
 export default function SnakeGame() {
   const { showToast, addNotification } = useNotification();
   const { playSound } = useSystemSettings();
@@ -44,7 +56,6 @@ export default function SnakeGame() {
   const gameLoopRef = useRef<number | null>(null);
   const gameOverHandledRef = useRef(false);
 
-  // Load high score
   useEffect(() => {
     const saved = localStorage.getItem(HIGH_SCORE_KEY);
     if (saved) {
@@ -52,7 +63,6 @@ export default function SnakeGame() {
     }
   }, []);
 
-  // Generate random food position
   const generateFood = useCallback((currentSnake: Position[]): Position => {
     let newFood: Position;
     do {
@@ -64,7 +74,6 @@ export default function SnakeGame() {
     return newFood;
   }, []);
 
-  // Reset game
   const resetGame = useCallback(() => {
     const initialSnake = [{ x: 10, y: 10 }];
     setSnake(initialSnake);
@@ -78,9 +87,7 @@ export default function SnakeGame() {
     gameOverHandledRef.current = false;
   }, [generateFood]);
 
-  // Game over handler
   const handleGameOver = useCallback(() => {
-    // Prevent duplicate calls
     if (gameOverHandledRef.current) return;
     gameOverHandledRef.current = true;
 
@@ -103,7 +110,6 @@ export default function SnakeGame() {
     }
   }, [score, highScore, showToast, addNotification, playSound, language, t]);
 
-  // Move snake
   const moveSnake = useCallback(() => {
     setSnake((currentSnake) => {
       const head = currentSnake[0];
@@ -125,13 +131,11 @@ export default function SnakeGame() {
           break;
       }
 
-      // Check wall collision
       if (newHead.x < 0 || newHead.x >= GRID_SIZE || newHead.y < 0 || newHead.y >= GRID_SIZE) {
         handleGameOver();
         return currentSnake;
       }
 
-      // Check self collision
       if (currentSnake.some((segment) => segment.x === newHead.x && segment.y === newHead.y)) {
         handleGameOver();
         return currentSnake;
@@ -139,21 +143,19 @@ export default function SnakeGame() {
 
       const newSnake = [newHead, ...currentSnake];
 
-      // Check if eating food
       if (newHead.x === food.x && newHead.y === food.y) {
         playSound('game-eat');
         setFood(generateFood(newSnake));
         setScore((s) => s + 10);
         setSpeed((s) => Math.max(MIN_SPEED, s - SPEED_INCREMENT));
-        return newSnake; // Don't remove tail (snake grows)
+        return newSnake;
       }
 
-      newSnake.pop(); // Remove tail
+      newSnake.pop();
       return newSnake;
     });
   }, [food, generateFood, handleGameOver, playSound]);
 
-  // Game loop
   useEffect(() => {
     if (isPlaying && !isGameOver) {
       gameLoopRef.current = window.setInterval(moveSnake, speed);
@@ -166,7 +168,6 @@ export default function SnakeGame() {
     };
   }, [isPlaying, isGameOver, speed, moveSnake]);
 
-  // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isPlaying) return;
@@ -219,7 +220,7 @@ export default function SnakeGame() {
 
   const handleDirectionClick = (newDir: Direction) => {
     if (!isPlaying) return;
-    const currentDir = directionRef.current; // Use ref for most up-to-date direction
+    const currentDir = directionRef.current;
 
     if (newDir === 'UP' && currentDir !== 'DOWN') {
       setDirection('UP');
@@ -236,7 +237,6 @@ export default function SnakeGame() {
     }
   };
 
-  // Draw game
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -244,11 +244,9 @@ export default function SnakeGame() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear canvas
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw grid
     ctx.strokeStyle = '#1a1a1a';
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= GRID_SIZE; i++) {
@@ -262,7 +260,6 @@ export default function SnakeGame() {
       ctx.stroke();
     }
 
-    // Draw food
     const gradient = ctx.createRadialGradient(
       food.x * CELL_SIZE + CELL_SIZE / 2,
       food.y * CELL_SIZE + CELL_SIZE / 2,
@@ -284,10 +281,9 @@ export default function SnakeGame() {
     );
     ctx.fill();
 
-    // Draw snake
     snake.forEach((segment, index) => {
       const isHead = index === 0;
-      const hue = 120 + index * 2; // Gradient from green to teal
+      const hue = 120 + index * 2;
       ctx.fillStyle = isHead ? '#22c55e' : `hsl(${hue}, 70%, 50%)`;
       ctx.shadowColor = isHead ? '#22c55e' : 'transparent';
       ctx.shadowBlur = isHead ? 10 : 0;
@@ -305,7 +301,6 @@ export default function SnakeGame() {
     });
   }, [snake, food]);
 
-  // Sync direction ref
   useEffect(() => {
     directionRef.current = direction;
   }, [direction]);
@@ -321,7 +316,6 @@ export default function SnakeGame() {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
         <div className={styles.scoreSection}>
           <div className={styles.score}>
@@ -346,8 +340,6 @@ export default function SnakeGame() {
           </button>
         </div>
       </div>
-
-      {/* Game Canvas */}
       <div className={styles.gameWrapper}>
         <canvas
           ref={canvasRef}
@@ -356,7 +348,6 @@ export default function SnakeGame() {
           className={styles.canvas}
         />
 
-        {/* Overlay for game states */}
         {!isPlaying && !isGameOver && (
           <div className={styles.overlay}>
             <div className={styles.overlayContent}>
@@ -387,8 +378,6 @@ export default function SnakeGame() {
           </div>
         )}
       </div>
-
-      {/* D-Pad controls (Mobile only) */}
       <div className={styles.dpad}>
         <div className={styles.dpadRow}>
           <button className={styles.dpadButton} onClick={() => handleDirectionClick('UP')}>
@@ -410,8 +399,6 @@ export default function SnakeGame() {
           </button>
         </div>
       </div>
-
-      {/* Footer */}
       <div className={styles.footer}>
         <span>Space: Pause | ↑↓←→: Move</span>
       </div>

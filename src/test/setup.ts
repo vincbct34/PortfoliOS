@@ -3,15 +3,12 @@ import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 
-// Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers);
 
-// Cleanup after each test
 afterEach(() => {
   cleanup();
 });
 
-// Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
@@ -26,7 +23,6 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
@@ -37,7 +33,6 @@ global.IntersectionObserver = class IntersectionObserver {
   }
 } as unknown as typeof IntersectionObserver;
 
-// Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}
@@ -45,7 +40,6 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 } as unknown as typeof ResizeObserver;
 
-// Mock AudioContext
 global.AudioContext = class AudioContext {
   constructor() {}
   createOscillator() {
@@ -86,7 +80,6 @@ global.AudioContext = class AudioContext {
   }
 } as unknown as typeof AudioContext;
 
-// Mock localStorage
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
 

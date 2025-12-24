@@ -1,3 +1,8 @@
+/**
+ * @file FileExplorer.tsx
+ * @description Windows-style file explorer with folder navigation, search, and file operations.
+ */
+
 import { useState, useCallback, useMemo } from 'react';
 import {
   Folder,
@@ -25,7 +30,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { useConfirm } from '../../components/ConfirmDialog/ConfirmDialog';
 import styles from './FileExplorer.module.css';
 
-// Virtual file system types
+/** File or folder node in the virtual file system */
 interface FileNode {
   id: string;
   name: string;
@@ -35,10 +40,10 @@ interface FileNode {
   content?: string;
   size?: string;
   modified?: string;
-  downloadUrl?: string; // URL for downloadable files like PDFs
+  downloadUrl?: string;
 }
 
-// Virtual file system data
+/** Virtual file system root structure */
 const fileSystem: FileNode = {
   id: 'root',
   name: 'Ce PC',
@@ -162,12 +167,11 @@ const fileSystem: FileNode = {
       id: 'mes-fichiers',
       name: 'Mes Fichiers',
       type: 'folder',
-      children: [], // Will be populated dynamically
+      children: [],
     },
   ],
 };
 
-// Helper to convert user files to FileNode format
 function convertUserFilesToNodes(
   files: { id: string; name: string; size: number; modifiedAt: Date }[]
 ): FileNode[] {
@@ -181,7 +185,6 @@ function convertUserFilesToNodes(
   }));
 }
 
-// Icon component based on file type
 function FileIcon({ type, iconName }: { type: 'file' | 'folder'; iconName?: string }) {
   if (type === 'folder') {
     return <Folder size={20} className={styles.folderIcon} />;
@@ -220,11 +223,9 @@ export default function FileExplorer() {
     item: FileNode | null;
   }>({ isOpen: false, x: 0, y: 0, item: null });
 
-  // Merge user files into the file system dynamically
   const dynamicFileSystem = useMemo(() => {
     const userFileNodes = convertUserFilesToNodes(userFiles);
 
-    // Deep clone and update "Mes Fichiers" folder
     const cloned = JSON.parse(JSON.stringify(fileSystem)) as FileNode;
     const mesFichiers = cloned.children?.find((f) => f.id === 'mes-fichiers');
     if (mesFichiers) {
@@ -234,7 +235,6 @@ export default function FileExplorer() {
     return cloned;
   }, [userFiles]);
 
-  // Find node by path (using dynamic file system)
   const findNodeByPathDynamic = useCallback(
     (path: string[]): FileNode | null => {
       let current: FileNode | null = dynamicFileSystem;
@@ -251,7 +251,6 @@ export default function FileExplorer() {
     [dynamicFileSystem]
   );
 
-  // Get breadcrumbs from path (using dynamic file system)
   const getBreadcrumbsDynamic = useCallback(
     (path: string[]): { id: string; name: string; path: string[] }[] => {
       const breadcrumbs = [{ id: 'root', name: 'Ce PC', path: [] as string[] }];
@@ -278,7 +277,6 @@ export default function FileExplorer() {
       setCurrentPath(path);
       setSelectedItem(null);
 
-      // Add to history
       const newHistory = history.slice(0, historyIndex + 1);
       newHistory.push(path);
       setHistory(newHistory);
@@ -341,7 +339,6 @@ export default function FileExplorer() {
     [navigateTo]
   );
 
-  // Context menu handlers
   const handleContextMenu = useCallback((e: React.MouseEvent, item: FileNode) => {
     e.preventDefault();
     setContextMenu({
@@ -356,7 +353,6 @@ export default function FileExplorer() {
     setContextMenu({ isOpen: false, x: 0, y: 0, item: null });
   }, []);
 
-  // Check if file is a user file (from Notepad)
   const isUserFile = useCallback(
     (fileId: string) => {
       return userFiles.some((f) => f.id === fileId);
@@ -364,7 +360,6 @@ export default function FileExplorer() {
     [userFiles]
   );
 
-  // Open file in Notepad
   const handleOpenFile = useCallback(
     (item: FileNode) => {
       if (item.type === 'file' && item.name.endsWith('.txt')) {
@@ -378,7 +373,6 @@ export default function FileExplorer() {
     [openWindow, showToast, closeContextMenu]
   );
 
-  // Delete file (only user files)
   const handleDeleteFile = useCallback(
     async (item: FileNode) => {
       if (isUserFile(item.id)) {
@@ -404,10 +398,8 @@ export default function FileExplorer() {
     [isUserFile, deleteFile, showToast, addNotification, closeContextMenu, confirm]
   );
 
-  // Download file content
   const handleDownloadFile = useCallback(
     (item: FileNode) => {
-      // Check if it's a file with a downloadUrl (like PDF)
       if (item.downloadUrl) {
         const a = document.createElement('a');
         a.href = item.downloadUrl;
@@ -418,7 +410,6 @@ export default function FileExplorer() {
         return;
       }
 
-      // Check if it's a user file
       const userFile = userFiles.find((f) => f.id === item.id);
       if (userFile) {
         const blob = new Blob([userFile.content], { type: 'text/plain' });
@@ -437,7 +428,6 @@ export default function FileExplorer() {
     [userFiles, showToast, closeContextMenu]
   );
 
-  // Copy file name
   const handleCopyName = useCallback(
     (item: FileNode) => {
       navigator.clipboard.writeText(item.name);
@@ -447,12 +437,10 @@ export default function FileExplorer() {
     [showToast, closeContextMenu]
   );
 
-  // Filter items based on search
   const filteredChildren = currentNode.children?.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Render sidebar tree
   const renderTreeItem = (node: FileNode, path: string[] = [], depth: number = 0) => {
     if (node.type !== 'folder') return null;
 
@@ -493,7 +481,6 @@ export default function FileExplorer() {
 
   return (
     <div className={styles.explorer}>
-      {/* Toolbar */}
       <div className={styles.toolbar}>
         <div className={styles.navButtons}>
           <button
@@ -521,8 +508,6 @@ export default function FileExplorer() {
             <ArrowUp size={18} />
           </button>
         </div>
-
-        {/* Breadcrumb / Address bar */}
         <div className={styles.addressBar}>
           {breadcrumbs.map((crumb, index) => (
             <span key={crumb.id} className={styles.breadcrumb}>
@@ -534,8 +519,6 @@ export default function FileExplorer() {
             </span>
           ))}
         </div>
-
-        {/* Search */}
         <div className={styles.searchBox}>
           <Search size={16} />
           <input
@@ -548,17 +531,13 @@ export default function FileExplorer() {
       </div>
 
       <div className={styles.main}>
-        {/* Sidebar */}
         <div className={styles.sidebar}>
           <div className={styles.sidebarSection}>
             <div className={styles.sidebarHeader}>Accès rapide</div>
             {renderTreeItem(dynamicFileSystem)}
           </div>
         </div>
-
-        {/* Content area */}
         <div className={styles.content}>
-          {/* View mode toggle */}
           <div className={styles.contentHeader}>
             <span className={styles.itemCount}>
               {filteredChildren?.length || 0} élément
@@ -582,7 +561,6 @@ export default function FileExplorer() {
             </div>
           </div>
 
-          {/* Files grid/list */}
           {viewMode === 'grid' ? (
             <div className={styles.grid}>
               {filteredChildren?.map((item) => (
@@ -633,8 +611,6 @@ export default function FileExplorer() {
           )}
         </div>
       </div>
-
-      {/* Status bar */}
       <div className={styles.statusBar}>
         {selectedItem ? (
           <span>{filteredChildren?.find((i) => i.id === selectedItem)?.name} sélectionné</span>
@@ -643,7 +619,6 @@ export default function FileExplorer() {
         )}
       </div>
 
-      {/* Context Menu */}
       {contextMenu.isOpen && contextMenu.item && (
         <>
           <div className={styles.contextMenuOverlay} onClick={closeContextMenu} />

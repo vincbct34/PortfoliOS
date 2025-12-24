@@ -1,6 +1,12 @@
+/**
+ * @file CustomCursor.tsx
+ * @description Custom animated cursor with context-aware states (hover, click, text, resize).
+ */
+
 import { useEffect, useRef, useState, useCallback } from 'react';
 import './CustomCursor.css';
 
+/** Cursor visual states */
 type CursorState =
   | 'default'
   | 'hover'
@@ -11,18 +17,22 @@ type CursorState =
   | 'resize-nwse'
   | 'resize-nesw';
 
+/** Cursor position coordinates */
 interface Position {
   x: number;
   y: number;
 }
 
+/**
+ * Custom Cursor component.
+ * Renders a dot and ring cursor with smooth animations and state-based styling.
+ */
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [cursorState, setCursorState] = useState<CursorState>('default');
   const [isVisible, setIsVisible] = useState(false);
 
-  // Smooth ring follow using requestAnimationFrame
   const ringPosition = useRef<Position>({ x: 0, y: 0 });
   const targetPosition = useRef<Position>({ x: 0, y: 0 });
   const animationFrameId = useRef<number | null>(null);
@@ -44,26 +54,21 @@ export default function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    // Check if device supports hover (excludes touch devices)
     const hasHover = window.matchMedia('(hover: hover)').matches;
     if (!hasHover) return;
 
-    // Add class to body to hide default cursor
     document.body.classList.add('has-custom-cursor');
 
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
 
-      // Update dot position immediately
       if (dotRef.current) {
         dotRef.current.style.left = `${clientX}px`;
         dotRef.current.style.top = `${clientY}px`;
       }
 
-      // Update target position for ring (will be lerped)
       targetPosition.current = { x: clientX, y: clientY };
 
-      // Check what element is under cursor
       const target = e.target as HTMLElement;
       updateCursorState(target);
 
@@ -75,7 +80,6 @@ export default function CustomCursor() {
     };
 
     const handleMouseUp = () => {
-      // Restore previous state based on current element
       const element = document.elementFromPoint(
         targetPosition.current.x,
         targetPosition.current.y
@@ -97,7 +101,6 @@ export default function CustomCursor() {
         return;
       }
 
-      // Check for resize handles
       const resizeHandle = element.closest('[data-resize]') as HTMLElement | null;
       if (resizeHandle) {
         const direction = resizeHandle.getAttribute('data-resize');
@@ -113,7 +116,6 @@ export default function CustomCursor() {
         return;
       }
 
-      // Check for text inputs
       const tagName = element.tagName.toLowerCase();
       if (tagName === 'input' || tagName === 'textarea' || element.isContentEditable) {
         const inputType = element.getAttribute('type');
@@ -126,7 +128,6 @@ export default function CustomCursor() {
         }
       }
 
-      // Check for clickable elements
       const isClickable =
         tagName === 'button' ||
         tagName === 'a' ||
@@ -141,10 +142,8 @@ export default function CustomCursor() {
       }
     };
 
-    // Start animation loop
     animationFrameId.current = requestAnimationFrame(animateRing);
 
-    // Add event listeners
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
@@ -166,7 +165,6 @@ export default function CustomCursor() {
     };
   }, [isVisible, animateRing]);
 
-  // Don't render on touch devices
   if (typeof window !== 'undefined') {
     const hasHover = window.matchMedia('(hover: hover)').matches;
     if (!hasHover) return null;

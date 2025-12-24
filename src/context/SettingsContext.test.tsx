@@ -26,7 +26,6 @@ describe('SettingsContext', () => {
   });
 
   it('should throw error when used outside provider', () => {
-    // Suppress console errors for this test
     const consoleError = console.error;
     console.error = () => {};
 
@@ -55,7 +54,6 @@ describe('SettingsContext', () => {
         wrapper: ({ children }) => <SettingsProvider>{children}</SettingsProvider>,
       });
 
-      // Initial theme is dark
       expect(document.documentElement.classList.contains('dark')).toBe(true);
 
       act(() => {
@@ -120,7 +118,7 @@ describe('SettingsContext', () => {
       });
 
       const value = result.current.getWallpaperValue();
-      expect(value).toBeDefined(); // Should return default wallpaper
+      expect(value).toBeDefined();
     });
 
     it('should persist wallpaper to localStorage', () => {
@@ -157,7 +155,6 @@ describe('SettingsContext', () => {
         wrapper: ({ children }) => <SettingsProvider>{children}</SettingsProvider>,
       });
 
-      // Initial accent color should be set
       const initialValue = document.documentElement.style.getPropertyValue('--accent-primary');
       expect(initialValue).toBeTruthy();
 
@@ -190,7 +187,7 @@ describe('SettingsContext', () => {
       });
 
       const value = result.current.getAccentColorValue();
-      expect(value).toBeDefined(); // Should return default accent color
+      expect(value).toBeDefined();
     });
 
     it('should persist accent color to localStorage', () => {
@@ -234,14 +231,12 @@ describe('SettingsContext', () => {
         wrapper: ({ children }) => <SettingsProvider>{children}</SettingsProvider>,
       });
 
-      // Should fall back to defaults
       expect(result.current.theme).toBe('dark');
       expect(result.current.wallpaperId).toBe('gradient-purple');
       expect(result.current.accentColorId).toBe('blue');
     });
 
     it('should merge saved settings with defaults', () => {
-      // Save only partial settings
       localStorage.setItem('portfolio-settings', JSON.stringify({ theme: 'light' }));
 
       const { result } = renderHook(() => useSettings(), {
@@ -249,7 +244,7 @@ describe('SettingsContext', () => {
       });
 
       expect(result.current.theme).toBe('light');
-      // Other settings should use defaults
+
       expect(result.current.wallpaperId).toBe('gradient-purple');
       expect(result.current.accentColorId).toBe('blue');
     });

@@ -1,12 +1,16 @@
 /**
- * Available wallpapers for the desktop background
+ * @file wallpapers.ts
+ * @description Wallpaper and accent color configuration options.
  */
+
+/** Wallpaper configuration */
 export interface Wallpaper {
   id: string;
   name: string;
   value: string;
 }
 
+/** Available wallpaper options */
 export const wallpapers: Wallpaper[] = [
   {
     id: 'gradient-purple',
@@ -71,9 +75,6 @@ export const wallpapers: Wallpaper[] = [
   },
 ];
 
-/**
- * Available accent colors for UI elements
- */
 export interface AccentColor {
   id: string;
   name: string;

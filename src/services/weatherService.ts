@@ -1,5 +1,9 @@
-// Open-Meteo API service for weather data
+/**
+ * @file weatherService.ts
+ * @description Weather service using Open-Meteo API for current conditions.
+ */
 
+/** Weather data structure */
 export interface WeatherData {
   temperature: number;
   weatherCode: number;
@@ -9,7 +13,11 @@ export interface WeatherData {
   city: string;
 }
 
-// WMO Weather interpretation codes
+/**
+ * Converts weather code to human-readable condition.
+ * @param code - WMO weather code
+ * @returns Weather condition in French
+ */
 export function getWeatherCondition(code: number): string {
   if (code === 0) return 'Ciel dégagé';
   if (code <= 3) return 'Partiellement nuageux';
@@ -23,6 +31,12 @@ export function getWeatherCondition(code: number): string {
   return 'Inconnu';
 }
 
+/**
+ * Gets weather icon name based on code and day/night.
+ * @param code - WMO weather code
+ * @param isDay - Whether it's daytime
+ * @returns Icon identifier string
+ */
 export function getWeatherIcon(
   code: number,
   isDay: boolean
@@ -36,16 +50,19 @@ export function getWeatherIcon(
   return 'cloud';
 }
 
+/** Geolocation data */
 interface GeoLocation {
   latitude: number;
   longitude: number;
   city: string;
 }
 
-// Get user's location using browser geolocation or default to Paris
+/**
+ * Gets user's location via browser geolocation or defaults to Paris.
+ * @returns Promise resolving to location data
+ */
 export async function getUserLocation(): Promise<GeoLocation> {
   return new Promise((resolve) => {
-    // Default to Paris
     const defaultLocation: GeoLocation = {
       latitude: 48.8566,
       longitude: 2.3522,
@@ -62,7 +79,6 @@ export async function getUserLocation(): Promise<GeoLocation> {
         const { latitude, longitude } = position.coords;
 
         try {
-          // Use BigDataCloud free reverse geocoding API
           const geoResponse = await fetch(
             `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=fr`
           );

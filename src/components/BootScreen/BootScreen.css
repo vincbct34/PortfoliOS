@@ -12,7 +12,6 @@
   overflow: hidden;
 }
 
-/* Subtle animated background */
 .boot-screen::before {
   content: '';
   position: absolute;
@@ -63,7 +62,6 @@
   }
 }
 
-/* Windows 11 style loading dots */
 .loading-dots {
   display: flex;
   gap: 8px;
@@ -89,7 +87,6 @@
   min-height: 21px;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .boot-logo {
     width: 100px;

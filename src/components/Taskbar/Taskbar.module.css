@@ -14,7 +14,6 @@
   z-index: 9999;
 }
 
-/* Start button */
 .startButton {
   display: flex;
   align-items: center;
@@ -38,7 +37,6 @@
   color: white;
 }
 
-/* App buttons container */
 .appButtons {
   display: flex;
   align-items: center;
@@ -48,7 +46,6 @@
   overflow-x: auto;
 }
 
-/* Individual app button */
 .appButton {
   display: flex;
   align-items: center;
@@ -90,7 +87,6 @@
   text-overflow: ellipsis;
 }
 
-/* Active indicator */
 .activeIndicator {
   position: absolute;
   bottom: 4px;
@@ -106,7 +102,6 @@
   width: 16px;
 }
 
-/* System tray */
 .systemTray {
   display: flex;
   align-items: center;
@@ -145,7 +140,6 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Widget button */
 .widgetButton {
   display: flex;
   align-items: center;
@@ -168,7 +162,6 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Tray button (notifications, etc) */
 .trayButton {
   position: relative;
   display: flex;
@@ -221,7 +214,6 @@
   }
 }
 
-/* Window Preview Popup */
 .windowPreview {
   position: fixed;
   bottom: 48px;
@@ -298,7 +290,6 @@
   color: #666666;
 }
 
-/* Preview content scaler - scales down the real app content */
 .previewScaler {
   width: 264px;
   height: 160px;
@@ -317,7 +308,7 @@
 @media (max-width: 768px) {
   .taskbar {
     padding: 0 4px;
-    height: 56px; /* Slightly taller for better touch targets */
+    height: 56px;
   }
 
   .startButton {
@@ -336,9 +327,9 @@
   }
 
   .appButton {
-    padding: 0 8px; /* Reduce padding */
+    padding: 0 8px;
     height: 48px;
-    width: 48px; /* Square buttons on mobile */
+    width: 48px;
   }
 
   .appButton svg {
@@ -347,12 +338,11 @@
   }
 
   .appButtonLabel {
-    display: none; /* Hide labels on mobile */
+    display: none;
   }
 
-  /* Adjust active indicator for icon-only mode */
   .activeIndicator {
-    width: 20px !important; /* Force wider indicator */
+    width: 20px !important;
   }
 
   .systemTray {
@@ -365,7 +355,7 @@
   }
 
   .clockDate {
-    display: none; /* Hide date on mobile */
+    display: none;
   }
 
   .widgetButton,

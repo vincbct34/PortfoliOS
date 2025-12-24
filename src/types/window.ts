@@ -1,16 +1,24 @@
-// Window types
+/**
+ * @file window.ts
+ * @description Type definitions for window management system.
+ */
+
+/** Window dimensions */
 export interface WindowSize {
   width: number;
   height: number;
 }
 
+/** Window position coordinates */
 export interface WindowPosition {
   x: number;
   y: number;
 }
 
+/** Window snap zone options */
 export type SnapZone = 'left' | 'right' | 'top' | null;
 
+/** Application configuration for window creation */
 export interface AppConfig {
   id: string;
   title: string;
@@ -20,6 +28,7 @@ export interface AppConfig {
   minSize: WindowSize;
 }
 
+/** Runtime state of a window instance */
 export interface WindowState {
   id: string;
   title: string;
@@ -43,7 +52,6 @@ export interface WindowsState {
   apps: Record<string, AppConfig>;
 }
 
-// Action types
 export type WindowAction =
   | { type: 'OPEN_WINDOW'; payload: { appId: string } }
   | { type: 'CLOSE_WINDOW'; payload: { windowId: string } }
@@ -58,7 +66,6 @@ export type WindowAction =
     }
   | { type: 'SNAP_WINDOW'; payload: { windowId: string; snapZone: SnapZone } };
 
-// Context value type
 export interface WindowContextValue extends WindowsState {
   openWindow: (appId: string) => void;
   closeWindow: (windowId: string) => void;

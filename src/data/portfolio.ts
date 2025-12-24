@@ -1,15 +1,12 @@
-// ============================================================================
-// Portfolio Configuration
-// ============================================================================
-// Edit this file to customize your portfolio content.
-// ============================================================================
+/**
+ * @file portfolio.ts
+ * @description Portfolio data including profile, skills, projects, and contact information.
+ */
 
 import type { LucideIcon } from 'lucide-react';
 import { Mail, Github, Linkedin } from 'lucide-react';
 
-// ----------------------------------------------------------------------------
-// Profile (AboutMe)
-// ----------------------------------------------------------------------------
+/** User profile information */
 export interface Profile {
   name: string;
   avatar: string;
@@ -20,6 +17,7 @@ export interface Profile {
   };
 }
 
+/** Profile data */
 export const profile: Profile = {
   name: 'Vincent Bichat',
   avatar: '/profile.png',
@@ -30,9 +28,6 @@ export const profile: Profile = {
   },
 };
 
-// ----------------------------------------------------------------------------
-// Skills
-// ----------------------------------------------------------------------------
 export interface Skill {
   name: string;
   category: string;
@@ -67,15 +62,12 @@ export const skillStats: SkillStats = {
   yearsExp: 2,
 };
 
-// ----------------------------------------------------------------------------
-// Projects
-// ----------------------------------------------------------------------------
 export interface Project {
   id: number;
   title: string;
   description: string;
   tags: string[];
-  image: string; // URL to project screenshot/preview
+  image: string;
   github: string | null;
   demo: string | null;
 }
@@ -113,9 +105,6 @@ export const projects: Project[] = [
   },
 ];
 
-// ----------------------------------------------------------------------------
-// Contact Methods
-// ----------------------------------------------------------------------------
 export interface ContactMethod {
   icon: LucideIcon;
   label: string;

@@ -8,7 +8,6 @@
   pointer-events: none;
 }
 
-/* Animated border glow */
 .preview::before {
   content: '';
   position: absolute;
@@ -36,7 +35,6 @@
   }
 }
 
-/* Inner content hint */
 .preview::after {
   content: '';
   position: absolute;

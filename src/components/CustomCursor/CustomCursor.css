@@ -6,7 +6,6 @@
   z-index: 99999;
 }
 
-/* Main cursor dot - white with black border */
 .custom-cursor__dot {
   position: absolute;
   width: 12px;
@@ -24,7 +23,6 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Cursor ring that follows with delay */
 .custom-cursor__ring {
   position: absolute;
   width: 32px;
@@ -39,7 +37,6 @@
     opacity 0.2s ease;
 }
 
-/* Hover state - grows */
 .custom-cursor--hover .custom-cursor__ring {
   width: 44px;
   height: 44px;
@@ -50,7 +47,6 @@
   transform: translate(-50%, -50%) scale(0.8);
 }
 
-/* Click state - shrinks */
 .custom-cursor--click .custom-cursor__ring {
   width: 24px;
   height: 24px;
@@ -60,7 +56,6 @@
   transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* Text input state */
 .custom-cursor--text .custom-cursor__ring {
   width: 4px;
   height: 20px;
@@ -73,7 +68,6 @@
   opacity: 0;
 }
 
-/* Resize North-South (vertical) */
 .custom-cursor--resize-ns .custom-cursor__dot {
   width: 6px;
   height: 20px;
@@ -86,7 +80,6 @@
   border-radius: 10px;
 }
 
-/* Resize East-West (horizontal) */
 .custom-cursor--resize-ew .custom-cursor__dot {
   width: 20px;
   height: 6px;
@@ -99,7 +92,6 @@
   border-radius: 10px;
 }
 
-/* Resize NW-SE diagonal */
 .custom-cursor--resize-nwse .custom-cursor__dot {
   width: 16px;
   height: 6px;
@@ -114,7 +106,6 @@
   border-radius: 8px;
 }
 
-/* Resize NE-SW diagonal */
 .custom-cursor--resize-nesw .custom-cursor__dot {
   width: 16px;
   height: 6px;
@@ -129,18 +120,15 @@
   border-radius: 8px;
 }
 
-/* Hidden when outside viewport */
 .custom-cursor--hidden {
   opacity: 0;
 }
 
-/* Hide default cursor globally when custom cursor is active */
 .has-custom-cursor,
 .has-custom-cursor * {
   cursor: none !important;
 }
 
-/* Restore cursor on touch devices */
 @media (hover: none) and (pointer: coarse) {
   .custom-cursor {
     display: none !important;

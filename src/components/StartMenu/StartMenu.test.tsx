@@ -5,14 +5,12 @@ import { WindowProvider } from '../../context/WindowContext';
 import { SystemSettingsProvider } from '../../context/SystemSettingsContext';
 import { I18nProvider } from '../../context/I18nContext';
 
-// Mock audioService
 vi.mock('../../services/audioService', () => ({
   audioService: {
     play: vi.fn(),
   },
 }));
 
-// Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
@@ -22,7 +20,6 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-// Test wrapper with all required providers
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
     <I18nProvider>
@@ -48,16 +45,12 @@ describe('StartMenu', () => {
         </TestWrapper>
       );
 
-      // Check for search input
       expect(screen.getByRole('textbox')).toBeInTheDocument();
 
-      // Check for pinned section
       expect(screen.getByText('Pinned')).toBeInTheDocument();
 
-      // Check for user profile
       expect(screen.getByText('Vincent')).toBeInTheDocument();
 
-      // Check for power button
       expect(screen.getByRole('button', { name: /power/i })).toBeInTheDocument();
     });
 
@@ -68,7 +61,6 @@ describe('StartMenu', () => {
         </TestWrapper>
       );
 
-      // Check for pinned apps by their aria-labels (Open X)
       expect(screen.getByRole('listitem', { name: /Open About/i })).toBeInTheDocument();
       expect(screen.getByRole('listitem', { name: /Open Projects/i })).toBeInTheDocument();
       expect(screen.getByRole('listitem', { name: /Open Skills/i })).toBeInTheDocument();
@@ -87,7 +79,6 @@ describe('StartMenu', () => {
         </TestWrapper>
       );
 
-      // Start menu dialog
       const dialog = screen.getByRole('dialog');
       expect(dialog).toBeInTheDocument();
       expect(dialog).toHaveAttribute('aria-label');
@@ -118,9 +109,8 @@ describe('StartMenu', () => {
         </TestWrapper>
       );
 
-      // Find the overlay (it has aria-hidden="true")
       const overlays = document.querySelectorAll('[aria-hidden="true"]');
-      const overlay = overlays[0]; // First overlay
+      const overlay = overlays[0];
       fireEvent.click(overlay);
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -138,13 +128,10 @@ describe('StartMenu', () => {
       const searchInput = screen.getByRole('textbox', { name: /search/i });
       fireEvent.change(searchInput, { target: { value: 'note' } });
 
-      // Should show Notepad
       expect(screen.getByRole('listitem', { name: /Open Notepad/i })).toBeInTheDocument();
 
-      // Should NOT show Terminal (as it doesn't match 'note')
       expect(screen.queryByRole('listitem', { name: /Open Terminal/i })).not.toBeInTheDocument();
 
-      // Title should change to Search
       expect(screen.getByText('Search')).toBeInTheDocument();
     });
 
@@ -158,10 +145,8 @@ describe('StartMenu', () => {
       const searchInput = screen.getByRole('textbox');
       fireEvent.change(searchInput, { target: { value: 'xyz123' } });
 
-      // Should show No results
       expect(screen.getByText('No results')).toBeInTheDocument();
 
-      // Should show no apps
       const listItems = screen.queryAllByRole('listitem');
       expect(listItems).toHaveLength(0);
     });
@@ -175,14 +160,11 @@ describe('StartMenu', () => {
 
       const searchInput = screen.getByRole('textbox');
 
-      // Search first
       fireEvent.change(searchInput, { target: { value: 'note' } });
       expect(screen.queryByRole('listitem', { name: /Open Terminal/i })).not.toBeInTheDocument();
 
-      // Clear search
       fireEvent.change(searchInput, { target: { value: '' } });
 
-      // Should show all apps again
       expect(screen.getByRole('listitem', { name: /Open Terminal/i })).toBeInTheDocument();
       expect(screen.getByText('Pinned')).toBeInTheDocument();
     });

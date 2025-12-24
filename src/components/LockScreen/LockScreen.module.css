@@ -65,7 +65,6 @@
   bottom: 80px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .time {
     font-size: 64px;

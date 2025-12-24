@@ -23,7 +23,6 @@
   overflow: hidden;
 }
 
-/* Calendar Section */
 .calendarSection {
   padding: 24px;
   background: linear-gradient(135deg, var(--accent-primary) 0%, #60cdff 100%);
@@ -43,7 +42,6 @@
   line-height: 1;
 }
 
-/* Notifications */
 .notificationsSection {
   flex: 1;
   padding: 16px;
@@ -200,7 +198,6 @@
   font-size: 13px;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .panel {
     width: 100%;

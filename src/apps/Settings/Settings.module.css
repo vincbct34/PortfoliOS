@@ -6,7 +6,6 @@
   overflow: hidden;
 }
 
-/* Sidebar */
 .sidebar {
   width: 220px;
   background: var(--surface-secondary);
@@ -59,7 +58,6 @@
   opacity: 0.5;
 }
 
-/* Content */
 .content {
   flex: 1;
   padding: 24px;
@@ -88,7 +86,6 @@
   margin: 0 0 12px 0;
 }
 
-/* Wallpaper Grid */
 .wallpaperGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -114,7 +111,6 @@
   border-color: var(--accent-primary);
 }
 
-/* Color Grid */
 .colorGrid {
   display: flex;
   gap: 10px;
@@ -151,7 +147,6 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Theme Toggle */
 .themeToggle {
   display: flex;
   gap: 16px;
@@ -182,7 +177,6 @@
   color: white;
 }
 
-/* About Section */
 .aboutCard {
   display: flex;
   align-items: center;
@@ -259,7 +253,6 @@
   font-size: 24px;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .settings {
     flex-direction: column;

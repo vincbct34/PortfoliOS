@@ -1,15 +1,21 @@
+/**
+ * @file SettingsContext.tsx
+ * @description Context for managing theme, wallpaper, and accent color settings with localStorage persistence.
+ */
+
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { wallpapers, accentColors } from '../data/wallpapers';
 
-// Re-export for consumers
 export { wallpapers, accentColors };
 
+/** Settings state shape */
 interface SettingsState {
   theme: 'light' | 'dark';
   wallpaperId: string;
   accentColorId: string;
 }
 
+/** Context value with settings and update functions */
 interface SettingsContextValue extends SettingsState {
   setTheme: (theme: 'light' | 'dark') => void;
   setWallpaper: (wallpaperId: string) => void;
@@ -18,23 +24,29 @@ interface SettingsContextValue extends SettingsState {
   getAccentColorValue: () => string;
 }
 
+/** Default settings configuration */
 const defaultSettings: SettingsState = {
   theme: 'dark',
   wallpaperId: 'gradient-purple',
   accentColorId: 'blue',
 };
 
+/** Storage key for persisting settings */
 const STORAGE_KEY = 'portfolio-settings';
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
+/** Props for the SettingsProvider component */
 interface SettingsProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Settings Provider component.
+ * Manages theme, wallpaper, and accent color with automatic persistence.
+ */
 export function SettingsProvider({ children }: SettingsProviderProps) {
   const [settings, setSettings] = useState<SettingsState>(() => {
-    // Load from localStorage on init
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -48,22 +60,18 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     return defaultSettings;
   });
 
-  // Persist to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     } catch {
-      // localStorage may be unavailable (private mode, storage full)
       console.warn('Failed to save settings to localStorage');
     }
   }, [settings]);
 
-  // Apply theme class to document
   useEffect(() => {
     document.documentElement.classList.toggle('dark', settings.theme === 'dark');
   }, [settings.theme]);
 
-  // Apply accent color CSS variable
   useEffect(() => {
     const accentColor = accentColors.find((c) => c.id === settings.accentColorId);
     if (accentColor) {

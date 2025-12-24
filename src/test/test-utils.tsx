@@ -6,7 +6,6 @@ import { SystemSettingsProvider } from '../context/SystemSettingsContext';
 import { NotificationProvider } from '../context/NotificationContext';
 import { MotionConfig } from 'framer-motion';
 
-// All providers wrapper for testing
 function AllTheProviders({ children }: { children: React.ReactNode }) {
   return (
     <I18nProvider>
@@ -21,11 +20,9 @@ function AllTheProviders({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Custom render function that includes providers
 function customRender(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { wrapper: AllTheProviders, ...options });
 }
 
-// Re-export everything
 export * from '@testing-library/react';
 export { customRender as render };

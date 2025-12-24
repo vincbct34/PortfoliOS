@@ -1,3 +1,8 @@
+/**
+ * @file Toast.tsx
+ * @description Individual toast notification with icon, message, and progress bar.
+ */
+
 import { motion } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
 import type {
@@ -6,11 +11,13 @@ import type {
 } from '../../context/NotificationContext';
 import styles from './Toast.module.css';
 
+/** Props for the Toast component */
 interface ToastProps {
   toast: ToastType;
   onClose: (id: string) => void;
 }
 
+/** Icon mapping for each toast type */
 const icons: Record<ToastVariant, React.ReactNode> = {
   success: <CheckCircle size={20} />,
   error: <AlertCircle size={20} />,
@@ -18,6 +25,10 @@ const icons: Record<ToastVariant, React.ReactNode> = {
   info: <Info size={20} />,
 };
 
+/**
+ * Toast notification component.
+ * Displays a dismissible message with type-specific icon and countdown progress bar.
+ */
 export default function Toast({ toast, onClose }: ToastProps) {
   return (
     <motion.div

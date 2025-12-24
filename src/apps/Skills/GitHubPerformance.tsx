@@ -1,12 +1,18 @@
+/**
+ * @file GitHubPerformance.tsx
+ * @description GitHub activity dashboard with commit graphs, language stats, and activity feed.
+ */
+
 import { useState, useEffect, useMemo } from 'react';
 import styles from './GitHubPerformance.module.css';
 import TaskManagerGraph from './TaskManagerGraph';
 import { fetchGitHubData, clearGitHubCache, type GitHubData } from '../../services/githubService';
 import { useTranslation } from '../../context/I18nContext';
 
+/** Performance metric types */
 type MetricType = 'commits' | 'repos' | 'languages' | 'activity';
 
-// Language colors from GitHub
+/** Color mapping for programming languages */
 const languageColors: Record<string, string> = {
   TypeScript: '#3178c6',
   JavaScript: '#f1e05a',
@@ -27,6 +33,10 @@ const languageColors: Record<string, string> = {
   Svelte: '#ff3e00',
 };
 
+/**
+ * GitHub Performance component.
+ * Displays commit activity, repository stats, language usage, and recent events.
+ */
 export default function GitHubPerformance() {
   const { t } = useTranslation();
   const [data, setData] = useState<GitHubData | null>(null);
@@ -60,21 +70,18 @@ export default function GitHubPerformance() {
     loadData();
   };
 
-  // Prepare commit data for the graph (last 26 weeks)
   const commitGraphData = useMemo(() => {
     if (!data?.commitActivity) return [];
     const lastWeeks = data.commitActivity.slice(-26);
     return lastWeeks.map((w) => w.total);
   }, [data]);
 
-  // Prepare daily commits for a detailed view
   const dailyCommitData = useMemo(() => {
     if (!data?.commitActivity) return [];
     const lastWeeks = data.commitActivity.slice(-8);
     return lastWeeks.flatMap((w) => w.days);
   }, [data]);
 
-  // Calculate language percentages
   const languageData = useMemo(() => {
     if (!data?.languages) return [];
     const total = Object.values(data.languages).reduce((a, b) => a + b, 0);
@@ -91,7 +98,6 @@ export default function GitHubPerformance() {
       .slice(0, 8);
   }, [data]);
 
-  // Format relative time
   const formatRelativeTime = (dateStr: string): string => {
     const date = new Date(dateStr);
     const now = new Date();
@@ -106,7 +112,6 @@ export default function GitHubPerformance() {
     return `${diffDays}d`;
   };
 
-  // Get event icon
   const getEventIcon = (type: string): string => {
     switch (type) {
       case 'PushEvent':
@@ -128,7 +133,6 @@ export default function GitHubPerformance() {
     }
   };
 
-  // Get event type label
   const getEventLabel = (event: { type: string; payload?: { action?: string } }): string => {
     switch (event.type) {
       case 'PushEvent':
@@ -198,7 +202,6 @@ export default function GitHubPerformance() {
 
   return (
     <div className={styles.performanceContainer}>
-      {/* Left Sidebar - Metrics */}
       <div className={styles.sidebar}>
         {metrics.map((metric) => (
           <button
@@ -214,8 +217,6 @@ export default function GitHubPerformance() {
           </button>
         ))}
       </div>
-
-      {/* Main Panel */}
       <div className={styles.mainPanel}>
         <div className={styles.panelHeader}>
           <div>
@@ -228,7 +229,6 @@ export default function GitHubPerformance() {
           </div>
         </div>
 
-        {/* Commits View */}
         {activeMetric === 'commits' && (
           <>
             <TaskManagerGraph
@@ -261,7 +261,6 @@ export default function GitHubPerformance() {
           </>
         )}
 
-        {/* Repos View */}
         {activeMetric === 'repos' && (
           <>
             <div className={styles.statsGrid}>
@@ -295,7 +294,6 @@ export default function GitHubPerformance() {
           </>
         )}
 
-        {/* Languages View */}
         {activeMetric === 'languages' && (
           <div className={styles.languagesContainer}>
             <div className={styles.languagesTitle}>
@@ -326,7 +324,6 @@ export default function GitHubPerformance() {
           </div>
         )}
 
-        {/* Activity View */}
         {activeMetric === 'activity' && (
           <div className={styles.activityContainer}>
             <div className={styles.activityTitle}>

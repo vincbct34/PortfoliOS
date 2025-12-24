@@ -13,12 +13,11 @@ describe('I18nContext', () => {
 
   describe('useI18n', () => {
     it('should provide default language', () => {
-      localStorage.clear(); // Ensure clean state
+      localStorage.clear();
       const { result } = renderHook(() => useI18n(), {
         wrapper: ({ children }) => <I18nProvider>{children}</I18nProvider>,
       });
 
-      // Should provide a language (default is browser-dependent or fallback to fr)
       expect(result.current.language).toBeDefined();
       expect(['fr', 'en']).toContain(result.current.language);
     });
@@ -71,7 +70,7 @@ describe('I18nContext', () => {
 
   describe('useTranslation', () => {
     it('should provide shorthand access to translations', () => {
-      localStorage.clear(); // Ensure clean state
+      localStorage.clear();
       const { result } = renderHook(() => useTranslation(), {
         wrapper: ({ children }) => <I18nProvider>{children}</I18nProvider>,
       });

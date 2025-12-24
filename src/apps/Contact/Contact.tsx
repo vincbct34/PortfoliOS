@@ -1,3 +1,8 @@
+/**
+ * @file Contact.tsx
+ * @description Contact form app with email submission and social links display.
+ */
+
 import { useState, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import styles from './Contact.module.css';
@@ -6,16 +11,23 @@ import { handleContactSubmission } from '../../services/emailService';
 import { useNotification } from '../../context/NotificationContext';
 import { useTranslation } from '../../context/I18nContext';
 
+/** Contact form data structure */
 interface FormData {
   name: string;
   email: string;
   message: string;
 }
 
+/** Form submission status states */
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const SUBMIT_COOLDOWN = 5000; // 5 seconds between submissions
+/** Cooldown between submissions in milliseconds */
+const SUBMIT_COOLDOWN = 5000;
 
+/**
+ * Contact application component.
+ * Provides a form for sending messages and displays alternative contact methods.
+ */
 export default function Contact() {
   const { showToast } = useNotification();
   const { t } = useTranslation();
@@ -26,7 +38,7 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [honeypot, setHoneypot] = useState(''); // Anti-spam honeypot
+  const [honeypot, setHoneypot] = useState('');
   const lastSubmitRef = useRef<number>(0);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -34,27 +46,26 @@ export default function Contact() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Reset status when user starts typing again
+
     if (status === 'error' || status === 'success') {
       setStatus('idle');
     }
   };
 
   const validateForm = (): string | null => {
-    // Honeypot check (bots fill this hidden field)
     if (honeypot) {
       return 'Spam detected';
     }
-    // Name validation
+
     if (formData.name.length < 2 || formData.name.length > 100) {
       return 'Le nom doit contenir entre 2 et 100 caractères';
     }
-    // Email validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       return 'Email invalide';
     }
-    // Message validation
+
     if (formData.message.length < 10 || formData.message.length > 5000) {
       return 'Le message doit contenir entre 10 et 5000 caractères';
     }
@@ -64,14 +75,12 @@ export default function Contact() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Rate limiting
     const now = Date.now();
     if (now - lastSubmitRef.current < SUBMIT_COOLDOWN) {
       showToast('Veuillez attendre avant de renvoyer un message', 'warning');
       return;
     }
 
-    // Validation
     const validationError = validateForm();
     if (validationError) {
       if (validationError !== 'Spam detected') {
@@ -142,7 +151,6 @@ export default function Contact() {
           </div>
         )}
 
-        {/* Honeypot field - hidden from real users, bots will fill it */}
         <input
           type="text"
           name="website"

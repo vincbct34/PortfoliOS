@@ -1,9 +1,15 @@
+/**
+ * @file DesktopIcon.tsx
+ * @description Draggable desktop icon with selection, double-click, and context menu support.
+ */
+
 import { memo, useRef } from 'react';
 import { motion, type PanInfo } from 'framer-motion';
 import type { IconPosition } from '../../hooks/useDesktopIcons';
 import { getIcon } from '../../utils/iconHelpers';
 import styles from './Desktop.module.css';
 
+/** Props for the DesktopIcon component */
 interface DesktopIconProps {
   appId: string;
   icon: string;
@@ -17,6 +23,10 @@ interface DesktopIconProps {
   onPositionChange: (appId: string, position: IconPosition) => void;
 }
 
+/**
+ * Desktop Icon component.
+ * Renders a draggable icon that can be clicked to open applications.
+ */
 const DesktopIcon = memo(function DesktopIcon({
   appId,
   icon,
@@ -39,7 +49,6 @@ const DesktopIcon = memo(function DesktopIcon({
   };
 
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    // Small delay to prevent click from firing after drag
     setTimeout(() => {
       isDragging.current = false;
     }, 100);

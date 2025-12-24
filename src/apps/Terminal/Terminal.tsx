@@ -1,12 +1,20 @@
+/**
+ * @file Terminal.tsx
+ * @description PowerShell-style terminal emulator with command history and built-in commands.
+ */
+
 import { useState, useRef, useEffect, useMemo, type KeyboardEvent, type FormEvent } from 'react';
 import { useNotification } from '../../context/NotificationContext';
 import { createCommands, ASCII_ART, type HistoryLine } from '../../data/terminalCommands';
 import styles from './Terminal.module.css';
 
+/**
+ * Terminal application component.
+ * Interactive command-line interface with custom commands and history navigation.
+ */
 export default function Terminal() {
   const { showToast, addNotification } = useNotification();
 
-  // Memoize commands to avoid recreating on every render
   const COMMANDS = useMemo(() => createCommands(), []);
 
   const [history, setHistory] = useState<HistoryLine[]>([
@@ -34,7 +42,6 @@ export default function Terminal() {
 
     if (!trimmedInput) return;
 
-    // Add command to history
     const newHistory: HistoryLine[] = [
       ...history,
       { type: 'command', text: `PS C:\\Users\\Vincent> ${input}` },
@@ -49,19 +56,18 @@ export default function Terminal() {
       return;
     }
 
-    // Handle toast command specially since it needs showToast hook
     if (trimmedInput === 'toast') {
       setHistory([
         ...newHistory,
         { type: 'info', text: 'Démonstration des notifications...' },
         { type: 'output', text: '' },
       ]);
-      // Show toasts (temporary popups)
+
       setTimeout(() => showToast('✅ Notification de succès', 'success'), 200);
       setTimeout(() => showToast("ℹ️ Notification d'information", 'info'), 800);
       setTimeout(() => showToast("⚠️ Notification d'avertissement", 'warning'), 1400);
       setTimeout(() => showToast("❌ Notification d'erreur", 'error'), 2000);
-      // Add to notification center (persistent)
+
       addNotification('Terminal', 'Démonstration des notifications exécutée', 'info');
       setInput('');
       return;

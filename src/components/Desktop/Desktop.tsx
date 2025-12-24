@@ -1,3 +1,8 @@
+/**
+ * @file Desktop.tsx
+ * @description Main desktop area with draggable icons, context menus, and window rendering.
+ */
+
 import { useState, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useWindows } from '../../context/WindowContext';
@@ -10,15 +15,18 @@ import IconContextMenu from '../ContextMenu/IconContextMenu';
 import PropertiesModal from '../PropertiesModal/PropertiesModal';
 import styles from './Desktop.module.css';
 
+/** Props for the Desktop component */
 interface DesktopProps {
   children?: ReactNode;
 }
 
+/** Configuration for a desktop icon */
 interface DesktopIconConfig {
   appId: string;
   label: string;
 }
 
+/** State for context menu visibility and position */
 interface ContextMenuState {
   isOpen: boolean;
   x: number;
@@ -26,6 +34,10 @@ interface ContextMenuState {
   targetId?: string;
 }
 
+/**
+ * Desktop component.
+ * Main desktop area with draggable icons, wallpaper, and context menu support.
+ */
 export default function Desktop({ children }: DesktopProps) {
   const { apps, windows, openWindow, restoreWindow, focusWindow } = useWindows();
   const { getWallpaperValue } = useSettings();
@@ -33,7 +45,6 @@ export default function Desktop({ children }: DesktopProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
-  // Context Menus State
   const [desktopContextMenu, setDesktopContextMenu] = useState<ContextMenuState>({
     isOpen: false,
     x: 0,
@@ -45,7 +56,6 @@ export default function Desktop({ children }: DesktopProps) {
     y: 0,
   });
 
-  // Properties Modal State
   const [propertiesModal, setPropertiesModal] = useState<{ isOpen: boolean; appId: string | null }>(
     {
       isOpen: false,
@@ -53,7 +63,6 @@ export default function Desktop({ children }: DesktopProps) {
     }
   );
 
-  // Create translated desktop icons config
   const desktopIconsConfig: DesktopIconConfig[] = useMemo(
     () => [
       { appId: 'about', label: t.apps.about },
@@ -102,14 +111,13 @@ export default function Desktop({ children }: DesktopProps) {
   );
 
   const handleDesktopClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    // Check if clicking background
     if (
       e.target === e.currentTarget ||
       (e.target as HTMLElement).closest(`.${styles.iconsContainer}`) === e.target
     ) {
       setSelectedIcon(null);
     }
-    // Close context menus
+
     setDesktopContextMenu((prev) => ({ ...prev, isOpen: false }));
     setIconContextMenu((prev) => ({ ...prev, isOpen: false }));
   }, []);
@@ -120,7 +128,7 @@ export default function Desktop({ children }: DesktopProps) {
       e.target !== e.currentTarget &&
       (e.target as HTMLElement).closest(`.${styles.desktopIcon}`)
     ) {
-      return; // Handled by icon
+      return;
     }
 
     setIconContextMenu((prev) => ({ ...prev, isOpen: false }));
@@ -132,7 +140,6 @@ export default function Desktop({ children }: DesktopProps) {
   }, []);
 
   const handleIconContextMenu = useCallback((e: React.MouseEvent, appId: string) => {
-    // Prevent desktop context menu
     setDesktopContextMenu((prev) => ({ ...prev, isOpen: false }));
 
     setIconContextMenu({

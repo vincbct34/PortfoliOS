@@ -1,8 +1,15 @@
+/**
+ * @file NotificationContext.tsx
+ * @description Context for managing toast notifications and persistent notification center.
+ */
+
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { useSystemSettings } from './SystemSettingsContext';
 
+/** Available toast notification types */
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
+/** Toast notification data */
 export interface Toast {
   id: string;
   message: string;
@@ -10,6 +17,7 @@ export interface Toast {
   duration: number;
 }
 
+/** Persistent notification data */
 export interface PersistentNotification {
   id: string;
   title: string;
@@ -19,6 +27,7 @@ export interface PersistentNotification {
   read: boolean;
 }
 
+/** Context value for notification operations */
 interface NotificationContextValue {
   toasts: Toast[];
   notifications: PersistentNotification[];
@@ -34,11 +43,16 @@ interface NotificationContextValue {
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
 
+/** Props for the NotificationProvider component */
 interface NotificationProviderProps {
   children: ReactNode;
 }
 
-// Helper to format relative time
+/**
+ * Formats a date as relative time (e.g., "5 min ago").
+ * @param date - The date to format
+ * @returns Formatted relative time string
+ */
 export function formatRelativeTime(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -56,7 +70,6 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { playSound } = useSystemSettings();
   const [notifications, setNotifications] = useState<PersistentNotification[]>([
-    // Default welcome notifications
     {
       id: 'welcome-1',
       title: 'Bienvenue !',
@@ -77,7 +90,6 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
       setToasts((prev) => [...prev, newToast]);
 
-      // Auto-remove after duration
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, duration);
@@ -102,7 +114,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
         read: false,
       };
 
-      setNotifications((prev) => [newNotification, ...prev].slice(0, 20)); // Keep max 20
+      setNotifications((prev) => [newNotification, ...prev].slice(0, 20));
     },
     [playSound]
   );

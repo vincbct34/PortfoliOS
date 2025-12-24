@@ -1,5 +1,3 @@
-/* GitHub Performance - Task Manager Style */
-
 .performanceContainer {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -10,7 +8,6 @@
   overflow: hidden;
 }
 
-/* Left Sidebar */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -78,7 +75,6 @@
   height: 100%;
 }
 
-/* Main Panel */
 .mainPanel {
   display: flex;
   flex-direction: column;
@@ -105,7 +101,6 @@
   color: #888;
 }
 
-/* Graph Container */
 .graphContainer {
   background: #1e1e1e;
   border: 1px solid #333;
@@ -150,7 +145,6 @@
   color: #666;
 }
 
-/* Stats Grid */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -184,7 +178,6 @@
   margin-top: 2px;
 }
 
-/* Languages Chart */
 .languagesContainer {
   background: #252525;
   border: 1px solid #333;
@@ -238,7 +231,6 @@
   color: #888;
 }
 
-/* Activity Feed */
 .activityContainer {
   background: #252525;
   border: 1px solid #333;
@@ -302,7 +294,6 @@
   white-space: nowrap;
 }
 
-/* Loading & Error States */
 .loadingContainer,
 .errorContainer {
   display: flex;
@@ -353,7 +344,6 @@
   background: #0065b8;
 }
 
-/* Mobile Responsive */
 @media (max-width: 900px) {
   .performanceContainer {
     grid-template-columns: 1fr;

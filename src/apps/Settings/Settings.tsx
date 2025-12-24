@@ -1,11 +1,21 @@
+/**
+ * @file Settings.tsx
+ * @description System settings app for theme, wallpaper, accent color, and language preferences.
+ */
+
 import { useState } from 'react';
 import { Moon, Sun, Palette, Monitor, Info, ChevronRight, Globe } from 'lucide-react';
 import { useSettings, wallpapers, accentColors } from '../../context/SettingsContext';
 import { useI18n } from '../../context/I18nContext';
 import styles from './Settings.module.css';
 
+/** Available settings sections */
 type SettingsSection = 'personalization' | 'display' | 'language' | 'about';
 
+/**
+ * Settings application component.
+ * Allows customization of theme, wallpaper, accent colors, and language.
+ */
 export default function Settings() {
   const [activeSection, setActiveSection] = useState<SettingsSection>('personalization');
   const { theme, wallpaperId, accentColorId, setTheme, setWallpaper, setAccentColor } =
@@ -21,7 +31,6 @@ export default function Settings() {
 
   return (
     <div className={styles.settings}>
-      {/* Sidebar */}
       <nav className={styles.sidebar}>
         <h2 className={styles.sidebarTitle}>{t.settingsPage.title}</h2>
         <ul className={styles.navList}>
@@ -42,14 +51,10 @@ export default function Settings() {
           })}
         </ul>
       </nav>
-
-      {/* Content */}
       <main className={styles.content}>
         {activeSection === 'personalization' && (
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>{t.settingsPage.personalization}</h3>
-
-            {/* Wallpaper Selection */}
             <div className={styles.settingGroup}>
               <h4 className={styles.groupTitle}>{t.settingsPage.wallpaper}</h4>
               <div className={styles.wallpaperGrid}>
@@ -66,8 +71,6 @@ export default function Settings() {
                 ))}
               </div>
             </div>
-
-            {/* Accent Color Selection */}
             <div className={styles.settingGroup}>
               <h4 className={styles.groupTitle}>
                 {language === 'fr' ? "Couleur d'accentuation" : 'Accent Color'}
@@ -92,8 +95,6 @@ export default function Settings() {
         {activeSection === 'display' && (
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>{t.settingsPage.theme}</h3>
-
-            {/* Theme Toggle */}
             <div className={styles.settingGroup}>
               <div className={styles.themeToggle}>
                 <button

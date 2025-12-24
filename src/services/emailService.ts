@@ -1,9 +1,14 @@
-// EmailJS Email Service
-// Documentation: https://www.emailjs.com/docs/
+/**
+ * @file emailService.ts
+ * @description Email sending service using EmailJS for contact form submissions.
+ */
 
 import emailjs from '@emailjs/browser';
 
-// Validate configuration at runtime (only logs warning, doesn't break the app)
+/**
+ * Checks if EmailJS is properly configured with environment variables.
+ * @returns True if all required env vars are set
+ */
 const checkConfig = () => {
   const isEmailConfigured = Boolean(
     import.meta.env.VITE_EMAILJS_SERVICE_ID &&
@@ -18,11 +23,11 @@ const checkConfig = () => {
   return isEmailConfigured;
 };
 
-// Check config immediately in dev
 if (import.meta.env.DEV) {
   checkConfig();
 }
 
+/** Contact form data structure */
 interface ContactFormData {
   name: string;
   email: string;
@@ -30,7 +35,9 @@ interface ContactFormData {
 }
 
 /**
- * Send notification email to portfolio owner
+ * Sends a notification email using EmailJS.
+ * @param data - Contact form data
+ * @returns Promise resolving to success status
  */
 async function sendNotification(data: ContactFormData): Promise<boolean> {
   const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
@@ -60,9 +67,6 @@ async function sendNotification(data: ContactFormData): Promise<boolean> {
   }
 }
 
-/**
- * Send confirmation email to the user
- */
 async function sendConfirmation(data: ContactFormData): Promise<boolean> {
   const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
   const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -88,20 +92,15 @@ async function sendConfirmation(data: ContactFormData): Promise<boolean> {
   }
 }
 
-/**
- * Handle contact form submission
- */
 export async function handleContactSubmission(
   data: ContactFormData
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // Send notification to owner
     const notificationSent = await sendNotification(data);
     if (!notificationSent) {
       return { success: false, error: "Échec de l'envoi du message" };
     }
 
-    // Send confirmation to user (don't fail if this fails)
     await sendConfirmation(data);
 
     return { success: true };

@@ -6,7 +6,6 @@
   color: #fff;
 }
 
-/* Header tabs */
 .tabs {
   display: flex;
   background: #252526;
@@ -34,14 +33,12 @@
   border-bottom-color: var(--accent-primary);
 }
 
-/* Main content */
 .content {
   flex: 1;
   padding: 16px;
   overflow-y: auto;
 }
 
-/* Stats bar */
 .statsBar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -68,7 +65,6 @@
   color: var(--accent-primary);
 }
 
-/* Process list */
 .processList {
   background: #252526;
   border-radius: 4px;
@@ -129,7 +125,6 @@
   color: #969696;
 }
 
-/* Progress bar */
 .progressBar {
   height: 4px;
   background: #3c3c3c;
@@ -155,7 +150,6 @@
   background: linear-gradient(90deg, #2196f3, #03a9f4);
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .tabs {
     overflow-x: auto;

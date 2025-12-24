@@ -1,11 +1,21 @@
+/**
+ * @file Skills.tsx
+ * @description Task Manager-style skills display with process list and GitHub performance tabs.
+ */
+
 import { useState } from 'react';
 import styles from './Skills.module.css';
 import { skills, skillStats } from '../../data/portfolio';
 import { useTranslation } from '../../context/I18nContext';
 import GitHubPerformance from './GitHubPerformance';
 
+/** Tab options for skills display */
 type TabType = 'processes' | 'performance';
 
+/**
+ * Skills application component.
+ * Displays technical skills as "processes" with proficiency levels and GitHub stats.
+ */
 export default function Skills() {
   const [activeTab, setActiveTab] = useState<TabType>('processes');
   const { t } = useTranslation();
@@ -16,7 +26,6 @@ export default function Skills() {
     return styles.low;
   };
 
-  // Map categories to translations
   const categoryTranslations: Record<string, string> = {
     Language: t.skillsPage.catLanguage,
     Frontend: t.skillsPage.catFrontend,

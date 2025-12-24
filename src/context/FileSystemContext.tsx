@@ -1,5 +1,11 @@
+/**
+ * @file FileSystemContext.tsx
+ * @description Virtual file system context for managing user-created files with localStorage persistence.
+ */
+
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 
+/** Virtual file representation */
 export interface VirtualFile {
   id: string;
   name: string;
@@ -9,6 +15,7 @@ export interface VirtualFile {
   modifiedAt: Date;
 }
 
+/** Virtual folder containing files and subfolders */
 export interface VirtualFolder {
   id: string;
   name: string;
@@ -16,6 +23,7 @@ export interface VirtualFolder {
   folders: VirtualFolder[];
 }
 
+/** Context value for file system operations */
 interface FileSystemContextValue {
   userFiles: VirtualFile[];
   addFile: (name: string, content: string) => void;
@@ -27,13 +35,13 @@ interface FileSystemContextValue {
 
 const FileSystemContext = createContext<FileSystemContextValue | null>(null);
 
+/** Storage key for persisting files */
 const STORAGE_KEY = 'notepad-files';
 
 interface FileSystemProviderProps {
   children: ReactNode;
 }
 
-// Convert bytes to human readable
 export function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} octets`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
@@ -43,7 +51,6 @@ export function formatFileSize(bytes: number): string {
 export function FileSystemProvider({ children }: FileSystemProviderProps) {
   const [userFiles, setUserFiles] = useState<VirtualFile[]>([]);
 
-  // Load files from localStorage on mount
   useEffect(() => {
     const loadFiles = () => {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -69,7 +76,6 @@ export function FileSystemProvider({ children }: FileSystemProviderProps) {
 
     loadFiles();
 
-    // Listen for storage changes (from Notepad)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) {
         loadFiles();
@@ -78,7 +84,6 @@ export function FileSystemProvider({ children }: FileSystemProviderProps) {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also poll for changes (same-tab updates) - 5s interval to reduce CPU usage
     const interval = setInterval(loadFiles, 5000);
 
     return () => {
@@ -108,11 +113,9 @@ export function FileSystemProvider({ children }: FileSystemProviderProps) {
   }, []);
 
   const deleteFile = useCallback((id: string) => {
-    // Find the file to get its name
     setUserFiles((prev) => {
       const fileToDelete = prev.find((f) => f.id === id);
       if (fileToDelete) {
-        // Also remove from localStorage
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           try {
@@ -120,7 +123,7 @@ export function FileSystemProvider({ children }: FileSystemProviderProps) {
             const updated = parsed.filter((f: { name: string }) => f.name !== fileToDelete.name);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
           } catch {
-            // Ignore parse errors
+            void 0;
           }
         }
       }

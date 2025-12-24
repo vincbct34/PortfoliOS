@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act, renderHook, waitFor } from '@testing-library/react';
 import { FileSystemProvider, useFileSystem, formatFileSize } from './FileSystemContext';
 
-// Test component to access context
 function TestComponent({ onMount }: { onMount?: (ctx: ReturnType<typeof useFileSystem>) => void }) {
   const ctx = useFileSystem();
   if (onMount) {
@@ -82,7 +81,6 @@ describe('FileSystemContext', () => {
       );
 
       await waitFor(() => {
-        // Should default to empty array
         expect(screen.getByTestId('file-count')).toHaveTextContent('0');
       });
     });
@@ -102,7 +100,6 @@ describe('FileSystemContext', () => {
 
   describe('useFileSystem hook', () => {
     it('should throw error when used outside provider', () => {
-      // Suppress console.error for this test
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       expect(() => {
@@ -288,7 +285,6 @@ describe('FileSystemContext', () => {
         expect(screen.getByTestId('file-count')).toHaveTextContent('0');
       });
 
-      // Simulate storage change from another tab
       const newFiles = [{ name: 'new.txt', content: 'New', lastModified: Date.now() }];
       localStorage.setItem('notepad-files', JSON.stringify(newFiles));
 
@@ -326,7 +322,6 @@ describe('FileSystemContext', () => {
         );
       });
 
-      // Should still be 0
       expect(screen.getByTestId('file-count')).toHaveTextContent('0');
     });
   });
@@ -361,7 +356,6 @@ describe('FileSystemContext', () => {
         contextValue!.deleteFile(fileToDelete!.id);
       });
 
-      // Check localStorage was updated
       const storedFiles = JSON.parse(localStorage.getItem('notepad-files') || '[]');
       expect(storedFiles).toHaveLength(1);
       expect(storedFiles[0].name).toBe('file2.txt');
@@ -387,12 +381,10 @@ describe('FileSystemContext', () => {
         expect(contextValue?.userFiles.length).toBe(1);
       });
 
-      // Corrupt localStorage before delete
       localStorage.setItem('notepad-files', 'invalid-json');
 
       const fileToDelete = contextValue!.userFiles[0];
 
-      // Should not throw
       await act(async () => {
         contextValue!.deleteFile(fileToDelete.id);
       });

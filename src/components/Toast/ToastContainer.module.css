@@ -1,7 +1,7 @@
 .container {
   position: fixed;
   bottom: 64px;
-  /* Above taskbar */
+
   right: 16px;
   z-index: 9999;
   display: flex;

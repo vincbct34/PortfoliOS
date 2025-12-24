@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useDrag } from './useDrag';
 
-// Mock SNAP_THRESHOLD from constants
 vi.mock('../constants/layout', () => ({
   SNAP_THRESHOLD: 50,
 }));
@@ -75,7 +74,6 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 50 });
       });
 
-      // Simulate mousemove
       act(() => {
         document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150, clientY: 150 }));
       });
@@ -102,7 +100,6 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 50 });
       });
 
-      // Simulate mouseup
       act(() => {
         document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150, clientY: 150 }));
       });
@@ -129,7 +126,6 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 50 });
       });
 
-      // Simulate mousemove to top edge (should trigger 'top' snap zone)
       act(() => {
         document.dispatchEvent(new MouseEvent('mousemove', { clientX: 500, clientY: 10 }));
       });
@@ -156,7 +152,6 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 50 });
       });
 
-      // Simulate mousemove to left edge
       act(() => {
         document.dispatchEvent(new MouseEvent('mousemove', { clientX: 10, clientY: 300 }));
       });
@@ -187,7 +182,6 @@ describe('useDrag', () => {
         document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 100 }));
       });
 
-      // Last call should clear with null
       const lastCall = onSnapZoneChange.mock.calls[onSnapZoneChange.mock.calls.length - 1];
       expect(lastCall[0]).toBeNull();
     });
@@ -242,12 +236,10 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 50 });
       });
 
-      // Move by 10 pixels
       act(() => {
         document.dispatchEvent(new MouseEvent('mousemove', { clientX: 110, clientY: 110 }));
       });
 
-      // Should use returned position (200, 200) as base, not initial (50, 50)
       expect(onDrag).toHaveBeenCalledWith({ x: 210, y: 210 });
     });
 
@@ -270,7 +262,6 @@ describe('useDrag', () => {
         result.current.handleMouseDown(mockEvent, { x: 50, y: 10 });
       });
 
-      // Move up by 100 pixels (should clamp to 0)
       act(() => {
         document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: -50 }));
       });

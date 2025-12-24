@@ -1,3 +1,9 @@
+/**
+ * @file audioService.ts
+ * @description Web Audio API service for playing UI sounds and game audio effects.
+ */
+
+/** Available sound effect types */
 export type SoundType =
   | 'click'
   | 'hover'
@@ -17,6 +23,10 @@ declare global {
   }
 }
 
+/**
+ * Audio service class for synthesizing and playing sound effects.
+ * Uses Web Audio API oscillators to generate sounds procedurally.
+ */
 class AudioService {
   private context: AudioContext | null = null;
   private masterGain: GainNode | null = null;
@@ -34,7 +44,6 @@ class AudioService {
 
   public setVolume(volume: number) {
     if (this.masterGain && this.context) {
-      // Smooth transition
       this.masterGain.gain.setTargetAtTime(volume / 100, this.context.currentTime, 0.05);
     }
   }
@@ -51,20 +60,17 @@ class AudioService {
       osc.connect(gain);
       gain.connect(this.masterGain);
 
-      // Apply specific sound characteristics
       switch (type) {
         case 'click':
-          // Short, high-pitch click
           osc.frequency.setValueAtTime(800, t);
           osc.frequency.exponentialRampToValueAtTime(1200, t + 0.05);
-          gain.gain.setValueAtTime(0.05 * (volume / 100), t); // Very quiet
+          gain.gain.setValueAtTime(0.05 * (volume / 100), t);
           gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
           osc.start(t);
           osc.stop(t + 0.05);
           break;
 
         case 'hover':
-          // Very subtle tick
           osc.frequency.setValueAtTime(400, t);
           gain.gain.setValueAtTime(0.02 * (volume / 100), t);
           gain.gain.exponentialRampToValueAtTime(0.001, t + 0.02);
@@ -73,22 +79,19 @@ class AudioService {
           break;
 
         case 'notification': {
-          // Double ding (Crystal like)
-          // First note
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(880, t); // A5
+          osc.frequency.setValueAtTime(880, t);
           gain.gain.setValueAtTime(0.3 * (volume / 100), t);
           gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
           osc.start(t);
           osc.stop(t + 0.5);
 
-          // Second note (harmonic)
           const osc2 = this.context.createOscillator();
           const gain2 = this.context.createGain();
           osc2.connect(gain2);
           gain2.connect(this.masterGain);
           osc2.type = 'sine';
-          osc2.frequency.setValueAtTime(1760, t + 0.1); // A6
+          osc2.frequency.setValueAtTime(1760, t + 0.1);
           gain2.gain.setValueAtTime(0.15 * (volume / 100), t + 0.1);
           gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
           osc2.start(t + 0.1);
@@ -97,7 +100,6 @@ class AudioService {
         }
 
         case 'success':
-          // Ascending major triad
           osc.frequency.setValueAtTime(440, t);
           osc.frequency.setValueAtTime(554, t + 0.1);
           osc.frequency.setValueAtTime(659, t + 0.2);
@@ -109,7 +111,6 @@ class AudioService {
           break;
 
         case 'error':
-          // Low buzz
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(150, t);
           osc.frequency.linearRampToValueAtTime(100, t + 0.2);
@@ -120,9 +121,8 @@ class AudioService {
           break;
 
         case 'window-open':
-          // Air swish enter
           osc.type = 'sine';
-          // Noise buffer would be better but simple sine sweep works
+
           osc.frequency.setValueAtTime(200, t);
           osc.frequency.exponentialRampToValueAtTime(600, t + 0.15);
           gain.gain.setValueAtTime(0.01, t);
@@ -133,7 +133,6 @@ class AudioService {
           break;
 
         case 'window-close':
-          // Air swish exit (descending)
           osc.type = 'sine';
           osc.frequency.setValueAtTime(600, t);
           osc.frequency.exponentialRampToValueAtTime(200, t + 0.15);
@@ -145,8 +144,6 @@ class AudioService {
           break;
 
         case 'startup': {
-          // Futuristic boot chime
-          // Chord: Cmaj7 (C, E, G, B)
           const frequencies = [523.25, 659.25, 783.99, 987.77];
           frequencies.forEach((freq, i) => {
             const o = this.context!.createOscillator();
@@ -154,10 +151,10 @@ class AudioService {
             o.type = 'sine';
             o.connect(g);
             g.connect(this.masterGain!);
-            o.frequency.setValueAtTime(freq, t + i * 0.1); // Staggered entry
+            o.frequency.setValueAtTime(freq, t + i * 0.1);
             g.gain.setValueAtTime(0, t + i * 0.1);
             g.gain.linearRampToValueAtTime(0.1 * (volume / 100), t + i * 0.1 + 0.2);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 2); // Long tail
+            g.gain.exponentialRampToValueAtTime(0.001, t + 2);
             o.start(t + i * 0.1);
             o.stop(t + 2);
           });
@@ -165,8 +162,7 @@ class AudioService {
         }
 
         case 'shutdown': {
-          // Descending chime
-          const frequencies = [987.77, 783.99, 659.25, 523.25]; // Reversed Cmaj7
+          const frequencies = [987.77, 783.99, 659.25, 523.25];
           frequencies.forEach((freq, i) => {
             const o = this.context!.createOscillator();
             const g = this.context!.createGain();
@@ -184,7 +180,6 @@ class AudioService {
         }
 
         case 'game-eat':
-          // Retro blip
           osc.type = 'square';
           osc.frequency.setValueAtTime(600, t);
           osc.frequency.exponentialRampToValueAtTime(1200, t + 0.1);
@@ -195,7 +190,6 @@ class AudioService {
           break;
 
         case 'game-over':
-          // Descending slide
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(400, t);
           osc.frequency.linearRampToValueAtTime(100, t + 0.5);

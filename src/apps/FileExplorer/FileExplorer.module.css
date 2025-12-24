@@ -7,7 +7,6 @@
   font-size: 13px;
 }
 
-/* Toolbar */
 .toolbar {
   display: flex;
   align-items: center;
@@ -45,7 +44,6 @@
   cursor: not-allowed;
 }
 
-/* Address bar */
 .addressBar {
   flex: 1;
   display: flex;
@@ -86,7 +84,6 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Search */
 .searchBox {
   display: flex;
   align-items: center;
@@ -110,14 +107,12 @@
   color: #888888;
 }
 
-/* Main content area */
 .main {
   flex: 1;
   display: flex;
   overflow: hidden;
 }
 
-/* Sidebar */
 .sidebar {
   width: 220px;
   background: #252526;
@@ -185,7 +180,6 @@
   white-space: nowrap;
 }
 
-/* Content */
 .content {
   flex: 1;
   display: flex;
@@ -235,7 +229,6 @@
   color: #60a5fa;
 }
 
-/* Grid view */
 .grid {
   flex: 1;
   display: grid;
@@ -286,7 +279,6 @@
   max-width: 100%;
 }
 
-/* List view */
 .list {
   flex: 1;
   overflow-y: auto;
@@ -341,7 +333,6 @@
   font-size: 12px;
 }
 
-/* Icons */
 .folderIcon {
   color: #dcb67a;
 }
@@ -362,7 +353,6 @@
   color: #888888;
 }
 
-/* Empty state */
 .emptyState {
   grid-column: 1 / -1;
   display: flex;
@@ -372,7 +362,6 @@
   color: #666666;
 }
 
-/* Status bar */
 .statusBar {
   padding: 6px 16px;
   background: #007acc;
@@ -380,7 +369,6 @@
   font-size: 12px;
 }
 
-/* Context Menu */
 .contextMenuOverlay {
   position: fixed;
   top: 0;
@@ -442,7 +430,6 @@
   background: rgba(239, 68, 68, 0.15) !important;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .sidebar {
     display: none;

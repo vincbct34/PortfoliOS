@@ -1,21 +1,31 @@
+/**
+ * @file CalendarPopup.tsx
+ * @description Calendar popup with month view and world clocks display.
+ */
+
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Globe } from 'lucide-react';
 import { useTranslation } from '../../context/I18nContext';
 import styles from './CalendarPopup.module.css';
 
+/** Props for the CalendarPopup component */
 interface CalendarPopupProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// World clock timezones
+/** World clock configuration */
 const WORLD_CLOCKS = [
   { city: 'Paris', timezone: 'Europe/Paris', flag: '🇫🇷' },
   { city: 'New York', timezone: 'America/New_York', flag: '🇺🇸' },
   { city: 'Tokyo', timezone: 'Asia/Tokyo', flag: '🇯🇵' },
 ];
 
+/**
+ * Calendar Popup component.
+ * Displays a monthly calendar with navigation and world clocks section.
+ */
 export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [displayDate, setDisplayDate] = useState(new Date());
@@ -24,7 +34,6 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
 
   const today = new Date();
 
-  // Update current time every second for world clocks
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
@@ -32,7 +41,6 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Close on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
@@ -55,7 +63,7 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
 
   const getFirstDayOfMonth = (date: Date) => {
     const day = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    // Convert Sunday (0) to 7 for Monday-first week
+
     return day === 0 ? 6 : day - 1;
   };
 
@@ -84,12 +92,10 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
     const firstDay = getFirstDayOfMonth(displayDate);
     const days = [];
 
-    // Empty cells for days before first day of month
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className={styles.dayEmpty} />);
     }
 
-    // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(
         <div key={day} className={`${styles.day} ${isToday(day) ? styles.today : ''}`}>
@@ -136,13 +142,10 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.15 }}
         >
-          {/* Current time and date */}
           <div className={styles.header}>
             <div className={styles.time}>{formatTime(currentDate)}</div>
             <div className={styles.fullDate}>{formatFullDate(currentDate)}</div>
           </div>
-
-          {/* Calendar navigation */}
           <div className={styles.navigation}>
             <button onClick={prevMonth} className={styles.navButton} aria-label={t.common.close}>
               <ChevronLeft size={18} />
@@ -154,8 +157,6 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
               <ChevronRight size={18} />
             </button>
           </div>
-
-          {/* Calendar grid */}
           <div className={styles.calendar}>
             <div className={styles.weekdays}>
               {t.calendar.days.map((day: string) => (
@@ -166,8 +167,6 @@ export default function CalendarPopup({ isOpen, onClose }: CalendarPopupProps) {
             </div>
             <div className={styles.days}>{renderCalendarDays()}</div>
           </div>
-
-          {/* World Clock Section */}
           <div className={styles.worldClockSection}>
             <div className={styles.worldClockTitle}>
               <Globe size={14} />

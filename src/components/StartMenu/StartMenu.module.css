@@ -55,7 +55,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Pinned section */
 .pinnedSection {
   padding: 0 24px 24px;
 }
@@ -74,7 +73,6 @@
   margin: 0;
 }
 
-/* Apps grid */
 .appsGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -125,7 +123,6 @@
   max-width: 100%;
 }
 
-/* Footer */
 .footer {
   display: flex;
   align-items: center;
@@ -257,12 +254,12 @@
     width: 100%;
     max-width: 100%;
     bottom: 56px;
-    /* Match new taskbar height */
+
     left: 0;
     right: 0;
     margin: 0;
     border-radius: 16px 16px 0 0;
-    /* Rounded top corners only */
+
     border-bottom: none;
   }
 
@@ -276,7 +273,7 @@
 
   .appsGrid {
     grid-template-columns: repeat(4, 1fr);
-    /* Reduce columns */
+
     gap: 4px;
   }
 
@@ -295,7 +292,7 @@
 
   .powerMenu {
     bottom: 72px;
-    /* Adjust for taller taskbar */
+
     right: 16px;
   }
 }

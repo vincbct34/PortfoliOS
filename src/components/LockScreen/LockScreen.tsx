@@ -1,12 +1,22 @@
+/**
+ * @file LockScreen.tsx
+ * @description Lock screen with animated clock and click/key to unlock.
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../context/I18nContext';
 import styles from './LockScreen.module.css';
 
+/** Props for the LockScreen component */
 interface LockScreenProps {
   onUnlock: () => void;
 }
 
+/**
+ * Lock Screen component.
+ * Displays time and date, unlocks on any click or key press.
+ */
 export default function LockScreen({ onUnlock }: LockScreenProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isUnlocking, setIsUnlocking] = useState(false);
@@ -18,7 +28,6 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
       setCurrentTime(new Date());
     }, 1000);
 
-    // Prevent immediate unlock from the event that caused the lock
     const unlockTimer = setTimeout(() => {
       setCanUnlock(true);
     }, 1000);

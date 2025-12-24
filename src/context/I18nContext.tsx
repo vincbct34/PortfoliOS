@@ -1,6 +1,12 @@
+/**
+ * @file I18nContext.tsx
+ * @description Internationalization context for managing language and translations.
+ */
+
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import { translations, type Language, type Translations } from '../i18n/translations';
 
+/** Context value for internationalization */
 interface I18nContextValue {
   language: Language;
   setLanguage: (lang: Language) => void;
@@ -10,9 +16,13 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
+/** Storage key for persisting language preference */
 const STORAGE_KEY = 'portfolios-language';
 
-// Get browser language or default to French
+/**
+ * Gets the initial language from storage or browser preference.
+ * @returns The detected or default language
+ */
 function getInitialLanguage(): Language {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -20,16 +30,15 @@ function getInitialLanguage(): Language {
       return saved;
     }
   } catch {
-    // localStorage may be unavailable
+    void 0;
   }
 
-  // Check browser language
   const browserLang = navigator.language.toLowerCase();
   if (browserLang.startsWith('en')) {
     return 'en';
   }
 
-  return 'fr'; // Default to French
+  return 'fr';
 }
 
 interface I18nProviderProps {
@@ -44,12 +53,11 @@ export function I18nProvider({ children }: I18nProviderProps) {
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch {
-      // localStorage may be unavailable
+      void 0;
     }
     document.documentElement.lang = lang;
   }, []);
 
-  // Set initial document language
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
@@ -72,7 +80,6 @@ export function useI18n(): I18nContextValue {
   return context;
 }
 
-// Shorthand hook for translations
 export function useTranslation() {
   const { t, language, locale } = useI18n();
   return { t, language, locale };

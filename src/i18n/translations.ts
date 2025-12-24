@@ -1,7 +1,6 @@
 export type Language = 'fr' | 'en';
 
 export interface Translations {
-  // Common
   common: {
     loading: string;
     error: string;
@@ -16,7 +15,6 @@ export interface Translations {
     no: string;
   };
 
-  // Apps
   apps: {
     about: string;
     projects: string;
@@ -29,13 +27,11 @@ export interface Translations {
     explorer: string;
   };
 
-  // Desktop
   desktop: {
     doubleClickToOpen: string;
     ariaLabel: string;
   };
 
-  // Window
   window: {
     minimize: string;
     maximize: string;
@@ -43,7 +39,6 @@ export interface Translations {
     close: string;
   };
 
-  // Taskbar
   taskbar: {
     startMenu: string;
     widgets: string;
@@ -54,7 +49,6 @@ export interface Translations {
     active: string;
   };
 
-  // Start Menu
   startMenu: {
     search: string;
     pinned: string;
@@ -65,7 +59,6 @@ export interface Translations {
     shutdown: string;
   };
 
-  // Quick Settings
   quickSettings: {
     title: string;
     nightMode: string;
@@ -76,14 +69,12 @@ export interface Translations {
     unmute: string;
   };
 
-  // Calendar
   calendar: {
     worldClocks: string;
     days: string[];
     months: string[];
   };
 
-  // Widget Panel
   widgets: {
     weather: string;
     weatherLoading: string;
@@ -95,7 +86,6 @@ export interface Translations {
     technologies: string;
   };
 
-  // About Me
   aboutMe: {
     title: string;
     about: string;
@@ -105,7 +95,7 @@ export interface Translations {
     availability: string;
     viewCV: string;
     cvLocation: string;
-    // Profile content
+
     profileTitle: string;
     profileBio: string;
     locationValue: string;
@@ -113,28 +103,44 @@ export interface Translations {
     availabilityValue: string;
   };
 
-  // Projects
   projectsPage: {
     title: string;
     viewProject: string;
     viewCode: string;
-    // Project descriptions
+
     project1Desc: string;
     project2Desc: string;
     project3Desc: string;
   };
 
-  // Skills
+  projects: {
+    title: string;
+    subtitle: string;
+    terminal: string;
+    catCommand: string;
+    viewProject: string;
+    viewAll: string;
+    descriptions: {
+      opera: string;
+      factory: string;
+      portfolio: string;
+      glados: string;
+    };
+    types: {
+      opera: string;
+    };
+  };
+
   skillsPage: {
     title: string;
-    // Categories
+
     catLanguage: string;
     catFrontend: string;
     catBackend: string;
     catDatabase: string;
     catTools: string;
     catDevOps: string;
-    // UI
+
     tabProcesses: string;
     tabPerformance: string;
     statSkills: string;
@@ -146,7 +152,7 @@ export interface Translations {
     colCategory: string;
     colLevel: string;
     colProficiency: string;
-    // Performance tab
+
     perfLoading: string;
     perfRetry: string;
     perfCommits: string;
@@ -161,7 +167,6 @@ export interface Translations {
     perfRecentActivity: string;
   };
 
-  // Contact
   contactPage: {
     title: string;
     name: string;
@@ -176,7 +181,6 @@ export interface Translations {
     otherWays: string;
   };
 
-  // Settings
   settingsPage: {
     title: string;
     personalization: string;
@@ -189,14 +193,13 @@ export interface Translations {
     languageEn: string;
   };
 
-  // Terminal
   terminal: {
     welcome: string;
     helpHint: string;
     commandNotFound: string;
     helpTitle: string;
     easterEggs: string;
-    // Commands
+
     cmdHelp: string;
     cmdAbout: string;
     cmdSkills: string;
@@ -205,18 +208,18 @@ export interface Translations {
     cmdClear: string;
     cmdNeofetch: string;
     cmdToast: string;
-    // About output
+
     aboutTitle: string;
     aboutDesc: string;
     aboutHint: string;
-    // Skills output
+
     skillsTitle: string;
-    // Projects output
+
     projectsTitle: string;
     projectsHint: string;
-    // Contact output
+
     contactTitle: string;
-    // Toast output
+
     toastDemo: string;
     toastSuccess: string;
     toastInfo: string;
@@ -224,7 +227,6 @@ export interface Translations {
     toastError: string;
   };
 
-  // Notepad
   notepad: {
     untitled: string;
     file: string;
@@ -262,7 +264,6 @@ export interface Translations {
     startTyping: string;
   };
 
-  // File Explorer
   fileExplorer: {
     thisPC: string;
     documents: string;
@@ -280,7 +281,6 @@ export interface Translations {
     folderEmpty: string;
   };
 
-  // Snake Game
   snakeGame: {
     title: string;
     score: string;
@@ -290,12 +290,10 @@ export interface Translations {
     startHint: string;
   };
 
-  // Lock Screen
   lockScreen: {
     hint: string;
   };
 
-  // Boot Screen
   bootScreen: {
     loading: string;
     messages: string[];
@@ -303,14 +301,12 @@ export interface Translations {
     safeToTurnOff: string;
   };
 
-  // Notifications
   notifications: {
     title: string;
     noNotifications: string;
     clearAll: string;
   };
 
-  // Confirm Dialog
   confirm: {
     deleteFile: string;
     deleteFileMessage: string;
@@ -437,6 +433,25 @@ N'hésitez pas à me contacter pour discuter de vos projets !`,
     project3Desc:
       "Interpréteur de langage développé en Haskell dans le cadre d'un projet EPITECH. Parsing, évaluation et gestion d'erreurs.",
   },
+  projects: {
+    title: 'Mes Projets',
+    subtitle: 'Une sélection de mes travaux récents',
+    terminal: 'terminal',
+    catCommand: 'cat',
+    viewProject: 'Voir le projet',
+    viewAll: 'Voir tous les projets',
+    descriptions: {
+      opera: "Plateforme d'inscriptions pour l'Opéra Orchestre National Montpellier.",
+      factory: 'Site vitrine pour 404Factory, avec animations et design moderne.',
+      portfolio:
+        'Ce portfolio ! Interface Windows 11, système de fenêtres et applications interactives.',
+      glados:
+        'Interpréteur de langage type LISP développé en Haskell. Gestion de la mémoire et parsing avancés.',
+    },
+    types: {
+      opera: 'Application Web',
+    },
+  },
   skillsPage: {
     title: 'Mes Compétences',
     catLanguage: 'Langage',
@@ -456,7 +471,7 @@ N'hésitez pas à me contacter pour discuter de vos projets !`,
     colCategory: 'Catégorie',
     colLevel: 'Niveau',
     colProficiency: 'Maîtrise',
-    // Performance tab
+
     perfLoading: 'Chargement des données GitHub...',
     perfRetry: 'Réessayer',
     perfCommits: 'Commits',
@@ -728,6 +743,25 @@ Feel free to contact me to discuss your projects!`,
     project3Desc:
       'Language interpreter developed in Haskell as part of an EPITECH project. Parsing, evaluation and error handling.',
   },
+  projects: {
+    title: 'My Projects',
+    subtitle: 'A selection of my recent work',
+    terminal: 'terminal',
+    catCommand: 'cat',
+    viewProject: 'View Project',
+    viewAll: 'View All Projects',
+    descriptions: {
+      opera: 'Registration platform for the Opéra Orchestre National Montpellier.',
+      factory: 'Showcase website for 404Factory, featuring animations and modern design.',
+      portfolio:
+        'This portfolio! Windows 11 interface, window system, and interactive applications.',
+      glados:
+        'LISP-like language interpreter developed in Haskell. Advanced parsing and memory management.',
+    },
+    types: {
+      opera: 'Web Application',
+    },
+  },
   skillsPage: {
     title: 'My Skills',
     catLanguage: 'Language',
@@ -747,7 +781,7 @@ Feel free to contact me to discuss your projects!`,
     colCategory: 'Category',
     colLevel: 'Level',
     colProficiency: 'Proficiency',
-    // Performance tab
+
     perfLoading: 'Loading GitHub data...',
     perfRetry: 'Retry',
     perfCommits: 'Commits',

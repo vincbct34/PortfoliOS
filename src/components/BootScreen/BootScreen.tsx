@@ -1,3 +1,8 @@
+/**
+ * @file BootScreen.tsx
+ * @description Animated boot/shutdown screen with loading dots and status messages.
+ */
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSystemSettings } from '../../context/SystemSettingsContext';
@@ -5,13 +10,14 @@ import { useTranslation } from '../../context/I18nContext';
 import bootLogo from '../../assets/boot.png';
 import './BootScreen.css';
 
+/** Props for the BootScreen component */
 interface BootScreenProps {
   onBootComplete: () => void;
   duration?: number;
   mode?: 'boot' | 'shutdown';
 }
 
-// Windows 11 style spinning dots
+/** Animated loading dots indicator */
 const LoadingDots = () => (
   <div className="loading-dots">
     {[...Array(5)].map((_, i) => (
@@ -33,6 +39,10 @@ const LoadingDots = () => (
   </div>
 );
 
+/**
+ * Boot/Shutdown screen component.
+ * Shows animated logo and rotating status messages during system transitions.
+ */
 function BootScreen({ onBootComplete, duration = 4000, mode = 'boot' }: BootScreenProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
@@ -42,22 +52,18 @@ function BootScreen({ onBootComplete, duration = 4000, mode = 'boot' }: BootScre
   const messages = mode === 'boot' ? t.bootScreen.messages : t.bootScreen.shutdownMessages;
 
   useEffect(() => {
-    // Play sound
     const soundTimer = setTimeout(() => {
       playSound(mode === 'boot' ? 'startup' : 'shutdown');
     }, 500);
 
-    // Cycle through messages
     const messageInterval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % messages.length);
     }, duration / messages.length);
 
-    // Start exit animation before completing
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
     }, duration - 500);
 
-    // Complete boot/shutdown
     const completeTimer = setTimeout(() => {
       onBootComplete();
     }, duration);

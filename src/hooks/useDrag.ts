@@ -1,12 +1,19 @@
+/**
+ * @file useDrag.ts
+ * @description Hook for handling window dragging with snap zone detection.
+ */
+
 import { useCallback, useRef, useEffect } from 'react';
 import type { WindowPosition, SnapZone } from '../types/window';
 import { SNAP_THRESHOLD } from '../constants/layout';
 
+/** Information passed to drag start callback */
 interface DragStartInfo {
   cursorX: number;
   cursorY: number;
 }
 
+/** Options for the useDrag hook */
 interface UseDragOptions {
   onDragStart?: (info: DragStartInfo) => WindowPosition | void;
   onDrag?: (position: WindowPosition) => void;
@@ -15,24 +22,28 @@ interface UseDragOptions {
   disabled?: boolean;
 }
 
+/** Return type for the useDrag hook */
 interface UseDragReturn {
   handleMouseDown: (e: React.MouseEvent, initialPosition: WindowPosition) => void;
 }
 
+/**
+ * Detects which snap zone the cursor is in based on screen position.
+ * @param x - Cursor X position
+ * @param y - Cursor Y position
+ * @returns The detected snap zone or null
+ */
 function detectSnapZone(x: number, y: number): SnapZone {
   const windowWidth = window.innerWidth;
 
-  // Top edge = maximize
   if (y <= SNAP_THRESHOLD) {
     return 'top';
   }
 
-  // Left edge = snap left
   if (x <= SNAP_THRESHOLD) {
     return 'left';
   }
 
-  // Right edge = snap right
   if (x >= windowWidth - SNAP_THRESHOLD) {
     return 'right';
   }
@@ -40,6 +51,11 @@ function detectSnapZone(x: number, y: number): SnapZone {
   return null;
 }
 
+/**
+ * Hook for handling window dragging with snap zone detection.
+ * @param options - Configuration options for drag behavior
+ * @returns Object with mouse down handler
+ */
 export function useDrag({
   onDragStart,
   onDrag,
@@ -51,13 +67,12 @@ export function useDrag({
   const startPos = useRef({ x: 0, y: 0 });
   const elementPos = useRef({ x: 0, y: 0 });
   const currentSnapZone = useRef<SnapZone>(null);
-  // Track event handlers for cleanup on unmount
+
   const handlersRef = useRef<{
     move: ((e: MouseEvent) => void) | null;
     up: ((e: MouseEvent) => void) | null;
   }>({ move: null, up: null });
 
-  // Cleanup event listeners on unmount
   useEffect(() => {
     return () => {
       if (handlersRef.current.move) {
@@ -78,16 +93,14 @@ export function useDrag({
       startPos.current = { x: e.clientX, y: e.clientY };
       currentSnapZone.current = null;
 
-      // Call onDragStart with cursor info, it may return a new position
       const newPosition = onDragStart?.({ cursorX: e.clientX, cursorY: e.clientY });
       elementPos.current = newPosition ? { ...newPosition } : { ...initialPosition };
 
       const handleMouseMove = (moveEvent: MouseEvent) => {
         if (!isDragging.current) return;
 
-        // Clamp mouse position to viewport boundaries
         const clampedX = Math.max(0, Math.min(moveEvent.clientX, window.innerWidth));
-        const clampedY = Math.max(0, Math.min(moveEvent.clientY, window.innerHeight - 48)); // -48 for taskbar
+        const clampedY = Math.max(0, Math.min(moveEvent.clientY, window.innerHeight - 48));
 
         const deltaX = clampedX - startPos.current.x;
         const deltaY = clampedY - startPos.current.y;
@@ -97,7 +110,6 @@ export function useDrag({
 
         onDrag?.({ x: newX, y: newY });
 
-        // Detect snap zone using clamped position
         const snapZone = detectSnapZone(clampedX, clampedY);
         if (snapZone !== currentSnapZone.current) {
           currentSnapZone.current = snapZone;
@@ -109,13 +121,12 @@ export function useDrag({
         isDragging.current = false;
         const finalSnapZone = detectSnapZone(upEvent.clientX, upEvent.clientY);
         onDragEnd?.(finalSnapZone);
-        onSnapZoneChange?.(null); // Clear preview
+        onSnapZoneChange?.(null);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
         handlersRef.current = { move: null, up: null };
       };
 
-      // Store refs for cleanup
       handlersRef.current = { move: handleMouseMove, up: handleMouseUp };
 
       document.addEventListener('mousemove', handleMouseMove);

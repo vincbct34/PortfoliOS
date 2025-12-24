@@ -1,8 +1,11 @@
+/**
+ * @file apps.ts
+ * @description Application configuration registry defining all available apps and their window defaults.
+ */
+
 import type { AppConfig } from '../types/window';
 
-/**
- * Application configurations for the window manager
- */
+/** Initial application configurations for the portfolio OS */
 export const initialApps: Record<string, AppConfig> = {
   about: {
     id: 'about',

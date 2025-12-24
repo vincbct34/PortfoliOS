@@ -6,7 +6,6 @@
   color: white;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -81,7 +80,6 @@
   transform: scale(1.05);
 }
 
-/* Game Wrapper */
 .gameWrapper {
   flex: 1;
   display: flex;
@@ -99,7 +97,6 @@
     0 0 80px rgba(34, 197, 94, 0.05);
 }
 
-/* Overlay */
 .overlay {
   position: absolute;
   inset: 0;
@@ -182,7 +179,6 @@
   box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
 }
 
-/* Footer */
 .footer {
   padding: 12px 20px;
   text-align: center;
@@ -191,7 +187,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* D-Pad - Default hidden */
 .dpad {
   display: none;
   flex-direction: column;
@@ -227,13 +222,11 @@
   transform: scale(0.95);
 }
 
-/* Spacer for the cross layout */
 .dpadCenter {
   width: 48px;
   height: 48px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .container {
     overflow: hidden;

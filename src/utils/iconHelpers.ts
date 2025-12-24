@@ -1,9 +1,16 @@
+/**
+ * @file iconHelpers.ts
+ * @description Utility functions for dynamic icon loading from Lucide React.
+ */
+
 import * as LucideIcons from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /**
- * Convert kebab-case icon name to LucideIcon component
- * e.g., 'file-text' -> FileText, 'gamepad-2' -> Gamepad2
+ * Gets a Lucide icon component by name.
+ * Converts kebab-case names to PascalCase for Lucide lookup.
+ * @param iconName - Icon name in kebab-case (e.g., 'file-text')
+ * @returns The matching Lucide icon component or File as fallback
  */
 export function getIcon(iconName: string): LucideIcon {
   const formattedName = iconName
